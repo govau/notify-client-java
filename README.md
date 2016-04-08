@@ -1,8 +1,5 @@
-# gov-notify-client-java
-
-Java client for Gov Notify platform.
-
-[![Build Status](https://travis-ci.org/przemos/gov-notify-client-java.svg?branch=master)](https://travis-ci.org/przemos/gov-notify-client-java)
+# notifications-java-client
+Java client for GOV.UK Notify
 
 ## Prerequisites
 - JDK 7+
