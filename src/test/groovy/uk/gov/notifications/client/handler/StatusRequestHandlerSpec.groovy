@@ -9,13 +9,11 @@ import static uk.gov.notifications.testutil.TestStub.govNotifyHttpClientStub
 
 public class StatusRequestHandlerSpec extends Specification {
 
-    def STATUS_RESPONSE = [
-            "notification":
-                    [
-                            "id"    : "4",
-                            "status": "delivered",
-                    ]
-    ]
+    def STATUS_RESPONSE = ["data": ["notification":
+                                    ["id"    : "4",
+                                     "status": "delivered"]
+                                    ]
+                          ]
 
     def httpClient = govNotifyHttpClientStub(toJson(STATUS_RESPONSE))
     def handler = new StatusRequestHandler(CONFIGURATION, httpClient)
@@ -48,10 +46,10 @@ public class StatusRequestHandlerSpec extends Specification {
         def response = handler.handle request
 
         then:
-        def notificationObject = STATUS_RESPONSE["notification"];
+        def notificationObject = STATUS_RESPONSE["data"]["notification"];
 
         response.with {
-            id == notificationObject["notificationId"]
+            id == notificationObject["id"]
             status == notificationObject["status"]
         }
     }

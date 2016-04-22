@@ -56,7 +56,7 @@ public final class SmsRequestHandler {
     private NotificationCreatedResponse buildResponse(GovNotifyHttpClientResponse httpResponse) {
 
         JSONObject responseBodyAsJson = new JSONObject(httpResponse.getBody());
-        String notificationId = responseBodyAsJson.getString("notification_id");
+        String notificationId = responseBodyAsJson.getJSONObject("data").getJSONObject("notification").getString("id");
         return new NotificationCreatedResponse.Builder().id(notificationId).build();
     }
 }

@@ -13,8 +13,7 @@ import static uk.gov.notifications.testutil.TestStub.govNotifyHttpClientStub
 class SmsRequestHandlerSpec extends Specification {
 
     def EXPECTED_NOTIFICATION_ID = "999"
-
-    def httpClient = govNotifyHttpClientStub(toJson(["notification_id": EXPECTED_NOTIFICATION_ID]));
+    def httpClient = govNotifyHttpClientStub(toJson(["data":["notification":["id": EXPECTED_NOTIFICATION_ID]]]));
 
     def handler = new SmsRequestHandler(CONFIGURATION, httpClient)
 
