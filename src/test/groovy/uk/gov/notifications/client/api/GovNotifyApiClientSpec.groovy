@@ -43,19 +43,37 @@ class GovNotifyApiClientSpec extends Specification {
 
     def "When I check notification status by id, I expect status data in return"() {
 
+        def notificationId = "6e1c96a7-4da6-439a-8143-037fad35f317"
         httpClient.send(_) >> httpResponse(toJson(
-                ["data":["notification":
-                         ["id"    : "4",
-                          "status": "delivered"]
-                        ]
+                ["data": ["notification":
+                                  ["id"    : notificationId,
+                                   "status": "delivered",
+                                   "content_char_count": 29,
+                                   "created_at": "2016-04-25T10:27:03.524679+00:00",
+                                   "id": notificationId,
+                                   "job": null,
+                                   "reference": null,
+                                   "sent_at": "2016-04-25T10:27:04.119717+00:00",
+                                   "sent_by": "mmg",
+                                   "service": "5cf87313-fddd-4482-a2ea-48e37320efd1",
+                                   "status": "delivered",
+                                   "template": [
+                                           "id": "5e427b42-4e98-46f3-a047-32c4a87d26bb",
+                                           "name": "First template",
+                                           "template_type": "sms"
+                                   ],
+                                   "to": "+441111111111",
+                                   "updated_at": "2016-04-25T10:27:04.550407+00:00"
+                                  ]
+                ]
                 ]
         ));
 
         when:
-        def response = apiClient.checkStatus "4"
+        def response = apiClient.checkStatus notificationId
 
         then:
-        response.id == "4"
+        response.id == notificationId
         response.status == "delivered"
     }
 

@@ -1,5 +1,5 @@
 group 'uk.gov.notifications'
-version '1.0-SNAPSHOT'
+version '1.1-SNAPSHOT'
 
 import org.apache.tools.ant.filters.ReplaceTokens
 
@@ -18,6 +18,7 @@ apply plugin: 'groovy'
 apply plugin: 'idea'
 apply plugin: 'com.github.johnrengelman.shadow'
 apply plugin: 'application'
+apply plugin: 'maven-publish'
 
 mainClassName = "uk.gov.notifications.cli.GovNotifyCli"
 
@@ -62,6 +63,7 @@ dependencies {
     compile 'commons-validator:commons-validator:1.5.0'
     compile 'org.apache.httpcomponents:httpclient:4.5.2'
     compile 'commons-codec:commons-codec:1.10'
+    compile 'joda-time:joda-time:2.7'
     testCompile 'cglib:cglib:3.2.1'
     testCompile 'org.mockito:mockito-all:1.10.19'
     testCompile 'junit:junit:4.12'
@@ -71,4 +73,16 @@ dependencies {
 
 shadowJar {
     mergeServiceFiles()
+}
+
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+    repositories {
+        mavenLocal()
+    }
 }
