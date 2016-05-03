@@ -136,7 +136,7 @@ public class StatusResponse implements Serializable {
 
         public Builder notification(JSONObject notification){
             response.id = notification.getString("id");
-            response.contentCharCount = notification.getInt("content_char_count");
+            if(!notification.isNull("content_char_count")){ response.contentCharCount = notification.getInt("content_char_count"); }
             response.createdAt = new DateTime(notification.getString("created_at"));
             if(!notification.isNull("sent_at")) { response.sentAt = new DateTime(notification.getString("sent_at")); }
             if(!notification.isNull("updated_at")) { response.updatedAt = new DateTime(notification.getString("updated_at")); }

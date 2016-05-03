@@ -36,8 +36,6 @@ public class BaseHandlerSpec extends Specification {
         then:
 
         tokenCreator.with {
-            requestPath == "${GET} $path".toString()
-            secret == CONFIGURATION.secret
             issuer == CONFIGURATION.serviceId
             body == body
         }

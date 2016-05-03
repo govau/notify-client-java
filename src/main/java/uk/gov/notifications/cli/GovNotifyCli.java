@@ -92,7 +92,7 @@ public class GovNotifyCli {
         GovNotifyApi client = new GovNotifyApiClient(builder.secret(secret).build());
         StatusResponse response = client.checkStatus(notificationId);
 
-        System.out.println("Status: " + response.toString());
+        System.out.println("Status: " + response.getStatus());
     }
 
     private static String ask(String label) {

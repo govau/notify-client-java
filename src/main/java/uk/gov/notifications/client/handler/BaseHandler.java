@@ -45,8 +45,6 @@ class BaseHandler {
             throws GovNotifyClientException {
 
         String token = tokenCreator.create(
-                String.format("%s %s", method.toString(), path),
-                body,
                 configuration.getServiceId(),
                 configuration.getSecret()
         );
