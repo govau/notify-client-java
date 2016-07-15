@@ -1,3 +1,0 @@
-#!/bin/bash
-
-./gradlew clean shadowJar && java -jar build/libs/gov-notify-client-java-1.1-SNAPSHOT-all.jar $*
