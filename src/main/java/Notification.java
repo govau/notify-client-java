@@ -1,5 +1,5 @@
 import org.joda.time.DateTime;
-import org.jose4j.json.internal.json_simple.JSONObject;
+import org.json.JSONObject;
 
 public class Notification {
     private String id;
@@ -19,19 +19,30 @@ public class Notification {
     private DateTime createdAt;
     private DateTime updatedAt;
     private String apiKey;
-    private String job;
+    private String jobId;
+    private String jobFileName;
     private int jobRowNumber;
 
     public Notification(String content){
         org.json.JSONObject responseBodyAsJson = new org.json.JSONObject(content);
         org.json.JSONObject data = responseBodyAsJson.getJSONObject("data").getJSONObject("notification");
+        build(data);
+
+    }
+
+    public Notification(org.json.JSONObject data){
+        build(data);
+
+    }
+
+    private void build(JSONObject data) {
         id = data.getString("id");
         body = data.getString("body");
         contentCharCount = data.isNull("content_char_count") ? 0 : data.getInt("content_char_count");
         notificationType = data.getString("notification_type");
         reference = data.isNull("reference") ? null : data.getString("reference");
-        subject = data.getString("subject");
-        org.json.JSONObject template = data.getJSONObject("template");
+        subject = data.isNull("subject") ? null : data.getString("subject");
+        JSONObject template = data.getJSONObject("template");
         templateId = template.getString("id");
         templateName = template.getString("name");
         templateVersion = data.getInt("template_version");
@@ -41,10 +52,17 @@ public class Notification {
         status = data.getString("status");
         createdAt = new DateTime(data.getString("created_at"));
         updatedAt = data.isNull("updated_at") ? null :  new DateTime(data.getString("updated_at"));
-        apiKey = data.getString("api_key");
-        job = data.isNull("job") ? null : data.getString("job");
+        apiKey = data.isNull("api_key") ? null : data.getString("api_key");
+        org.json.JSONObject job = data.isNull("job") ? null : data.getJSONObject("job");
+        if(job == null){
+            jobId = null;
+            jobFileName = null;
+        }
+        else {
+            jobId = job.isNull("id") ? null : job.getString("id");
+            jobFileName = job.isNull("original_file_name") ? null : job.getString("original_file_name");
+        }
         jobRowNumber = data.isNull("job_row_number") ? 0 : data.getInt("job_row_number");
-
     }
 
     public String getId() {
@@ -111,8 +129,12 @@ public class Notification {
         return apiKey;
     }
 
-    public String getJob() {
-        return job;
+    public String getJobId() {
+        return jobId;
+    }
+
+    public String getJobFileName() {
+        return jobFileName;
     }
 
     public int getJobRowNumber() {
