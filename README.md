@@ -18,6 +18,7 @@ mvn dependency to populate
 **Import the NotificationClient**:
 
     ::
+    
     import uk.gov.service.notify.NotificationClient;
     import uk.gov.service.notify.Notification;
     import uk.gov.service.notify.NotificationList;
