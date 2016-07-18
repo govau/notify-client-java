@@ -26,8 +26,10 @@ mvn dependency to populate
 
 **Create a new instance of NotificationClient and objects returned by the client**:
 
-    `NotificationClient client = new NotificationClient(secret, serviceId, "https://api.notifications.service.gov.uk");`
-    
+```
+    NotificationClient client = new NotificationClient(secret, serviceId, "https://api.notifications.service.gov.uk");`
+```
+ 
 **Send and email or sms**:
 
 ```
