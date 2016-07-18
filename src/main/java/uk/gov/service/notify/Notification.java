@@ -1,3 +1,5 @@
+package uk.gov.service.notify;
+
 import org.joda.time.DateTime;
 import org.json.JSONObject;
 
@@ -24,8 +26,8 @@ public class Notification {
     private int jobRowNumber;
 
     public Notification(String content){
-        org.json.JSONObject responseBodyAsJson = new org.json.JSONObject(content);
-        org.json.JSONObject data = responseBodyAsJson.getJSONObject("data").getJSONObject("notification");
+        JSONObject responseBodyAsJson = new JSONObject(content);
+        JSONObject data = responseBodyAsJson.getJSONObject("data").getJSONObject("notification");
         build(data);
 
     }

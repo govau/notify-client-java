@@ -1,3 +1,5 @@
+package uk.gov.service.notify;
+
 import java.io.UnsupportedEncodingException;
 import org.jose4j.jws.AlgorithmIdentifiers;
 import org.jose4j.jws.JsonWebSignature;

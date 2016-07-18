@@ -1,6 +1,8 @@
+package uk.gov.service.notify;
+
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 
 public class NotificationListTest {

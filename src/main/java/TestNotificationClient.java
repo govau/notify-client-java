@@ -1,3 +1,9 @@
+import uk.gov.service.notify.Notification;
+import uk.gov.service.notify.NotificationClient;
+import uk.gov.service.notify.NotificationClientException;
+import uk.gov.service.notify.NotificationList;
+import uk.gov.service.notify.NotificationResponse;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -24,9 +30,11 @@ public class TestNotificationClient {
                 break;
             case "3":
                 createFetchAllRequest(client);
+                break;
             default:
                 System.out.println("Invalid selection, please enter 1, 2 or 3");
                 System.exit(1);
+                break;
         }
 
     }
@@ -52,6 +60,7 @@ public class TestNotificationClient {
             default:
                 System.out.println("Invalid selection, please enter 0, 1, 2 or 3");
                 System.exit(1);
+                break;
         }
         System.out.println("Select notification type from following: \n 0 - both \n 1 - sms \n 2 - email");
         String typeInt = reader.readLine();
@@ -69,6 +78,7 @@ public class TestNotificationClient {
             default:
                 System.out.println("Invalid selection, please enter 0, 1, 2");
                 System.exit(1);
+                break;
         }
         NotificationList notificationList = client.getNotifications(status, notificationType);
     }
@@ -103,6 +113,10 @@ public class TestNotificationClient {
 
         System.out.println("Enter the template id: ");
         String templateId = reader.readLine();
+        if(templateId == null || templateId.isEmpty()){
+            System.out.println("Template id must be the uuid of the template and can not be empty.");
+            System.exit(1);
+        }
         System.out.println("Enter the personalisation (as JSON): ");
         String personalisation = reader.readLine();
         if (messageType.equals("sms")){

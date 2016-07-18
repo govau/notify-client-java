@@ -1,8 +1,10 @@
-import org.json.JSONObject;
+package uk.gov.service.notify;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import org.json.JSONObject;
+import org.json.JSONArray;
 
 public class NotificationList {
     private List<Notification> notifications;
@@ -32,18 +34,18 @@ public class NotificationList {
     }
 
     public NotificationList(String content){
-        org.json.JSONObject data = new org.json.JSONObject(content);
-        org.json.JSONObject links = data.getJSONObject("links");
+        JSONObject data = new JSONObject(content);
+        JSONObject links = data.getJSONObject("links");
         nextPageLink = links.isNull("next") ? null : links.getString("next");
         lastPageLink = links.isNull("last") ? null : links.getString("last");
         pageSize = data.getInt("page_size");
         total = data.getInt("total");
-        notifications =  new ArrayList<Notification>();
-        org.json.JSONArray notificationsData = data.getJSONArray("notifications");
+        notifications =  new ArrayList<>();
+        JSONArray notificationsData = data.getJSONArray("notifications");
 
         Iterator<Object> iterator = notificationsData.iterator();
         while(iterator.hasNext()) {
-             org.json.JSONObject notification = (org.json.JSONObject)iterator.next();
+             JSONObject notification = (JSONObject)iterator.next();
 
             notifications.add(new Notification(notification));
         }
