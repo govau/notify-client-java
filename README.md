@@ -26,7 +26,9 @@ import uk.gov.service.notify.NotificationResponse;
 
 **Create a new instance of NotificationClient and objects returned by the client**:
 
-`NotificationClient client = new NotificationClient(secret, serviceId, "https://api.notifications.service.gov.uk");`
+```
+NotificationClient client = new NotificationClient(secret, serviceId, "https://api.notifications.service.gov.uk");`
+```
 
 
 **Send and email or sms**:
@@ -81,4 +83,4 @@ Then run the mvn execute java command with the excute arguments:
 
 `>  mvn exec:java -Dexec.mainClass=TestNotificationClient -Dexec.args="api-key-id service-id https://api.notifications.service.gov.uk"`
 
-You will be prompted to select an options to submit the API call.
+You will be prompted to select an option to submit the API call.
