@@ -18,29 +18,24 @@ mvn dependency to populate
 **Import the NotificationClient**
 
 ```
-    import uk.gov.service.notify.NotificationClient;
-    import uk.gov.service.notify.Notification;
-    import uk.gov.service.notify.NotificationList;
-    import uk.gov.service.notify.NotificationResponse;
+import uk.gov.service.notify.NotificationClient;
+import uk.gov.service.notify.Notification;
+import uk.gov.service.notify.NotificationList;
+import uk.gov.service.notify.NotificationResponse;
 ```
 
 **Create a new instance of NotificationClient and objects returned by the client**:
 
-```
-    NotificationClient client = new NotificationClient(secret, serviceId, "https://api.notifications.service.gov.uk");`
-```
- 
+`NotificationClient client = new NotificationClient(secret, serviceId, "https://api.notifications.service.gov.uk");`
+
+
 **Send and email or sms**:
 
-```
-    NotificationResponse response = client.sendEmail(templateId, emailAddress, personalisation);
-```
+`NotificationResponse response = client.sendEmail(templateId, emailAddress, personalisation);`
 
 or
 
-```
-    NotificationResponse response client.sendSms(templateId, mobileNumber, personalisation);
-```
+`NotificationResponse response client.sendSms(templateId, mobileNumber, personalisation);`
 
 * `mobileNumber` is the mobile phone number for the notification
     * Only UK mobiles are supported
@@ -56,17 +51,13 @@ or
 
 **Fetch notification by id**:
 
-```
-    Notification notification = client.getNotificationById(notificationId);
-```
+`Notification notification = client.getNotificationById(notificationId);`
 
 * `notificationId` is the id of the notification. The Id is part of the notification object returned when `sendEmail` or `sendSms` is called.
  
 **Fetch all notification for your service**:
 
-```
-    Notification notification = client.getNotification(status, notificationType);
-```
+`Notification notification = client.getNotification(status, notificationType);`
 
 * `status` is a string that represents the status of the notifications you want returned. Options for status:
     * null (for all status types)
