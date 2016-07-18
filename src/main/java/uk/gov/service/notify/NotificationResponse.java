@@ -1,3 +1,5 @@
+package uk.gov.service.notify;
+
 import org.json.JSONObject;
 
 public class NotificationResponse {

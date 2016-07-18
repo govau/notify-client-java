@@ -1,4 +1,5 @@
-import org.jose4j.json.internal.json_simple.JSONObject;
+package uk.gov.service.notify;
+
 
 import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
@@ -9,7 +10,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
-import java.util.Collection;
+import org.json.JSONObject;
 
 public class NotificationClient {
 

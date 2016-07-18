@@ -1,3 +1,5 @@
+package uk.gov.service.notify;
+
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
