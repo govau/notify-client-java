@@ -20,7 +20,8 @@ mvn dependency to populate
     ```import uk.gov.service.notify.NotificationClient;
     import uk.gov.service.notify.Notification;
     import uk.gov.service.notify.NotificationList;
-    import uk.gov.service.notify.NotificationResponse;```
+    import uk.gov.service.notify.NotificationResponse;
+    ```
 
 **Create a new instance of NotificationClient and objects returned by the client**:
 
