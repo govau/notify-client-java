@@ -9,6 +9,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.util.Collection;
 
 public class NotificationClient {
 
@@ -103,6 +104,50 @@ public class NotificationClient {
         return null;
     }
 
+    public NotificationList getNotifications(String status, String notification_type) throws NotificationClientException {
+        JSONObject data = new JSONObject();
+        if (status != null && !status.isEmpty()){
+            data.put("status", status);
+        }
+        if(notification_type != null && !notification_type.isEmpty()){
+            data.put("template_type", notification_type);
+        }
+        StringBuilder stringBuilder;
+        HttpsURLConnection conn = null;
+        try {
+            URL url = new URL(baseUrl + "/notifications");
+            conn = (HttpsURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            Authentication authentication = new Authentication();
+            String token = authentication.create(issuer, secret);
+            conn.setRequestProperty("Authorization", "Bearer " + token);
+            conn.connect();
+            int httpResult = conn.getResponseCode();
+            if(httpResult == 200) {
+                stringBuilder = readStream(new InputStreamReader(conn.getInputStream()));
+                conn.disconnect();
+                return new NotificationList(stringBuilder.toString());
+            }
+            else{
+                stringBuilder = readStream(new InputStreamReader(conn.getErrorStream(), "utf-8"));
+                throw new NotificationClientException(httpResult, stringBuilder.toString());
+            }
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (ProtocolException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }finally {
+            if(conn != null){
+                conn.disconnect();
+            }
+        }
+        return null;
+    }
+
     private HttpsURLConnection postConnection(String token, URL url) throws IOException {
         HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
         conn.setRequestMethod("POST");
@@ -117,8 +162,8 @@ public class NotificationClient {
 
     private JSONObject setPersonalisation(String templateId, String to, String personalisation) {
         JSONObject body = new JSONObject();
-        body.put("to", to); //"+447515349060"
-        body.put("template", templateId); //"5151207f-c46f-442a-a627-bf6dd37166cd"
+        body.put("to", to);
+        body.put("template", templateId);
         if(personalisation != null && !personalisation.isEmpty()){
             System.out.println("personalisation: " + personalisation);
             body.put("personalisation", personalisation);
