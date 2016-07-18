@@ -39,4 +39,10 @@
             <version>2.7</version>
         </dependency>
     </dependencies>
+    <distributionManagement>
+        <repository>
+            <id>notifications-java-client</id>
+            <url>https://api.bintray.com/maven/rebeccalaw/maven-repo/notifications-java-client/;publish=1</url>
+        </repository>
+    </distributionManagement>
 </project>

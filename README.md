@@ -8,7 +8,7 @@ This application is built using java 8.
 
 ## Usage
 
-Prior to usage a service must be created through the notify admin console. This will allow access to the API credentials you application, there are normal, test and team API keys available.
+Prior to usage a service must be created through the notify admin console. This will allow access to the API credentials your application, there are normal, test and team API keys available.
 Read the [API documentation](https://www.notifications.service.gov.uk/documentation) for more information.
 
 Add the maven dependency to your project.
