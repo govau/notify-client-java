@@ -12,9 +12,9 @@ import java.net.URL;
 
 public class NotificationClient {
 
-    private String secret; //"12f2459c-7402-4796-ac70-8278b7a16b4c"
-    private String issuer; //"49c0b4bf-abf8-41ec-8470-a0955cb91aaa"
-    private String baseUrl; // https://api.notifications.service.gov.uk
+    private String secret;
+    private String issuer;
+    private String baseUrl;
 
     public NotificationClient(String secret, String issuer, String baseUrl) {
         this.secret = secret;
