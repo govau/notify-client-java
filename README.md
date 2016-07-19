@@ -43,7 +43,7 @@ or
     * must not have any whitespaces or punctuation
     * valid format is +447777111222
 * `emailAddress` is the email address for the notification
-* `template_id` is the template to send
+* `templateId` is the template to send
     * must be a universally unique identifier (UUID) that identifies a valid template  - templates are created in the admin tools
 * `personalisation` is the template to send
     * must be a JSON string, with keys matching the placeholders in the template, eg {"name": "Chris"}
