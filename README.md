@@ -37,7 +37,7 @@ or
 `NotificationResponse response client.sendSms(templateId, mobileNumber, personalisation);`
 
 * `mobileNumber` is the mobile phone number for the notification
-    * only UK mobiles are supported
+    * must be a UK mobile number
     * must start with +44
     * must not have leading zero
     * must not have any whitespaces or punctuation
