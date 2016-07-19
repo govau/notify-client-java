@@ -52,7 +52,7 @@ or
 
 `Notification notification = client.getNotificationById(notificationId);`
 
-* `notificationId` is the Id of the notification. The Id is part of the notification object returned when `sendEmail` or `sendSms` is called.
+* `notificationId` is the Id of the notification - the Id is part of the notification object returned when `sendEmail` or `sendSms` is called.
  
 **Fetch all notification for your service**:
 
