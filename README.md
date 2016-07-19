@@ -12,7 +12,7 @@ This application is built using Java 8.
 Before usage, create a service through the Notify admin console. This provides access to the API credentials for your application. There are normal, test and team API keys available.
 Read the [API documentation](https://www.notifications.service.gov.uk/documentation) for more information.
 
-Add the maven dependency to your project.
+Add the Maven dependency to your project.
 mvn dependency to populate 
 
 **Import the `NotificationClient`**:
@@ -73,7 +73,7 @@ or
 
 There is a main class that can be used to test the integration. It is also useful to read this class to see how to integrate with the notification client.
 
-On a command line build the project with maven:
+On a command line build the project with Maven:
 
 `> mvn test`
 
