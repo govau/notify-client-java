@@ -39,7 +39,7 @@ or
 * `mobileNumber` is the mobile phone number for the notification
     * must be a UK mobile number
     * must start with +44
-    * must not have leading zero
+    * must not have a leading zero
     * must not have any whitespaces or punctuation
     * valid format is +447777111222
 * `emailAddress` is the email address for the notification
