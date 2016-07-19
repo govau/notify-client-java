@@ -9,7 +9,7 @@ This application is built using Java 8.
 
 ## Usage
 
-Before usage, creaate a service through the Notify admin console. This provides access to the API credentials for your application. There are normal, test and team API keys available.
+Before usage, create a service through the Notify admin console. This provides access to the API credentials for your application. There are normal, test and team API keys available.
 Read the [API documentation](https://www.notifications.service.gov.uk/documentation) for more information.
 
 Add the maven dependency to your project.
@@ -44,7 +44,7 @@ or
     * valid format is +447777111222
 * `emailAddress` is the email address for the notification
 * `template_id` is the template to send
-    * must be an uuid that identifies a valid template. Templates are created in the admin tools.
+    * must be a universally unique identifier (UUID) that identifies a valid template  - templates are created in the admin tools
 * `personalisation` is the template to send
     * must be a JSON string, with keys matching the placeholders in the template, eg {"name": "Chris"}
 
