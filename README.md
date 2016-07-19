@@ -52,21 +52,21 @@ or
 
 `Notification notification = client.getNotificationById(notificationId);`
 
-* `notificationId` is the Id of the notification - the Id is part of the notification object returned when `sendEmail` or `sendSms` is called.
+* `notificationId` is the Id of the notification - the Id is part of the notification object returned when `sendEmail` or `sendSms` is called
  
 **Fetch all notification for your service**:
 
 `Notification notification = client.getNotification(status, notificationType);`
 
 * `status` is a string that represents the status of the notifications you want returned. Options for `status`:
-    * null (for all status types)
-    * delivered 
-    * failed
-    * sending
+    * `null` (for all status types)
+    * `delivered` 
+    * `failed`
+    * `sending`
 * `notificationType` is the type of notification to return. Options for `notificaitonType`:
-    * null (for both types)
-    * email 
-    * sms
+    * `null` (for both types)
+    * `email` 
+    * `sms`
 
 
 ### Testing
