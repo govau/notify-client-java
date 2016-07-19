@@ -77,7 +77,7 @@ On a command line build the project with Maven:
 
 `> mvn test`
 
-Then run the mvn execute java command with the excute arguments:
+Then run Java via the Maven exec command with the following arguments:
 
 `>  mvn exec:java -Dexec.mainClass=TestNotificationClient -Dexec.args="api-key-id service-id https://api.notifications.service.gov.uk"`
 
