@@ -12,7 +12,14 @@ Prior to usage a service must be created through the notify admin console. This 
 Read the [API documentation](https://www.notifications.service.gov.uk/documentation) for more information.
 
 Add the maven dependency to your project.
-mvn dependency to populate 
+`
+    <dependency>
+        <groupId>uk.gov.service.notify</groupId>
+        <artifactId>notifications-java-client</artifactId>
+        <version>1.0-RELEASE</version>
+    </dependency>
+
+`
 
 **Import the NotificationClient**
     `import uk.gov.service.notify.NotificationClient;`
