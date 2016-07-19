@@ -15,7 +15,7 @@ Read the [API documentation](https://www.notifications.service.gov.uk/documentat
 Add the Maven dependency to your project.
 mvn dependency to populate 
 
-**Import the `NotificationClient`**:
+**Import the `NotificationClient`**
 
 ```
 import uk.gov.service.notify.NotificationClient;
@@ -24,11 +24,11 @@ import uk.gov.service.notify.NotificationList;
 import uk.gov.service.notify.NotificationResponse;
 ```
 
-**Create a new instance of `NotificationClient` and objects returned by the client**:
+**Create a new instance of `NotificationClient` and objects returned by the client**
 
 `NotificationClient client = new NotificationClient(secret, serviceId, "https://api.notifications.service.gov.uk");`
 
-**Send an email or text message**:
+**Send an email or text message**
 
 `NotificationResponse response = client.sendEmail(templateId, emailAddress, personalisation);`
 
@@ -48,13 +48,13 @@ or
 * `personalisation` is the template to send
     * must be a JSON string, with keys matching the placeholders in the template, eg {"name": "Chris"}
 
-**Fetch notification by id**:
+**Fetch notification by Id**
 
 `Notification notification = client.getNotificationById(notificationId);`
 
 * `notificationId` is the Id of the notification - the Id is part of the notification object returned when `sendEmail` or `sendSms` is called
  
-**Fetch all notification for your service**:
+**Fetch all notifications for your service**:
 
 `Notification notification = client.getNotification(status, notificationType);`
 
