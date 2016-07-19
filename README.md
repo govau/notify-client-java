@@ -9,13 +9,13 @@ This application is built using Java 8.
 
 ## Usage
 
-Before usage, creaate a service through the Notify admin console. This allows access to the API credentials for your application. There are normal, test and team API keys available.
+Before usage, creaate a service through the Notify admin console. This provides access to the API credentials for your application. There are normal, test and team API keys available.
 Read the [API documentation](https://www.notifications.service.gov.uk/documentation) for more information.
 
 Add the maven dependency to your project.
 mvn dependency to populate 
 
-**Import the NotificationClient**
+**Import the `NotificationClient`**:
 
 ```
 import uk.gov.service.notify.NotificationClient;
@@ -24,11 +24,11 @@ import uk.gov.service.notify.NotificationList;
 import uk.gov.service.notify.NotificationResponse;
 ```
 
-**Create a new instance of NotificationClient and objects returned by the client**:
+**Create a new instance of `NotificationClient` and objects returned by the client**:
 
 `NotificationClient client = new NotificationClient(secret, serviceId, "https://api.notifications.service.gov.uk");`
 
-**Send and email or sms**:
+**Send an email or text message**:
 
 `NotificationResponse response = client.sendEmail(templateId, emailAddress, personalisation);`
 
