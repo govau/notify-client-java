@@ -58,12 +58,12 @@ or
 
 `Notification notification = client.getNotification(status, notificationType);`
 
-* `status` is a string that represents the status of the notifications you want returned. Options for status:
+* `status` is a string that represents the status of the notifications you want returned. Options for `status`:
     * null (for all status types)
     * delivered 
     * failed
     * sending
-* `notificationType` is the type of notification to return. Options for notificaitonType:
+* `notificationType` is the type of notification to return. Options for `notificaitonType`:
     * null (for both types)
     * email 
     * sms
