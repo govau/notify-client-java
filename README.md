@@ -26,10 +26,7 @@ import uk.gov.service.notify.NotificationResponse;
 
 **Create a new instance of NotificationClient and objects returned by the client**:
 
-```
-NotificationClient client = new NotificationClient(secret, serviceId, "https://api.notifications.service.gov.uk");`
-```
-
+`NotificationClient client = new NotificationClient(secret, serviceId, "https://api.notifications.service.gov.uk");`
 
 **Send and email or sms**:
 
@@ -40,16 +37,16 @@ or
 `NotificationResponse response client.sendSms(templateId, mobileNumber, personalisation);`
 
 * `mobileNumber` is the mobile phone number for the notification
-    * Only UK mobiles are supported
-    * Must start with +44
-    * Must not have leading zero
-    * Must not have any whitespace, punctuation etc.
+    * only UK mobiles are supported
+    * must start with +44
+    * must not have leading zero
+    * must not have any whitespaces or punctuation
     * valid format is +447777111222
 * `emailAddress` is the email address for the notification
 * `template_id` is the template to send
-    * Must be an uuid that identifies a valid template. Templates are created in the admin tools.
+    * must be an uuid that identifies a valid template. Templates are created in the admin tools.
 * `personalisation` is the template to send
-    * Must be a JSON string, with keys matching the placeholders in the template, eg {"name": "Chris"}
+    * must be a JSON string, with keys matching the placeholders in the template, eg {"name": "Chris"}
 
 **Fetch notification by id**:
 
@@ -75,6 +72,7 @@ or
 ### Testing
 
 There is a main class that can be used to test the integration. It is also useful to read this class to see how to integrate with the notification client.
+
 On a command line build the project with maven:
 
 `> mvn test`
