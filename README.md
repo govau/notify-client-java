@@ -12,9 +12,41 @@ This application is built using Java 8.
 Before usage, create a service through the Notify admin console. This provides access to the API credentials for your application. There are normal, test and team API keys available.
 Read the [API documentation](https://www.notifications.service.gov.uk/documentation) for more information.
 
-Add the Maven dependency to your project.
-mvn dependency to populate 
-Add the maven dependency to your project.
+The notifications-java-client has been deployed to [bintray](https://bintray.com). You will need to add the following snippet to your maven settings.xml file.
+```
+<?xml version='1.0' encoding='UTF-8'?>
+<settings xsi:schemaLocation='http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd' xmlns='http://maven.apache.org/SETTINGS/1.0.0' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>
+<profiles>
+	<profile>
+		<repositories>
+			<repository>
+				<snapshots>
+					<enabled>false</enabled>
+				</snapshots>
+				<id>bintray-gov-uk-notify-maven</id>
+				<name>bintray</name>
+				<url>http://dl.bintray.com/gov-uk-notify/maven</url>
+			</repository>
+		</repositories>
+		<pluginRepositories>
+			<pluginRepository>
+				<snapshots>
+					<enabled>false</enabled>
+				</snapshots>
+				<id>bintray-gov-uk-notify-maven</id>
+				<name>bintray-plugins</name>
+				<url>http://dl.bintray.com/gov-uk-notify/maven</url>
+			</pluginRepository>
+		</pluginRepositories>
+		<id>bintray</id>
+	</profile>
+</profiles>
+<activeProfiles>
+	<activeProfile>bintray</activeProfile>
+</activeProfiles>
+</settings>
+```
+Then you can add the Maven dependency to your project.
 ```
     <dependency>
         <groupId>uk.gov.service.notify</groupId>
