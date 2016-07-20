@@ -3,10 +3,9 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
-    <groupId>gov.uk</groupId>
-    <artifactId>notify-java-client</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <groupId>uk.gov.service.notify</groupId>
+    <artifactId>notifications-java-client</artifactId>
+    <version>1.0-RELEASE</version>
     <properties>
        <maven.compiler.source>1.8</maven.compiler.source>
        <maven.compiler.target>1.8</maven.compiler.target>
@@ -39,4 +38,11 @@
             <version>2.7</version>
         </dependency>
     </dependencies>
+    <distributionManagement>
+        <repository>
+            <id>bintray-gov-uk-notify-maven</id>
+            <name>gov-uk-notify-maven</name>
+            <url>https://api.bintray.com/maven/gov-uk-notify/maven/notifications-java-client/;publish=1</url>
+        </repository>
+    </distributionManagement>
 </project>
