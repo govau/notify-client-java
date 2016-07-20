@@ -19,7 +19,7 @@ Add the maven dependency to your project.
     <dependency>
         <groupId>uk.gov.service.notify</groupId>
         <artifactId>notifications-java-client</artifactId>
-        <version>1.0-RELEASE</version>
+        <version>2.0.0-RELEASE</version>
     </dependency>
 
 ```
