@@ -55,6 +55,7 @@ Then you can add the Maven dependency to your project.
     </dependency>
 
 ```
+If you are using Gradle, Artifactory, or Nexus you can click 'set me up!' on https://bintray.com/gov-uk-notify/maven/notifications-java-client for instructions.
 
 **Import the `NotificationClient`**
 
