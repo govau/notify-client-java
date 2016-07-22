@@ -6,6 +6,7 @@ It provides client calls, response marshalling and authentication for the GOV.UK
 
 This application is built using Java 8.
 
+[![Build Status](https://travis-ci.org/alphagov/notifications-java-client.svg?branch=master)](https://travis-ci.org/alphagov/notifications-java-client)
 
 ## Usage
 
