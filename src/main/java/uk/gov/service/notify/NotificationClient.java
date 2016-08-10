@@ -7,9 +7,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.net.URL;
+import java.net.*;
 import java.util.HashMap;
 
 import org.json.JSONObject;
@@ -19,6 +17,8 @@ public class NotificationClient {
     private String secret;
     private String issuer;
     private String baseUrl;
+    private Proxy proxy;
+
 
     public NotificationClient(String secret, String issuer, String baseUrl) {
         this.secret = secret;
@@ -26,14 +26,19 @@ public class NotificationClient {
         this.baseUrl = baseUrl;
     }
 
+    public NotificationClient(String secret, String issuer, String baseUrl, Proxy proxy) {
+        this(secret, issuer, baseUrl);
+        this.proxy = proxy;
+    }
+
     public NotificationResponse sendEmail(String templateId, String to, HashMap<String, String> personalisation) throws NotificationClientException {
         return postRequest("email", templateId, to, personalisation);
     }
-    public NotificationResponse sendSms(String templateId, String to, HashMap personalisation) throws NotificationClientException {
+    public NotificationResponse sendSms(String templateId, String to, HashMap<String, String> personalisation) throws NotificationClientException {
         return postRequest("sms", templateId, to, personalisation);
     }
 
-    private NotificationResponse postRequest(String messageType, String templateId, String to, HashMap personalisation) throws NotificationClientException {
+    private NotificationResponse postRequest(String messageType, String templateId, String to, HashMap<String, String> personalisation) throws NotificationClientException {
         HttpsURLConnection conn = null;
         try {
             JSONObject body = createBodyForRequest(templateId, to, personalisation);
@@ -74,12 +79,13 @@ public class NotificationClient {
         StringBuilder stringBuilder;
         HttpsURLConnection conn = null;
         try {
-            URL url = new URL(baseUrl + "/notifications/"+ notificationId);
-            conn = (HttpsURLConnection) url.openConnection();
+            URL url = new URL(baseUrl + "/notifications/" + notificationId);
+            conn = getConnection(url);
             conn.setRequestMethod("GET");
             Authentication authentication = new Authentication();
             String token = authentication.create(issuer, secret);
             conn.setRequestProperty("Authorization", "Bearer " + token);
+
             conn.connect();
             int httpResult = conn.getResponseCode();
             if(httpResult == 200) {
@@ -119,7 +125,7 @@ public class NotificationClient {
         HttpsURLConnection conn = null;
         try {
             URL url = new URL(baseUrl + "/notifications");
-            conn = (HttpsURLConnection) url.openConnection();
+            conn = getConnection(url);
             conn.setRequestMethod("GET");
             Authentication authentication = new Authentication();
             String token = authentication.create(issuer, secret);
@@ -151,8 +157,21 @@ public class NotificationClient {
         return null;
     }
 
+
+    private HttpsURLConnection getConnection(URL url) throws IOException {
+        HttpsURLConnection conn;
+
+        if (null != proxy) {
+            conn = (HttpsURLConnection) url.openConnection(proxy);
+        } else {
+            conn = (HttpsURLConnection) url.openConnection();
+        }
+
+        return conn;
+    }
+
     private HttpsURLConnection postConnection(String token, URL url) throws IOException {
-        HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
+        HttpsURLConnection conn = getConnection(url);
         conn.setRequestMethod("POST");
         conn.setDoOutput(true);
         conn.setRequestProperty("Authorization", "Bearer " + token);
