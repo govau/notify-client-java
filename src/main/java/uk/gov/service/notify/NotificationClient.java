@@ -12,7 +12,7 @@ import java.util.HashMap;
 
 import org.json.JSONObject;
 
-public class NotificationClient {
+public class NotificationClient implements NotificationClientApi {
 
     private String secret;
     private String issuer;
