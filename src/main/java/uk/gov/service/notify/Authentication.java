@@ -18,7 +18,6 @@ public final class Authentication {
     public String create(String issuer, String secret) {
 
         try {
-            System.out.println("in auth issuer: " + issuer + " secret: " + secret);
             JsonWebSignature jws = new JsonWebSignature();
             jws.setAlgorithmHeaderValue(AlgorithmIdentifiers.HMAC_SHA256);
             jws.setHeader(HeaderParameterNames.TYPE, "JWT");
