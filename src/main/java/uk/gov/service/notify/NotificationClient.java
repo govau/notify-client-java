@@ -199,7 +199,6 @@ public class NotificationClient {
             sb.append(line + "\n");
         }
         br.close();
-        System.out.println("" + sb.toString());
         return sb;
     }
 
