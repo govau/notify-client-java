@@ -82,7 +82,7 @@ NotificationResponse response = client.sendEmail(templateId, emailAddress, perso
 or
 
 ```java
-NotificationResponse response client.sendSms(templateId, mobileNumber, personalisation);
+NotificationResponse response = client.sendSms(templateId, mobileNumber, personalisation);
 ```
 
 * `mobileNumber` is the mobile phone number for the notification
