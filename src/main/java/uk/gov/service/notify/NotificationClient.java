@@ -14,20 +14,19 @@ import org.json.JSONObject;
 
 public class NotificationClient implements NotificationClientApi {
 
-    private String secret;
-    private String issuer;
-    private String baseUrl;
-    private Proxy proxy;
-
+    private final String secret;
+    private final String issuer;
+    private final String baseUrl;
+    private final Proxy  proxy;
 
     public NotificationClient(String secret, String issuer, String baseUrl) {
-        this.secret = secret;
-        this.issuer = issuer;
-        this.baseUrl = baseUrl;
+        this(secret, issuer, baseUrl, null);
     }
 
     public NotificationClient(String secret, String issuer, String baseUrl, Proxy proxy) {
-        this(secret, issuer, baseUrl);
+        this.secret = secret;
+        this.issuer = issuer;
+        this.baseUrl = baseUrl;
         this.proxy = proxy;
     }
 
