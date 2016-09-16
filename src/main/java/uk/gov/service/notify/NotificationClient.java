@@ -6,13 +6,16 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
 import java.net.*;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.json.JSONObject;
 
 public class NotificationClient implements NotificationClientApi {
+
+    private static final Logger LOGGER = Logger.getLogger(NotificationClient.class.toString());
 
     private final String secret;
     private final String issuer;
@@ -60,12 +63,8 @@ public class NotificationClient implements NotificationClientApi {
                 throw new NotificationClientException(httpResult, sb.toString());
             }
 
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (ProtocolException e) {
-            e.printStackTrace();
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, e.toString(), e);
         } finally{
            if (conn != null){
                conn.disconnect();
@@ -96,15 +95,9 @@ public class NotificationClient implements NotificationClientApi {
                 stringBuilder = readStream(new InputStreamReader(conn.getErrorStream(), "utf-8"));
                 throw new NotificationClientException(httpResult, stringBuilder.toString());
             }
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        } catch (ProtocolException e) {
-            e.printStackTrace();
         } catch (IOException e) {
-            e.printStackTrace();
-        }finally {
+            LOGGER.log(Level.SEVERE, e.toString(), e);
+        } finally {
             if(conn != null){
                 conn.disconnect();
             }
@@ -140,15 +133,9 @@ public class NotificationClient implements NotificationClientApi {
                 stringBuilder = readStream(new InputStreamReader(conn.getErrorStream(), "utf-8"));
                 throw new NotificationClientException(httpResult, stringBuilder.toString());
             }
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        } catch (ProtocolException e) {
-            e.printStackTrace();
         } catch (IOException e) {
-            e.printStackTrace();
-        }finally {
+            LOGGER.log(Level.SEVERE, e.toString(), e);
+        } finally {
             if(conn != null){
                 conn.disconnect();
             }
