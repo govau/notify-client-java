@@ -1,39 +1,41 @@
 package uk.gov.service.notify;
 
-
 import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
 import java.net.*;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.json.JSONObject;
 
 public class NotificationClient implements NotificationClientApi {
 
-    private String secret;
-    private String issuer;
-    private String baseUrl;
-    private Proxy proxy;
+    private static final Logger LOGGER = Logger.getLogger(NotificationClient.class.toString());
 
+    private final String secret;
+    private final String issuer;
+    private final String baseUrl;
+    private final Proxy proxy;
 
     public NotificationClient(String secret, String issuer, String baseUrl) {
-        this.secret = secret;
-        this.issuer = issuer;
-        this.baseUrl = baseUrl;
+        this(secret, issuer, baseUrl, null);
     }
 
     public NotificationClient(String secret, String issuer, String baseUrl, Proxy proxy) {
-        this(secret, issuer, baseUrl);
+        this.secret = secret;
+        this.issuer = issuer;
+        this.baseUrl = baseUrl;
         this.proxy = proxy;
     }
 
     public NotificationResponse sendEmail(String templateId, String to, HashMap<String, String> personalisation) throws NotificationClientException {
         return postRequest("email", templateId, to, personalisation);
     }
+
     public NotificationResponse sendSms(String templateId, String to, HashMap<String, String> personalisation) throws NotificationClientException {
         return postRequest("sms", templateId, to, personalisation);
     }
@@ -61,16 +63,12 @@ public class NotificationClient implements NotificationClientApi {
                 throw new NotificationClientException(httpResult, sb.toString());
             }
 
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (ProtocolException e) {
-            e.printStackTrace();
         } catch (IOException e) {
-            e.printStackTrace();
-        } finally{
-           if (conn != null){
-               conn.disconnect();
-           }
+            LOGGER.log(Level.SEVERE, e.toString(), e);
+        } finally {
+            if (conn != null) {
+                conn.disconnect();
+            }
         }
         return null;
     }
@@ -88,25 +86,18 @@ public class NotificationClient implements NotificationClientApi {
 
             conn.connect();
             int httpResult = conn.getResponseCode();
-            if(httpResult == 200) {
+            if (httpResult == 200) {
                 stringBuilder = readStream(new InputStreamReader(conn.getInputStream()));
                 conn.disconnect();
                 return new Notification(stringBuilder.toString());
-            }
-            else{
+            } else {
                 stringBuilder = readStream(new InputStreamReader(conn.getErrorStream(), "utf-8"));
                 throw new NotificationClientException(httpResult, stringBuilder.toString());
             }
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        } catch (ProtocolException e) {
-            e.printStackTrace();
         } catch (IOException e) {
-            e.printStackTrace();
-        }finally {
-            if(conn != null){
+            LOGGER.log(Level.SEVERE, e.toString(), e);
+        } finally {
+            if (conn != null) {
                 conn.disconnect();
             }
         }
@@ -115,10 +106,10 @@ public class NotificationClient implements NotificationClientApi {
 
     public NotificationList getNotifications(String status, String notification_type) throws NotificationClientException {
         JSONObject data = new JSONObject();
-        if (status != null && !status.isEmpty()){
+        if (status != null && !status.isEmpty()) {
             data.put("status", status);
         }
-        if(notification_type != null && !notification_type.isEmpty()){
+        if (notification_type != null && !notification_type.isEmpty()) {
             data.put("template_type", notification_type);
         }
         StringBuilder stringBuilder;
@@ -132,31 +123,23 @@ public class NotificationClient implements NotificationClientApi {
             conn.setRequestProperty("Authorization", "Bearer " + token);
             conn.connect();
             int httpResult = conn.getResponseCode();
-            if(httpResult == 200) {
+            if (httpResult == 200) {
                 stringBuilder = readStream(new InputStreamReader(conn.getInputStream()));
                 conn.disconnect();
                 return new NotificationList(stringBuilder.toString());
-            }
-            else{
+            } else {
                 stringBuilder = readStream(new InputStreamReader(conn.getErrorStream(), "utf-8"));
                 throw new NotificationClientException(httpResult, stringBuilder.toString());
             }
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        } catch (ProtocolException e) {
-            e.printStackTrace();
         } catch (IOException e) {
-            e.printStackTrace();
-        }finally {
-            if(conn != null){
+            LOGGER.log(Level.SEVERE, e.toString(), e);
+        } finally {
+            if (conn != null) {
                 conn.disconnect();
             }
         }
         return null;
     }
-
 
     private HttpsURLConnection getConnection(URL url) throws IOException {
         HttpsURLConnection conn;
@@ -166,7 +149,6 @@ public class NotificationClient implements NotificationClientApi {
         } else {
             conn = (HttpsURLConnection) url.openConnection();
         }
-
         return conn;
     }
 
@@ -186,11 +168,12 @@ public class NotificationClient implements NotificationClientApi {
         JSONObject body = new JSONObject();
         body.put("to", to);
         body.put("template", templateId);
-        if(personalisation != null && !personalisation.isEmpty()){
+        if (personalisation != null && !personalisation.isEmpty()) {
             body.put("personalisation", new JSONObject(personalisation));
         }
         return body;
     }
+
     private StringBuilder readStream(InputStreamReader streamReader) throws IOException {
         StringBuilder sb = new StringBuilder();
         BufferedReader br = new BufferedReader(streamReader);
@@ -201,5 +184,4 @@ public class NotificationClient implements NotificationClientApi {
         br.close();
         return sb;
     }
-
 }
