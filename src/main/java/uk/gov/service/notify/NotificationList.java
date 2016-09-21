@@ -50,4 +50,20 @@ public class NotificationList {
             notifications.add(new Notification(notification));
         }
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        StringBuilder notifications_string = new StringBuilder("\n");
+        for (Notification notification : notifications){
+            notifications_string.append(notification.toString()).append("\n");
+        }
+        return "NotificationList{" +
+                "notifications=" + notifications_string.toString() +
+                ", nextPageLink='" + nextPageLink + '\'' +
+                ", lastPageLink='" + lastPageLink + '\'' +
+                ", pageSize=" + pageSize +
+                ", total=" + total +
+                '}';
+    }
 }
