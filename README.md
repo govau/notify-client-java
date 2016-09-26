@@ -72,7 +72,7 @@ dependencies {
 ```
 
 
-If you are using Gradle, Artifactory, or Nexus you can click 'set me up!' on https://bintray.com/gov-uk-notify/maven/notifications-java-client for instructions.
+If you are using Artifactory, or Nexus you can click 'set me up!' on https://bintray.com/gov-uk-notify/maven/notifications-java-client for instructions.
 
 **Import the `NotificationClient`**
 
