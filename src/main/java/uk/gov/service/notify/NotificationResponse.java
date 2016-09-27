@@ -26,4 +26,13 @@ public class NotificationResponse {
     public int getTemplateVersion() {
         return templateVersion;
     }
+
+    @Override
+    public String toString() {
+        return "NotificationResponse{" +
+                "body='" + body + '\'' +
+                ", notificationId='" + notificationId + '\'' +
+                ", templateVersion=" + templateVersion +
+                '}';
+    }
 }

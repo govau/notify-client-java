@@ -142,4 +142,29 @@ public class Notification {
     public int getJobRowNumber() {
         return jobRowNumber;
     }
+
+    @Override
+    public String toString() {
+        return "Notification{" +
+                "id='" + id + '\'' +
+                ", body='" + body + '\'' +
+                ", contentCharCount=" + contentCharCount +
+                ", notificationType='" + notificationType + '\'' +
+                ", reference='" + reference + '\'' +
+                ", subject='" + subject + '\'' +
+                ", templateId='" + templateId + '\'' +
+                ", templateName='" + templateName + '\'' +
+                ", templateVersion=" + templateVersion +
+                ", to='" + to + '\'' +
+                ", sentBy='" + sentBy + '\'' +
+                ", sentAt=" + sentAt +
+                ", status='" + status + '\'' +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                ", apiKey='" + apiKey + '\'' +
+                ", jobId='" + jobId + '\'' +
+                ", jobFileName='" + jobFileName + '\'' +
+                ", jobRowNumber=" + jobRowNumber +
+                '}';
+    }
 }
