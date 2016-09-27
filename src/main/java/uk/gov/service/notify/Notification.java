@@ -49,8 +49,8 @@ public class Notification {
         templateName = template.getString("name");
         templateVersion = data.getInt("template_version");
         to = data.getString("to");
-        sentBy = data.getString("sent_by");
-        sentAt = new DateTime(data.getString("sent_at"));
+        sentBy = data.isNull("sent_by") ? null : data.getString("sent_by");
+        sentAt =  data.isNull("sent_at") ? null : new DateTime(data.getString("sent_at"));
         status = data.getString("status");
         createdAt = new DateTime(data.getString("created_at"));
         updatedAt = data.isNull("updated_at") ? null :  new DateTime(data.getString("updated_at"));
