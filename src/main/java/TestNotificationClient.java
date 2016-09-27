@@ -82,6 +82,7 @@ public class TestNotificationClient {
                 break;
         }
         NotificationList notificationList = client.getNotifications(status, notificationType);
+        System.out.println(notificationList);
     }
 
     private static void createFetchNotificationByIdRequest(NotificationClient client) throws IOException, NotificationClientException {
@@ -89,6 +90,7 @@ public class TestNotificationClient {
         System.out.println("Enter the notification id to fetch: ");
         String notificationId = reader.readLine();
         Notification notification = client.getNotificationById(notificationId);
+        System.out.println(notification);
     }
 
     private static void createPostRequest(NotificationClient client) throws IOException, NotificationClientException {
@@ -130,9 +132,11 @@ public class TestNotificationClient {
         }
         if (messageType.equals("sms")){
             NotificationResponse response = client.sendSms(templateId, to, properties);
+            System.out.println(response);
         }
         else{
             NotificationResponse response = client.sendEmail(templateId, to, properties);
+            System.out.println(response);
         }
     }
 }

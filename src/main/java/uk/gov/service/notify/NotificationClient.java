@@ -1,11 +1,13 @@
 package uk.gov.service.notify;
 
 import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.*;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -23,6 +25,11 @@ public class NotificationClient implements NotificationClientApi {
 
     public NotificationClient(String secret, String issuer, String baseUrl) {
         this(secret, issuer, baseUrl, null);
+        try {
+            setDefaultSSLContext();
+        } catch (NoSuchAlgorithmException e) {
+            LOGGER.log(Level.SEVERE, e.toString(), e);
+        }
     }
 
     public NotificationClient(String secret, String issuer, String baseUrl, Proxy proxy) {
@@ -183,5 +190,19 @@ public class NotificationClient implements NotificationClientApi {
         }
         br.close();
         return sb;
+    }
+
+    /**
+     * Set default SSL context for HTTPS connections.
+     *
+     * This is necessary when client has to use keystore
+     * (eg provide certification for client authentication).
+     *
+     * Use case: enterprise proxy requiring HTTPS client authentication
+     *
+     * @throws NoSuchAlgorithmException
+     */
+    private static void setDefaultSSLContext() throws NoSuchAlgorithmException {
+        HttpsURLConnection.setDefaultSSLSocketFactory(SSLContext.getDefault().getSocketFactory());
     }
 }
