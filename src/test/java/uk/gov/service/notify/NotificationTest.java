@@ -9,7 +9,7 @@ import static org.junit.Assert.assertNull;
 public class NotificationTest {
 
     @Test
-    public void testNotification_canCreateObjectFromJson(){
+    public void testNotification_canCreateObjectFromJson() {
         String content = "{\n" +
                 "  \"data\": {\n" +
                 "    \"notification\": {\n" +
@@ -63,7 +63,7 @@ public class NotificationTest {
     }
 
     @Test
-    public void testNotification_canCreateObjectWithJob(){
+    public void testNotification_canCreateObjectWithJob() {
 
         String data = "{\n" +
                 "  \"data\": {\n" +
@@ -101,6 +101,60 @@ public class NotificationTest {
         assertEquals(8, notification.getJobRowNumber());
         assertEquals("somejobid", notification.getJobId());
         assertEquals("test_email.csv", notification.getJobFileName());
+
+    }
+
+    @Test
+    public void testNotification_canCreateObjectWithNoSender() {
+        String content = "{\n" +
+                "  \"data\": {\n" +
+                "    \"notification\": {\n" +
+                "      \"api_key\": \"some api key\",\n" +
+                "      \"body\": \"Hello hello\",\n" +
+                "      \"content_char_count\": 11,\n" +
+                "      \"created_at\": \"2016-07-15T15:16:21.675607+00:00\",\n" +
+                "      \"id\": \"some id\",\n" +
+                "      \"job\": null,\n" +
+                "      \"job_row_number\": null,\n" +
+                "      \"notification_type\": \"email\",\n" +
+                "      \"reference\": \"some reference\",\n" +
+                "      \"sent_at\": null,\n" +
+                "      \"sent_by\": null,\n" +
+                "      \"service\": \"service id\",\n" +
+                "      \"status\": \"delivered\",\n" +
+                "      \"subject\": \"Version 2\",\n" +
+                "      \"template\": {\n" +
+                "        \"id\": \"some template id\",\n" +
+                "        \"name\": \"Testing template\",\n" +
+                "        \"template_type\": \"email\"\n" +
+                "      },\n" +
+                "      \"template_version\": 2,\n" +
+                "      \"to\": \"testing@digital.cabinet-office.gov.uk\",\n" +
+                "      \"updated_at\": \"2016-07-15T15:16:23.729177+00:00\"\n" +
+                "    }\n" +
+                "  }\n" +
+                "}\n";
+
+        Notification notification = new Notification(content);
+        assertEquals("some id", notification.getId());
+        assertEquals("Hello hello", notification.getBody());
+        assertEquals(11, notification.getContentCharCount());
+        assertEquals("Version 2", notification.getSubject());
+        assertEquals("some reference", notification.getReference());
+        assertEquals("some template id", notification.getTemplateId());
+        assertEquals("some api key", notification.getApiKey());
+        assertEquals(new DateTime("2016-07-15T15:16:21.675607+00:00"), notification.getCreatedAt());
+        assertNull(notification.getSentAt());
+        assertEquals(new DateTime("2016-07-15T15:16:23.729177+00:00"), notification.getUpdatedAt());
+        assertEquals("testing@digital.cabinet-office.gov.uk", notification.getTo());
+        assertEquals("Testing template", notification.getTemplateName());
+        assertEquals(2, notification.getTemplateVersion());
+        assertNull(notification.getJobId());
+        assertNull(notification.getJobFileName());
+        assertEquals(0, notification.getJobRowNumber());
+        assertEquals("delivered", notification.getStatus());
+        assertNull(notification.getSentBy());
+        assertEquals("email", notification.getNotificationType());
 
     }
 }

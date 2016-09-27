@@ -41,19 +41,16 @@ public class NotificationList {
         pageSize = data.getInt("page_size");
         total = data.getInt("total");
         notifications =  new ArrayList<>();
+
         JSONArray notificationsData = data.getJSONArray("notifications");
-
-        Iterator<Object> iterator = notificationsData.iterator();
-        while(iterator.hasNext()) {
-             JSONObject notification = (JSONObject)iterator.next();
-
+        for(int i = 0; i < notificationsData.length(); i++){
+            JSONObject notification = notificationsData.getJSONObject(i);
             notifications.add(new Notification(notification));
         }
     }
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
         StringBuilder notifications_string = new StringBuilder("\n");
         for (Notification notification : notifications){
             notifications_string.append(notification.toString()).append("\n");
