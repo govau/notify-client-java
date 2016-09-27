@@ -56,7 +56,23 @@ Then you can add the Maven dependency to your project.
     </dependency>
 
 ```
-If you are using Gradle, Artifactory, or Nexus you can click 'set me up!' on https://bintray.com/gov-uk-notify/maven/notifications-java-client for instructions.
+
+### Gradle settings
+```
+repositories {
+    mavenCentral()
+    maven {
+        url  "http://dl.bintray.com/gov-uk-notify/maven"
+    }
+}
+
+dependencies {
+    compile('uk.gov.service.notify:notifications-java-client:2.1.3-RELEASE')
+}
+```
+
+
+If you are using Artifactory, or Nexus you can click 'set me up!' on https://bintray.com/gov-uk-notify/maven/notifications-java-client for instructions.
 
 **Import the `NotificationClient`**
 
