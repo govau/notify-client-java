@@ -11,7 +11,7 @@ This application is built using Java 8.
 Before usage, create a service through the Notify admin console. This provides access to the API credentials for your application. There are normal, test and team API keys available.
 Read the [API documentation](https://www.notifications.service.gov.uk/documentation) for more information.
 
-The notifications-java-client has been deployed to [bintray](https://bintray.com). You will need to add the following snippet to your maven settings.xml file.
+The notifications-java-client has been deployed to [Bintray](https://bintray.com/gov-uk-notify/maven/notifications-java-client). You will need to add the following snippet to your maven settings.xml file.
 ```xml
 <?xml version='1.0' encoding='UTF-8'?>
 <settings xsi:schemaLocation='http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd' xmlns='http://maven.apache.org/SETTINGS/1.0.0' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>
