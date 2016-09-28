@@ -86,7 +86,7 @@ import uk.gov.service.notify.NotificationResponse;
 **Create a new instance of `NotificationClient` and objects returned by the client**
 
 ```java
-NotificationClient client = new NotificationClient(secret, serviceId, "https://api.notifications.service.gov.uk");
+NotificationClient client = new NotificationClient(api_key, serviceId, "https://api.notifications.service.gov.uk");
 ```
 
 **Send an email or text message**
