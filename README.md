@@ -6,8 +6,6 @@ It provides client calls, response marshalling and authentication for the GOV.UK
 
 This application is built using Java 8.
 
-[![Build Status](https://travis-ci.org/alphagov/notifications-java-client.svg?branch=master)](https://travis-ci.org/alphagov/notifications-java-client)
-
 ## Usage
 
 Before usage, create a service through the Notify admin console. This provides access to the API credentials for your application. There are normal, test and team API keys available.
