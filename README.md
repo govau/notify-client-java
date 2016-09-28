@@ -2,9 +2,11 @@
 
 Client for the GOV.UK Notify API, built using Java 8.
 
-## Usage
+## Installation
 
-The notifications-java-client has been deployed to [Bintray](https://bintray.com/gov-uk-notify/maven/notifications-java-client). You will need to add the following snippet to your maven settings.xml file.
+### Maven
+
+The notifications-java-client has been deployed to [Bintray](https://bintray.com/gov-uk-notify/maven/notifications-java-client). Add the following snippet to your Maven `settings.xml` file.
 ```xml
 <?xml version='1.0' encoding='UTF-8'?>
 <settings xsi:schemaLocation='http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd' xmlns='http://maven.apache.org/SETTINGS/1.0.0' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>
@@ -48,7 +50,7 @@ Then you can add the Maven dependency to your project.
 
 ```
 
-### Gradle settings
+### Gradle
 ```
 repositories {
     mavenCentral()
@@ -62,8 +64,11 @@ dependencies {
 }
 ```
 
+### Artifactory or Nexus
 
-If you are using Artifactory, or Nexus you can click 'set me up!' on https://bintray.com/gov-uk-notify/maven/notifications-java-client for instructions.
+Click 'set me up!' on https://bintray.com/gov-uk-notify/maven/notifications-java-client for instructions.
+
+## Getting started
 
 **Import the `NotificationClient`**
 
@@ -125,7 +130,7 @@ NotificationResponse response = client.sendSms(templateId, mobileNumber, persona
     * `sms`
 
 
-### Testing
+## Testing
 
 There is a main class that can be used to test the integration. It is also useful to read this class to see how to integrate with the notification client.
 
