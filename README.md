@@ -85,7 +85,7 @@ import uk.gov.service.notify.NotificationResponse;
 NotificationClient client = new NotificationClient(api_key, serviceId, "https://api.notifications.service.gov.uk");
 ```
 
-**Send an email or text message**
+## Send an email or text message
 
 ```java
 NotificationResponse response = client.sendEmail(templateId, emailAddress, personalisation);
@@ -109,13 +109,13 @@ NotificationResponse response = client.sendSms(templateId, mobileNumber, persona
 * `personalisation` is the placeholders to send 
     * must be a HashMap<String, String> which contains the key value pairs for the placeholders. 
 
-**Fetch notification by Id**
+## Fetch notification by Id
 
 `Notification notification = client.getNotificationById(notificationId);`
 
 * `notificationId` is the Id of the notification - the Id is part of the notification object returned when `sendEmail` or `sendSms` is called
  
-**Fetch all notifications for your service**:
+## Fetch all notifications for your service
 
 `Notification notification = client.getNotification(status, notificationType);`
 
