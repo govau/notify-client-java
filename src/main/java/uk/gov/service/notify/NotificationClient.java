@@ -18,13 +18,13 @@ public class NotificationClient implements NotificationClientApi {
 
     private static final Logger LOGGER = Logger.getLogger(NotificationClient.class.toString());
 
-    private final String secret;
-    private final String issuer;
+    private final String apiKey;
+    private final String serviceId;
     private final String baseUrl;
     private final Proxy proxy;
 
-    public NotificationClient(String secret, String issuer, String baseUrl) {
-        this(secret, issuer, baseUrl, null);
+    public NotificationClient(String apiKey, String serviceId, String baseUrl) {
+        this(apiKey, serviceId, baseUrl, null);
         try {
             setDefaultSSLContext();
         } catch (NoSuchAlgorithmException e) {
@@ -32,17 +32,35 @@ public class NotificationClient implements NotificationClientApi {
         }
     }
 
-    public NotificationClient(String secret, String issuer, String baseUrl, Proxy proxy) {
-        this.secret = secret;
-        this.issuer = issuer;
+    public NotificationClient(String apiKey, String serviceId, String baseUrl, Proxy proxy) {
+        this.apiKey = apiKey;
+        this.serviceId = serviceId;
         this.baseUrl = baseUrl;
         this.proxy = proxy;
     }
 
+    /**
+     * The sendEmail method will create an HTTPS POST request. A JWT token will be created and added as an Authorization header to the request.
+     *
+     * @param templateId Find templateId by clicking API info for the template you want to send
+     * @param to The email address
+     * @param personalisation Optional HashMap representing the placeholders for the template if any. For example, key=name value=Bob
+     * @return <code>NotificationResponse</code>
+     * @throws NotificationClientException
+     */
     public NotificationResponse sendEmail(String templateId, String to, HashMap<String, String> personalisation) throws NotificationClientException {
         return postRequest("email", templateId, to, personalisation);
     }
 
+    /**
+     * The sendSms method will create an HTTPS POST request. A JWT token will be created and added as an Authorization header to the request.
+     *
+     * @param templateId Find templateId by clicking API info for the template you want to send
+     * @param to The mobile phone number
+     * @param personalisation Optional HashMap representing the placeholders for the template if any. For example, key=name value=Bob
+     * @return <code>NotificationResponse</code>
+     * @throws NotificationClientException
+     */
     public NotificationResponse sendSms(String templateId, String to, HashMap<String, String> personalisation) throws NotificationClientException {
         return postRequest("sms", templateId, to, personalisation);
     }
@@ -53,7 +71,7 @@ public class NotificationClient implements NotificationClientApi {
             JSONObject body = createBodyForRequest(templateId, to, personalisation);
 
             Authentication tg = new Authentication();
-            String token = tg.create(issuer, secret);
+            String token = tg.create(serviceId, apiKey);
             URL url = new URL(baseUrl + "/notifications/" + messageType);
             conn = postConnection(token, url);
 
@@ -80,6 +98,14 @@ public class NotificationClient implements NotificationClientApi {
         return null;
     }
 
+    /**
+     * The getNotificationById method will return a <code>Notification</code> for a given notification id.
+     * The id is can be retrieved from the <code>NotificationResponse</code> of a <code>sendEmail</code> or <code>sendSms</code> request.
+     *
+     * @param notificationId The id of the notification.
+     * @return <code>Notification</code>
+     * @throws NotificationClientException
+     */
     public Notification getNotificationById(String notificationId) throws NotificationClientException {
         StringBuilder stringBuilder;
         HttpsURLConnection conn = null;
@@ -88,7 +114,7 @@ public class NotificationClient implements NotificationClientApi {
             conn = getConnection(url);
             conn.setRequestMethod("GET");
             Authentication authentication = new Authentication();
-            String token = authentication.create(issuer, secret);
+            String token = authentication.create(serviceId, apiKey);
             conn.setRequestProperty("Authorization", "Bearer " + token);
 
             conn.connect();
@@ -111,6 +137,16 @@ public class NotificationClient implements NotificationClientApi {
         return null;
     }
 
+    /**
+     * The getNotifications method will create a GET HTTPS request to retrieve all the notifications.
+     *
+     * @param status If status is not null notifications will only return notifications for the given status.
+     *               Possible statuses are created|sending|delivered|permanent-failure|temporary-failure|technical-failure
+     * @param notification_type If notification_type is not null only notification of the given status will be returned.
+     *                          Possible notificationTypes are sms|email
+     * @return <code>NotificationList</code>
+     * @throws NotificationClientException
+     */
     public NotificationList getNotifications(String status, String notification_type) throws NotificationClientException {
         JSONObject data = new JSONObject();
         if (status != null && !status.isEmpty()) {
@@ -126,7 +162,7 @@ public class NotificationClient implements NotificationClientApi {
             conn = getConnection(url);
             conn.setRequestMethod("GET");
             Authentication authentication = new Authentication();
-            String token = authentication.create(issuer, secret);
+            String token = authentication.create(serviceId, apiKey);
             conn.setRequestProperty("Authorization", "Bearer " + token);
             conn.connect();
             int httpResult = conn.getResponseCode();

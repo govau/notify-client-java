@@ -12,8 +12,8 @@ import java.util.HashMap;
 public class TestNotificationClient {
 
     /**
-     *  Args: secret, issuer, baseUrl
-      * @param args
+     * Args: api key, service id, baseUrl
+     * @param args
      * @throws Exception
      */
     public static void main(String[] args) throws Exception {

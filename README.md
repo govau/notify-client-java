@@ -50,7 +50,7 @@ Then you can add the Maven dependency to your project.
     <dependency>
         <groupId>uk.gov.service.notify</groupId>
         <artifactId>notifications-java-client</artifactId>
-        <version>2.1.4-RELEASE</version>
+        <version>2.1.5-RELEASE</version>
     </dependency>
 
 ```
@@ -65,7 +65,7 @@ repositories {
 }
 
 dependencies {
-    compile('uk.gov.service.notify:notifications-java-client:2.1.4-RELEASE')
+    compile('uk.gov.service.notify:notifications-java-client:2.1.5-RELEASE')
 }
 ```
 
@@ -84,7 +84,7 @@ import uk.gov.service.notify.NotificationResponse;
 **Create a new instance of `NotificationClient` and objects returned by the client**
 
 ```java
-NotificationClient client = new NotificationClient(secret, serviceId, "https://api.notifications.service.gov.uk");
+NotificationClient client = new NotificationClient(api_key, serviceId, "https://api.notifications.service.gov.uk");
 ```
 
 **Send an email or text message**
