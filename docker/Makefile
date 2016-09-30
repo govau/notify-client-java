@@ -7,4 +7,4 @@ help:
 
 .PHONY: build
 build:
-	docker build -t govuk/notify-java-client-builder .
+	docker build --pull -t govuk/notify-java-client-builder .
