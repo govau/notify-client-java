@@ -42,8 +42,13 @@ public class ClientIntegrationTestIT {
         assertNotNull(notificationList.getNextPageLink());
         assertNotNull(notificationList.getNotifications());
         assertFalse(notificationList.getNotifications().isEmpty());
-        Notification firstNotification = notificationList.getNotifications().get(0);
-        assertNotification(firstNotification);
+        // get first notification that is in sending or delivered as because it is possible that the first notification is in created status, and the null checks will fail.
+        for(Notification notification : notificationList.getNotifications()){
+            if(Arrays.asList("sending", "delivered").contains(notification.getStatus())){
+                assertNotification(notification);
+                break;
+            }
+        }
     }
 
     private NotificationClient getClient(){
