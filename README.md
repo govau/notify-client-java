@@ -1,17 +1,12 @@
-# GOV.UK Notify - notifications-java-client
+# GOV.UK Notify Java client
 
-This is the Java client for the GOV.UK Notify API.
+Client for the GOV.UK Notify API, built using Java 8.
 
-It provides client calls, response marshalling and authentication for the GOV.UK Notify API.
+## Installation
 
-This application is built using Java 8.
+### Maven
 
-## Usage
-
-Before usage, create a service through the Notify admin console. This provides access to the API credentials for your application. There are normal, test and team API keys available.
-Read the [API documentation](https://www.notifications.service.gov.uk/documentation) for more information.
-
-The notifications-java-client has been deployed to [bintray](https://bintray.com). You will need to add the following snippet to your maven settings.xml file.
+The notifications-java-client has been deployed to [Bintray](https://bintray.com/gov-uk-notify/maven/notifications-java-client). Add the following snippet to your Maven `settings.xml` file.
 ```xml
 <?xml version='1.0' encoding='UTF-8'?>
 <settings xsi:schemaLocation='http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd' xmlns='http://maven.apache.org/SETTINGS/1.0.0' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>
@@ -55,7 +50,7 @@ Then you can add the Maven dependency to your project.
 
 ```
 
-### Gradle settings
+### Gradle
 ```
 repositories {
     mavenCentral()
@@ -69,8 +64,11 @@ dependencies {
 }
 ```
 
+### Artifactory or Nexus
 
-If you are using Artifactory, or Nexus you can click 'set me up!' on https://bintray.com/gov-uk-notify/maven/notifications-java-client for instructions.
+Click 'set me up!' on https://bintray.com/gov-uk-notify/maven/notifications-java-client for instructions.
+
+## Getting started
 
 **Import the `NotificationClient`**
 
@@ -87,7 +85,7 @@ import uk.gov.service.notify.NotificationResponse;
 NotificationClient client = new NotificationClient(api_key, serviceId, "https://api.notifications.service.gov.uk");
 ```
 
-**Send an email or text message**
+## Send an email or text message
 
 ```java
 NotificationResponse response = client.sendEmail(templateId, emailAddress, personalisation);
@@ -111,13 +109,13 @@ NotificationResponse response = client.sendSms(templateId, mobileNumber, persona
 * `personalisation` is the placeholders to send 
     * must be a HashMap<String, String> which contains the key value pairs for the placeholders. 
 
-**Fetch notification by Id**
+## Fetch notification by Id
 
 `Notification notification = client.getNotificationById(notificationId);`
 
 * `notificationId` is the Id of the notification - the Id is part of the notification object returned when `sendEmail` or `sendSms` is called
  
-**Fetch all notifications for your service**:
+## Fetch all notifications for your service
 
 `Notification notification = client.getNotification(status, notificationType);`
 
@@ -132,7 +130,7 @@ NotificationResponse response = client.sendSms(templateId, mobileNumber, persona
     * `sms`
 
 
-### Testing
+## Testing
 
 There is a main class that can be used to test the integration. It is also useful to read this class to see how to integrate with the notification client.
 

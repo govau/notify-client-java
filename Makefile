@@ -13,18 +13,18 @@ help:
 
 .PHONY: dependencies
 dependencies: ## Install build dependencies
-	mvn clean initialize
+	mvn --batch-mode clean initialize
 
 .PHONY: build
 build: dependencies ## Build project
 
 .PHONY: test
 test: ## Run tests
-	mvn clean test
+	mvn --batch-mode clean test
 
 .PHONY: integration-test
 integration-test: ## Run integration tests
-	mvn clean verify
+	mvn --batch-mode clean verify
 
 .PHONY: generate-env-file
 generate-env-file: ## Generate the environment file for running the tests inside a Docker container
@@ -39,6 +39,7 @@ build-with-docker: prepare-docker-runner-image ## Build inside a Docker containe
 	docker run -i --rm \
 		--name "${DOCKER_CONTAINER_PREFIX}-build" \
 		-v `pwd`:/var/project \
+		-v `pwd`/.m2:/root/.m2 \
 		${DOCKER_BUILDER_IMAGE_NAME} \
 		make build
 
@@ -47,6 +48,7 @@ test-with-docker: prepare-docker-runner-image generate-env-file ## Run tests ins
 	docker run -i --rm \
 		--name "${DOCKER_CONTAINER_PREFIX}-test" \
 		-v `pwd`:/var/project \
+		-v `pwd`/.m2:/root/.m2 \
 		--env-file docker.env \
 		${DOCKER_BUILDER_IMAGE_NAME} \
 		make test
@@ -56,6 +58,7 @@ integration-test-with-docker: prepare-docker-runner-image generate-env-file ## R
 	docker run -i --rm \
 		--name "${DOCKER_CONTAINER_PREFIX}-integration-test" \
 		-v `pwd`:/var/project \
+		-v `pwd`/.m2:/root/.m2 \
 		--env-file docker.env \
 		${DOCKER_BUILDER_IMAGE_NAME} \
 		make integration-test
@@ -65,4 +68,4 @@ clean-docker-containers: ## Clean up any remaining docker containers
 	docker rm -f $(shell docker ps -q -f "name=${DOCKER_CONTAINER_PREFIX}") 2> /dev/null || true
 
 clean:
-	rm -rf vendor
+	rm -rf .m2

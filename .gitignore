@@ -3,6 +3,7 @@
 *.ipr
 *.iml
 /target
+.m2
 
 environment.sh
 docker.env
