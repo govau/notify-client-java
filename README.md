@@ -68,22 +68,17 @@ Click 'set me up!' on https://bintray.com/gov-uk-notify/maven/notifications-java
 
 ## Getting started
 
-Import the `NotificationClient`.
 
 ```java
 import uk.gov.service.notify.NotificationClient;
 import uk.gov.service.notify.Notification;
 import uk.gov.service.notify.NotificationList;
 import uk.gov.service.notify.NotificationResponse;
-```
 
-Create a new instance of `NotificationClient` and objects returned by the client.
-
-```java
 NotificationClient client = new NotificationClient(api_key, serviceId, "https://api.notifications.service.gov.uk");
 ```
 
-Generate an API key by logging in to
+Generate an API key by signing in to
 [GOV.UK Notify](https://www.notifications.service.gov.uk) and going to
 the **API integration** page.
 
@@ -106,6 +101,14 @@ NotificationResponse response = client.sendEmail(templateId, emailAddress, perso
 Find `templateId` by clicking **API info** for the template you want to send.
 
 If a template has placeholders, you need to provide their values in `personalisation`.
+
+```java
+HashMap<String, String> personalisation = new HashMap<>();
+personalisation.put("name", "Jo");
+personalisation.put("reference_number", "13566");
+NotificationResponse response = client.sendEmail(emailTemplateId,
+        emailAddress, personalisation);
+```
 
 ## Get the status of one message
 
