@@ -4,7 +4,7 @@
 
 ### Maven
 
-The notifications-java-client is deployed to [Bintray](https://bintray.com/gov-uk-notify/maven/notifications-java-client). Add the following snippet to your Maven `settings.xml` file.
+The notifications-java-client is deployed to [Bintray](https://bintray.com/gov-uk-notify/maven/notifications-java-client). Add this snippet to your Maven `settings.xml` file.
 ```xml
 <?xml version='1.0' encoding='UTF-8'?>
 <settings xsi:schemaLocation='http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd' xmlns='http://maven.apache.org/SETTINGS/1.0.0' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>
@@ -68,7 +68,7 @@ Click 'set me up!' on https://bintray.com/gov-uk-notify/maven/notifications-java
 
 ## Getting started
 
-Import the `NotificationClient`
+Import the `NotificationClient`.
 
 ```java
 import uk.gov.service.notify.NotificationClient;
@@ -77,7 +77,7 @@ import uk.gov.service.notify.NotificationList;
 import uk.gov.service.notify.NotificationResponse;
 ```
 
-Create a new instance of `NotificationClient` and objects returned by the client
+Create a new instance of `NotificationClient` and objects returned by the client.
 
 ```java
 NotificationClient client = new NotificationClient(api_key, serviceId, "https://api.notifications.service.gov.uk");
@@ -103,13 +103,15 @@ Email:
 NotificationResponse response = client.sendEmail(templateId, emailAddress, personalisation);
 ```
 
+Find `templateId` by clicking **API info** for the template you want to send.
+
+If a template has placeholders, you need to provide their values in `personalisation`.
+
 ## Get the status of one message
 
 ```java
 Notification notification = client.getNotificationById(notificationId);
 ```
-
-* `notificationId` is the Id of the notification - the Id is part of the notification object returned when `sendEmail` or `sendSms` is called
  
 ## Get the status of all messages
 
