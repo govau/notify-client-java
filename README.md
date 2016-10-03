@@ -100,7 +100,7 @@ NotificationResponse response = client.sendEmail(templateId, emailAddress, perso
 
 Find `templateId` by clicking **API info** for the template you want to send.
 
-If a template has placeholders, you need to provide their values in `personalisation`.
+If a template has placeholders, you need to provide their values in `personalisation`, for example:
 
 ```java
 HashMap<String, String> personalisation = new HashMap<>();
@@ -122,11 +122,6 @@ Notification notification = client.getNotificationById(notificationId);
 Notification notification = client.getNotification(status, notificationType);
 ```
 
-Optional `notificationType` can be one of:
-
-* `email`
-* `sms`
-
 Optional `status` can be one of:
 
 * `sending`
@@ -134,5 +129,11 @@ Optional `status` can be one of:
 * `permanent-failure`
 * `temporary-failure`
 * `technical-failure`
+
+Optional `notificationType` can be one of:
+
+* `email`
+* `sms`
+
 
 
