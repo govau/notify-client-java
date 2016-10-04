@@ -124,6 +124,7 @@ Notification notification = client.getNotification(status, notificationType);
 
 Optional `status` can be one of:
 
+* `null` (returns all messages)
 * `sending`
 * `delivered`
 * `permanent-failure`
@@ -132,6 +133,7 @@ Optional `status` can be one of:
 
 Optional `notificationType` can be one of:
 
+* `null` (returns all messages)
 * `email`
 * `sms`
 
