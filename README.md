@@ -89,13 +89,13 @@ You'll find your service ID on the **API integration** page.
 Text message:
 
 ```java
-NotificationResponse response = client.sendSms(templateId, mobileNumber, personalisation);
+NotificationResponse response = client.sendSms(templateId, mobileNumber, null);
 ```
 
 Email:
 
 ```java
-NotificationResponse response = client.sendEmail(templateId, emailAddress, personalisation);
+NotificationResponse response = client.sendEmail(templateId, emailAddress, null);
 ```
 
 Find `templateId` by clicking **API info** for the template you want to send.
