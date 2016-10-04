@@ -9,10 +9,13 @@ There's a main class that can be used to test the integration. It's also useful 
 
 On a command line build the project with Maven:
 
-`> mvn test`
+```shell
+> mvn test
+```
 
 Then run Java via the Maven exec command with the following arguments:
 
-`> mvn exec:java -Dexec.mainClass=TestNotificationClient -Dexec.args="api-key-id service-id https://api.notifications.service.gov.uk"`
+```shell> mvn exec:java -Dexec.mainClass=TestNotificationClient -Dexec.args="api-key-id service-id https://api.notifications.service.gov.uk"
+```
 
 You'll be prompted to select an option to submit the API call.
