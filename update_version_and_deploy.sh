@@ -13,4 +13,4 @@ mvn versions:set -DnewVersion=${version}
 
 source environment.sh
 
-#mvn deploy
+mvn deploy
