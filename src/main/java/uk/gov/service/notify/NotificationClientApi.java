@@ -10,7 +10,7 @@ public interface NotificationClientApi {
      *
      * @param templateId Find templateId by clicking API info for the template you want to send
      * @param to The email address
-     * @param personalisation Optional HashMap representing the placeholders for the template if any. For example, key=name value=Bob
+     * @param personalisation HashMap representing the placeholders for the template if any. For example, key=name value=Bob
      * @return <code>NotificationResponse</code>
      * @throws NotificationClientException
      */
@@ -31,7 +31,7 @@ public interface NotificationClientApi {
      *
      * @param templateId Find templateId by clicking API info for the template you want to send
      * @param to The mobile phone number
-     * @param personalisation Optional HashMap representing the placeholders for the template if any. For example, key=name value=Bob
+     * @param personalisation HashMap representing the placeholders for the template if any. For example, key=name value=Bob
      * @return <code>NotificationResponse</code>
      * @throws NotificationClientException
      */
