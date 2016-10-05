@@ -51,6 +51,30 @@ public class ClientIntegrationTestIT {
         }
     }
 
+    @Test
+    public void testEmailNotificationWithoutPersonalisationReturnsErrorMessageIT() {
+        NotificationClient client = getClient();
+        try {
+            client.sendEmail(System.getenv("EMAIL_TEMPLATE_ID"), System.getenv("FUNCTIONAL_TEST_EMAIL"));
+            fail("Expected NotificationClientException: Missing personalisation: name");
+        } catch (NotificationClientException e) {
+            assert(e.getMessage().contains("Missing personalisation: name"));
+            assert(e.getMessage().contains("Status code: 400"));
+        }
+    }
+
+    @Test
+    public void testSmsNotificationWithoutPersonalisationReturnsErrorMessageIT() {
+        NotificationClient client = getClient();
+        try {
+            client.sendSms(System.getenv("SMS_TEMPLATE_ID"), System.getenv("FUNCTIONAL_TEST_NUMBER"));
+            fail("Expected NotificationClientException: Missing personalisation: name");
+        } catch (NotificationClientException e) {
+            assert(e.getMessage().contains("Missing personalisation: name"));
+            assert(e.getMessage().contains("Status code: 400"));
+        }
+    }
+
     private NotificationClient getClient(){
         String serviceId = System.getenv("SERVICE_ID");
         String apiKey = System.getenv("API_KEY");
