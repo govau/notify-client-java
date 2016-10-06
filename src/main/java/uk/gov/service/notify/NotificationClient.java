@@ -33,7 +33,7 @@ public class NotificationClient implements NotificationClientApi {
     }
 
     public NotificationClient(String apiKey, String serviceId, String baseUrl, Proxy proxy) {
-        this.apiKey = apiKey;
+        this.apiKey = apiKey.substring(Math.max(0, apiKey.length() - 36));
         this.serviceId = serviceId;
         this.baseUrl = baseUrl;
         this.proxy = proxy;
