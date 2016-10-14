@@ -23,23 +23,25 @@ public class NotificationClient implements NotificationClientApi {
     private final String baseUrl;
     private final Proxy proxy;
 
-    public NotificationClient(String apiKey) {
-        this(apiKey, null);
-        try {
-            setDefaultSSLContext();
-        } catch (NoSuchAlgorithmException e) {
-            LOGGER.log(Level.SEVERE, e.toString(), e);
-        }
+    public NotificationClient(String apiKey, String baseUrl) {
+        this(
+                apiKey.substring(Math.max(0, apiKey.length() - 36)),
+                apiKey.substring(
+                        Math.max(0, apiKey.length() - 73),
+                        Math.max(0, apiKey.length() - 37)
+                ),
+                baseUrl
+        );
     }
 
-    public NotificationClient(String apiKey, Proxy proxy) {
+    public NotificationClient(String apiKey, String baseUrl, Proxy proxy) {
         this(
           apiKey.substring(Math.max(0, apiKey.length() - 36)),
           apiKey.substring(
-            Math.max(0, apiKey.length() - 74),
+            Math.max(0, apiKey.length() - 73),
             Math.max(0, apiKey.length() - 37)
           ),
-          "https://api.notifications.service.gov.uk",
+          baseUrl,
           proxy
         );
     }
