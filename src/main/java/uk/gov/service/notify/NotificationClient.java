@@ -23,6 +23,10 @@ public class NotificationClient implements NotificationClientApi {
     private final String baseUrl;
     private final Proxy proxy;
 
+    public NotificationClient(String apiKey) {
+        this(apiKey, "https://api.notifications.service.gov.uk");
+    }
+
     public NotificationClient(String apiKey, String baseUrl) {
         this(
                 apiKey.substring(Math.max(0, apiKey.length() - 36)),

@@ -12,10 +12,10 @@ import static org.junit.Assert.assertNull;
 public class NotificationClientTest {
     private final String apiKey = UUID.randomUUID().toString();
     private final String serviceId = UUID.randomUUID().toString();
-    private final String baseUrl = "https://notifications.service.gov.uk";
+    private final String baseUrl = "https://api.notifications.service.gov.uk";
 
     @Test
-    public void testCreateNotificationClient_withSingleApiKey(){
+    public void testCreateNotificationClient_withSingleApiKeyAndBaseUrl(){
         String singleApiKey = "Api key name -" + serviceId + "-" + apiKey;
 
         NotificationClient client = new NotificationClient(singleApiKey, baseUrl);
@@ -43,6 +43,15 @@ public class NotificationClientTest {
         NotificationClient client = new NotificationClient(apiKey, serviceId, baseUrl, proxy);
         assertNotificationWithProxy(proxy, client);
     }
+
+    @Test
+    public void testCreateNotificationClient_withSingleApiKey() {
+        String singleApiKey = "Api key name -" + serviceId + "-" + apiKey;
+        NotificationClient client = new NotificationClient(singleApiKey);
+        assertNotificationClient(client);
+    }
+
+
     private void assertNotificationWithProxy(Proxy proxy, NotificationClient client) {
         assertEquals(client.getApiKey(), apiKey);
         assertEquals(client.getServiceId(), serviceId);
