@@ -48,11 +48,6 @@ public class NotificationClient implements NotificationClientApi {
 
     public NotificationClient(String apiKey, String serviceId, String baseUrl) {
         this(apiKey, serviceId, baseUrl, null);
-        try {
-            setDefaultSSLContext();
-        } catch (NoSuchAlgorithmException e) {
-            LOGGER.log(Level.SEVERE, e.toString(), e);
-        }
     }
 
     public NotificationClient(String apiKey, String serviceId, String baseUrl, Proxy proxy) {
@@ -60,6 +55,11 @@ public class NotificationClient implements NotificationClientApi {
         this.serviceId = serviceId;
         this.baseUrl = baseUrl;
         this.proxy = proxy;
+        try {
+            setDefaultSSLContext();
+        } catch (NoSuchAlgorithmException e) {
+            LOGGER.log(Level.SEVERE, e.toString(), e);
+        }
     }
 
     public String getApiKey() {
