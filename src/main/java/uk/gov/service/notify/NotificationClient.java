@@ -62,6 +62,22 @@ public class NotificationClient implements NotificationClientApi {
         this.proxy = proxy;
     }
 
+    public String getApiKey() {
+        return apiKey;
+    }
+
+    public String getServiceId() {
+        return serviceId;
+    }
+
+    public String getBaseUrl() {
+        return baseUrl;
+    }
+
+    public Proxy getProxy(){
+        return proxy;
+    }
+
     /**
      * The sendEmail method will create an HTTPS POST request. A JWT token will be created and added as an Authorization header to the request.
      *

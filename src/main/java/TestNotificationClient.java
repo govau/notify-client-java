@@ -12,12 +12,30 @@ import java.util.HashMap;
 public class TestNotificationClient {
 
     /**
-     * Args: api key, service id, baseUrl
+     * A command line tool to test the integration of the NotificationClient
+     * Run by using this command:
+     * mvn exec:java -Dexec.mainClass=TestNotificationClient -Dexec.args="api_key service_ID https://api.notifications.service.gov.uk"
+     * OR
+     * mvn exec:java -Dexec.mainClass=TestNotificationClient -Dexec.args="single_api_key https://api.notifications.service.gov.uk"
+     *    where single_api_key = api key name + service id + api key
+     * Args: either enter 3 arguments: api key, service id, baseUrl
+     *      or 2: api key, baseUrl (single api key that is the api key name + service id + api key)
+     *
      * @param args
      * @throws Exception
      */
     public static void main(String[] args) throws Exception {
-        NotificationClient client = new NotificationClient(args[0], args[1], args[2]);
+        NotificationClient client = null;
+        if(args.length == 2) {
+            client = new NotificationClient(args[0], args[1]);
+        }
+        if(args.length == 3) {
+            client = new NotificationClient(args[0], args[1], args[2]);
+        }
+        else{
+            System.out.println("expected either 2 or 3 arguments  got: " + args.length);
+            System.exit(1);
+        }
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         System.out.println("Select an option from the following options: \n 1 - create \n 2 - fetch \n 3 - fetch-all");
         String requestType = reader.readLine();

@@ -18,7 +18,7 @@ public class ClientIntegrationTestIT {
 
     @Test
     public void testEmailNotificationIT() throws NotificationClientException, InterruptedException {
-        NotificationClient client = getNewClient();
+        NotificationClient client = getClient();
         NotificationResponse emailResponse = sendEmail(client);
         Notification notification = getNotificationByIdWithStatusGreaterThanCreated(client, emailResponse);
         assertNotification(notification);
@@ -73,20 +73,6 @@ public class ClientIntegrationTestIT {
             assert(e.getMessage().contains("Missing personalisation: name"));
             assert(e.getMessage().contains("Status code: 400"));
         }
-    }
-
-    private NotificationClient getNewClient(){
-        String serviceId = System.getenv("SERVICE_ID");
-        String apiKey = System.getenv("API_KEY");
-        String baseUrl = System.getenv("NOTIFY_API_URL");
-        String keyName = System.getenv("API_KEY_NAME");
-        StringBuffer sb = new StringBuffer();
-        sb.append(keyName);
-        sb.append("-");
-        sb.append(serviceId);
-        sb.append("-").append(apiKey);
-        NotificationClient client = new NotificationClient(sb.toString(), baseUrl);
-        return client;
     }
 
     private NotificationClient getClient(){
