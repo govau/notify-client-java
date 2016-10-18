@@ -10,7 +10,3 @@ echo $version
 sed -e "s/{version}/${version}/" README.md-tpl > README.md
 
 mvn versions:set -DnewVersion=${version}
-
-source environment.sh
-
-mvn deploy
