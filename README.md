@@ -43,7 +43,7 @@ Then add the Maven dependency to your project.
     <dependency>
         <groupId>uk.gov.service.notify</groupId>
         <artifactId>notifications-java-client</artifactId>
-        <version>2.1.8-RELEASE</version>
+        <version>2.2.0-RELEASE</version>
     </dependency>
 
 ```
@@ -58,7 +58,7 @@ repositories {
 }
 
 dependencies {
-    compile('uk.gov.service.notify:notifications-java-client:2.1.8-RELEASE')
+    compile('uk.gov.service.notify:notifications-java-client:2.2.0-RELEASE')
 }
 ```
 
@@ -75,14 +75,12 @@ import uk.gov.service.notify.Notification;
 import uk.gov.service.notify.NotificationList;
 import uk.gov.service.notify.NotificationResponse;
 
-NotificationClient client = new NotificationClient(api_key, serviceId, "https://api.notifications.service.gov.uk");
+NotificationClient client = new NotificationClient(apiKey);
 ```
 
 Generate an API key by signing in to
 [GOV.UK Notify](https://www.notifications.service.gov.uk) and going to
 the **API integration** page.
-
-You'll find your service ID on the **API integration** page.
 
 ## Send a message
 
