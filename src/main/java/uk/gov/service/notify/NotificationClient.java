@@ -29,33 +29,32 @@ public class NotificationClient implements NotificationClientApi {
 
     public NotificationClient(String apiKey, String baseUrl) {
         this(
-                apiKey.substring(Math.max(0, apiKey.length() - 36)),
-                apiKey.substring(
-                        Math.max(0, apiKey.length() - 73),
-                        Math.max(0, apiKey.length() - 37)
-                ),
+                extractApiKey(apiKey),
+                extractServiceId(apiKey),
                 baseUrl
         );
     }
 
     public NotificationClient(String apiKey, String baseUrl, Proxy proxy) {
         this(
-          apiKey.substring(Math.max(0, apiKey.length() - 36)),
-          apiKey.substring(
-            Math.max(0, apiKey.length() - 73),
-            Math.max(0, apiKey.length() - 37)
-          ),
-          baseUrl,
-          proxy
+                extractApiKey(apiKey),
+                extractServiceId(apiKey),
+                baseUrl,
+                proxy
         );
     }
 
     public NotificationClient(String apiKey, String serviceId, String baseUrl) {
-        this(apiKey, serviceId, baseUrl, null);
+        this(
+                apiKey,
+                serviceId,
+                baseUrl,
+                null
+        );
     }
 
     public NotificationClient(String apiKey, String serviceId, String baseUrl, Proxy proxy) {
-        this.apiKey = apiKey.substring(Math.max(0, apiKey.length() - 36));
+        this.apiKey = extractApiKey(apiKey);
         this.serviceId = serviceId;
         this.baseUrl = baseUrl;
         this.proxy = proxy;
@@ -78,15 +77,15 @@ public class NotificationClient implements NotificationClientApi {
         return baseUrl;
     }
 
-    public Proxy getProxy(){
+    public Proxy getProxy() {
         return proxy;
     }
 
     /**
      * The sendEmail method will create an HTTPS POST request. A JWT token will be created and added as an Authorization header to the request.
      *
-     * @param templateId Find templateId by clicking API info for the template you want to send
-     * @param to The email address
+     * @param templateId      Find templateId by clicking API info for the template you want to send
+     * @param to              The email address
      * @param personalisation HashMap representing the placeholders for the template if any. For example, key=name value=Bob
      * @return <code>NotificationResponse</code>
      * @throws NotificationClientException
@@ -99,7 +98,7 @@ public class NotificationClient implements NotificationClientApi {
      * The sendEmail method will create an HTTPS POST request. A JWT token will be created and added as an Authorization header to the request.
      *
      * @param templateId Find templateId by clicking API info for the template you want to send
-     * @param to The email address
+     * @param to         The email address
      * @return <code>NotificationResponse</code>
      * @throws NotificationClientException
      */
@@ -110,8 +109,8 @@ public class NotificationClient implements NotificationClientApi {
     /**
      * The sendSms method will create an HTTPS POST request. A JWT token will be created and added as an Authorization header to the request.
      *
-     * @param templateId Find templateId by clicking API info for the template you want to send
-     * @param to The mobile phone number
+     * @param templateId      Find templateId by clicking API info for the template you want to send
+     * @param to              The mobile phone number
      * @param personalisation HashMap representing the placeholders for the template if any. For example, key=name value=Bob
      * @return <code>NotificationResponse</code>
      * @throws NotificationClientException
@@ -124,7 +123,7 @@ public class NotificationClient implements NotificationClientApi {
      * The sendSms method will create an HTTPS POST request. A JWT token will be created and added as an Authorization header to the request.
      *
      * @param templateId Find templateId by clicking API info for the template you want to send
-     * @param to The mobile phone number
+     * @param to         The mobile phone number
      * @return <code>NotificationResponse</code>
      * @throws NotificationClientException
      */
@@ -207,8 +206,8 @@ public class NotificationClient implements NotificationClientApi {
     /**
      * The getNotifications method will create a GET HTTPS request to retrieve all the notifications.
      *
-     * @param status If status is not null notifications will only return notifications for the given status.
-     *               Possible statuses are created|sending|delivered|permanent-failure|temporary-failure|technical-failure
+     * @param status            If status is not null notifications will only return notifications for the given status.
+     *                          Possible statuses are created|sending|delivered|permanent-failure|temporary-failure|technical-failure
      * @param notification_type If notification_type is not null only notification of the given status will be returned.
      *                          Possible notificationTypes are sms|email
      * @return <code>NotificationList</code>
@@ -297,15 +296,23 @@ public class NotificationClient implements NotificationClientApi {
 
     /**
      * Set default SSL context for HTTPS connections.
-     *
+     * <p/>
      * This is necessary when client has to use keystore
      * (eg provide certification for client authentication).
-     *
+     * <p/>
      * Use case: enterprise proxy requiring HTTPS client authentication
      *
      * @throws NoSuchAlgorithmException
      */
     private static void setDefaultSSLContext() throws NoSuchAlgorithmException {
         HttpsURLConnection.setDefaultSSLSocketFactory(SSLContext.getDefault().getSocketFactory());
+    }
+
+    private static String extractServiceId(String apiKey) {
+        return apiKey.substring(Math.max(0, apiKey.length() - 73), Math.max(0, apiKey.length() - 37));
+    }
+
+    private static String extractApiKey(String apiKey) {
+        return apiKey.substring(Math.max(0, apiKey.length() - 36));
     }
 }
