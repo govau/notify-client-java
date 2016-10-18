@@ -75,7 +75,7 @@ import uk.gov.service.notify.Notification;
 import uk.gov.service.notify.NotificationList;
 import uk.gov.service.notify.NotificationResponse;
 
-NotificationClient client = new NotificationClient(api_key);
+NotificationClient client = new NotificationClient(apiKey);
 ```
 
 Generate an API key by signing in to
