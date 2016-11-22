@@ -20,7 +20,7 @@ public class ClientIntegrationTestIT {
     public void testEmailNotificationIT() throws NotificationClientException, InterruptedException {
         NotificationClient client = getClient();
         NotificationResponse emailResponse = sendEmail(client);
-        Notification notification = getNotificationByIdWithStatusGreaterThanCreated(client, emailResponse);
+        Notification notification = client.getNotificationById(emailResponse.getNotificationId());
         assertNotification(notification);
     }
 
@@ -28,7 +28,7 @@ public class ClientIntegrationTestIT {
     public void testSmsNotificationIT() throws NotificationClientException, InterruptedException {
         NotificationClient client = getClient();
         NotificationResponse response = sendSms(client);
-        Notification notification = getNotificationByIdWithStatusGreaterThanCreated(client, response);
+        Notification notification = client.getNotificationById(response.getNotificationId());
         assertNotification(notification);
     }
 
@@ -40,13 +40,8 @@ public class ClientIntegrationTestIT {
         assertNotNull(notificationList.getTotal());
         assertNotNull(notificationList.getNotifications());
         assertFalse(notificationList.getNotifications().isEmpty());
-        // get first notification that is in sending or delivered as because it is possible that the first notification is in created status, and the null checks will fail.
-        for(Notification notification : notificationList.getNotifications()){
-            if(Arrays.asList("sending", "delivered").contains(notification.getStatus())){
-                assertNotification(notification);
-                break;
-            }
-        }
+        // Just check the first notification in the list.
+        assertNotification(notificationList.getNotifications().get(0));
     }
 
     @Test
@@ -113,9 +108,14 @@ public class ClientIntegrationTestIT {
         assertNotNull(notification.getId());
         assertNotNull(notification.getBody());
         assertTrue(Arrays.asList("email", "sms").contains(notification.getNotificationType()));
+        assertNotNull(notification.getStatus());
         if(notification.getNotificationType().equals("email")){
             assertNotNull(notification.getSubject());
-            assertNotNull(notification.getReference());
+            if(notification.getStatus().equals("created")){
+                assertNull(notification.getReference());
+            }else{
+                assertNotNull(notification.getReference());
+            }
             assertEquals(0, notification.getContentCharCount());
         }
         else{
@@ -127,29 +127,20 @@ public class ClientIntegrationTestIT {
         assertNotNull(notification.getTemplateName());
         assertNotNull(notification.getTemplateVersion());
         assertNotNull(notification.getTo());
-        assertNotNull(notification.getSentBy());
-        assertNotNull(notification.getSentAt());
-        assertNotNull(notification.getStatus());
-        assertTrue("expected status to be sending or delivered", Arrays.asList("sending", "delivered").contains(notification.getStatus()));
+        if(notification.getStatus().equals("created")) {
+            assertNull(notification.getSentBy());
+            assertNull(notification.getSentAt());
+        }
+        else{
+            assertNotNull(notification.getSentBy());
+            assertNotNull(notification.getSentAt());
+        }
+        assertTrue("expected status to be created, sending or delivered", Arrays.asList("created", "sending", "delivered").contains(notification.getStatus()));
         assertNotNull(notification.getApiKey());
         assertNull(notification.getJobId());
         assertNull(notification.getJobFileName());
         assertEquals(0, notification.getJobRowNumber());
 
-        return notification;
-    }
-
-    private Notification getNotificationByIdWithStatusGreaterThanCreated(NotificationClient client, NotificationResponse response) throws NotificationClientException, InterruptedException {
-        Notification notification = client.getNotificationById(response.getNotificationId());
-        int i = 0;
-        while(i < 3 && notification.getStatus().equals("created")){
-            Thread.sleep(3000);
-            notification = client.getNotificationById(response.getNotificationId());
-            i++;
-        }
-        if(i == 3){
-            fail("notification is still in created status");
-        }
         return notification;
     }
 
