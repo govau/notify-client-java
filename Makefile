@@ -40,6 +40,11 @@ build-with-docker: prepare-docker-runner-image ## Build inside a Docker containe
 		--name "${DOCKER_CONTAINER_PREFIX}-build" \
 		-v `pwd`:/var/project \
 		-v `pwd`/.m2:/root/.m2 \
+		-e http_proxy="${HTTP_PROXY}" \
+		-e HTTP_PROXY="${HTTP_PROXY}" \
+		-e https_proxy="${HTTPS_PROXY}" \
+		-e HTTPS_PROXY="${HTTPS_PROXY}" \
+		-e NO_PROXY="${NO_PROXY}" \
 		${DOCKER_BUILDER_IMAGE_NAME} \
 		make build
 
@@ -49,6 +54,11 @@ test-with-docker: prepare-docker-runner-image generate-env-file ## Run tests ins
 		--name "${DOCKER_CONTAINER_PREFIX}-test" \
 		-v `pwd`:/var/project \
 		-v `pwd`/.m2:/root/.m2 \
+		-e http_proxy="${HTTP_PROXY}" \
+		-e HTTP_PROXY="${HTTP_PROXY}" \
+		-e https_proxy="${HTTPS_PROXY}" \
+		-e HTTPS_PROXY="${HTTPS_PROXY}" \
+		-e NO_PROXY="${NO_PROXY}" \
 		--env-file docker.env \
 		${DOCKER_BUILDER_IMAGE_NAME} \
 		make test
@@ -59,6 +69,11 @@ integration-test-with-docker: prepare-docker-runner-image generate-env-file ## R
 		--name "${DOCKER_CONTAINER_PREFIX}-integration-test" \
 		-v `pwd`:/var/project \
 		-v `pwd`/.m2:/root/.m2 \
+		-e http_proxy="${HTTP_PROXY}" \
+		-e HTTP_PROXY="${HTTP_PROXY}" \
+		-e https_proxy="${HTTPS_PROXY}" \
+		-e HTTPS_PROXY="${HTTPS_PROXY}" \
+		-e NO_PROXY="${NO_PROXY}" \
 		--env-file docker.env \
 		${DOCKER_BUILDER_IMAGE_NAME} \
 		make integration-test
