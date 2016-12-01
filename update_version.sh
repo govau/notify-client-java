@@ -2,8 +2,12 @@
 
 set -eo pipefail
 
+function prop {
+    grep "${1}" src/main/resources/application.properties|cut -d'=' -f2
+}
 
-read -p "What is the next release number: " version
+version=$(prop 'project.version')
+
 
 echo $version
 
