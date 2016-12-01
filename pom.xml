@@ -47,11 +47,13 @@
     </distributionManagement>
     <build>
     <plugins>
-
         <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-failsafe-plugin</artifactId>
             <version>2.12.4</version>
+            <configuration>
+                <argLine>-DforkCount=0 -Dhttp.proxyHost=${http-proxy-host} -Dhttp.proxyPort=${http-proxy-port} -Dhttps.proxyHost=${http-proxy-host} -Dhttps.proxyPort=${http-proxy-port} -Dhttp.nonProxyHosts="${non-proxy-hosts}"</argLine>
+            </configuration>
             <executions>
                 <execution>
                     <goals>
