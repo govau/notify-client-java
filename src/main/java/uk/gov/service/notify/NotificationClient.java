@@ -4,11 +4,13 @@ import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.*;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -22,6 +24,7 @@ public class NotificationClient implements NotificationClientApi {
     private final String serviceId;
     private final String baseUrl;
     private final Proxy proxy;
+    private final String version;
 
     public NotificationClient(String apiKey) {
         this(apiKey, "https://api.notifications.service.gov.uk");
@@ -63,6 +66,7 @@ public class NotificationClient implements NotificationClientApi {
         } catch (NoSuchAlgorithmException e) {
             LOGGER.log(Level.SEVERE, e.toString(), e);
         }
+        this.version = getVersion();
     }
 
     public String getApiKey() {
@@ -182,6 +186,7 @@ public class NotificationClient implements NotificationClientApi {
             Authentication authentication = new Authentication();
             String token = authentication.create(serviceId, apiKey);
             conn.setRequestProperty("Authorization", "Bearer " + token);
+            conn.setRequestProperty("User-agent", "NOTIFY-API-JAVA-CLIENT/" + version);
 
             conn.connect();
             int httpResult = conn.getResponseCode();
@@ -230,6 +235,8 @@ public class NotificationClient implements NotificationClientApi {
             Authentication authentication = new Authentication();
             String token = authentication.create(serviceId, apiKey);
             conn.setRequestProperty("Authorization", "Bearer " + token);
+            conn.setRequestProperty("User-agent", "NOTIFY-API-JAVA-CLIENT/" + version);
+
             conn.connect();
             int httpResult = conn.getResponseCode();
             if (httpResult == 200) {
@@ -268,6 +275,7 @@ public class NotificationClient implements NotificationClientApi {
         conn.setRequestProperty("Authorization", "Bearer " + token);
         conn.setRequestProperty("Content-Type", "application/json");
         conn.setRequestProperty("Accept", "application/json");
+        conn.setRequestProperty("User-agent", "NOTIFY-API-JAVA-CLIENT/" + version);
 
         conn.connect();
         return conn;
@@ -314,5 +322,28 @@ public class NotificationClient implements NotificationClientApi {
 
     private static String extractApiKey(String apiKey) {
         return apiKey.substring(Math.max(0, apiKey.length() - 36));
+    }
+
+
+    private String getVersion(){
+        InputStream input = null;
+        Properties prop = new Properties();
+        try {
+            input = getClass().getClassLoader().getResourceAsStream("application.properties");
+
+            prop.load(input);
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } finally {
+            if (input != null) {
+                try {
+                    input.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return prop.getProperty("version");
     }
 }
