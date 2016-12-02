@@ -2,7 +2,8 @@ import uk.gov.service.notify.Notification;
 import uk.gov.service.notify.NotificationClient;
 import uk.gov.service.notify.NotificationClientException;
 import uk.gov.service.notify.NotificationList;
-import uk.gov.service.notify.NotificationResponse;
+import uk.gov.service.notify.SendEmailResponse;
+import uk.gov.service.notify.SendSmsResponse;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -26,6 +27,9 @@ public class TestNotificationClient {
      */
     public static void main(String[] args) throws Exception {
         NotificationClient client = null;
+        if(args.length == 1) {
+            client = new NotificationClient(args[0]);
+        }
         if(args.length == 2) {
             client = new NotificationClient(args[0], args[1]);
         }
@@ -146,11 +150,11 @@ public class TestNotificationClient {
             }
         }
         if (messageType.equals("sms")){
-            NotificationResponse response = client.sendSms(templateId, to, properties);
+            SendSmsResponse response = client.sendSms(templateId, to, properties);
             System.out.println(response);
         }
         else{
-            NotificationResponse response = client.sendEmail(templateId, to, properties);
+            SendEmailResponse response = client.sendEmail(templateId, to, properties);
             System.out.println(response);
         }
     }

@@ -105,60 +105,19 @@ public class NotificationClient implements NotificationClientApi {
      * The sendEmail method will create an HTTPS POST request. A JWT token will be created and added as an Authorization header to the request.
      *
      * @param templateId      Find templateId by clicking API info for the template you want to send
-     * @param to              The email address
+     * @param emailAddress              The email address
      * @param personalisation HashMap representing the placeholders for the template if any. For example, key=name value=Bob
-     * @return <code>NotificationResponse</code>
+     * @return <code>SendEmailResponse</code>
      * @throws NotificationClientException
      */
-    public NotificationResponse sendEmail(String templateId, String to, HashMap<String, String> personalisation) throws NotificationClientException {
-        return postRequest("email", templateId, to, personalisation);
-    }
-
-    /**
-     * The sendEmail method will create an HTTPS POST request. A JWT token will be created and added as an Authorization header to the request.
-     *
-     * @param templateId    Find templateId by clicking API info for the template you want to send
-     * @param emailAddress  The email address
-     * @return <code>NotificationResponse</code>
-     * @throws NotificationClientException
-     */
-    public NotificationResponse sendEmail(String templateId, String emailAddress) throws NotificationClientException {
-        return postRequest("email", templateId, emailAddress, null);
-    }
-
-    /**
-     * The sendSms method will create an HTTPS POST request. A JWT token will be created and added as an Authorization header to the request.
-     *
-     * @param templateId      Find templateId by clicking API info for the template you want to send
-     * @param phoneNumber              The mobile phone number
-     * @param personalisation HashMap representing the placeholders for the template if any. For example, key=name value=Bob
-     * @return <code>NotificationResponse</code>
-     * @throws NotificationClientException
-     */
-    public NotificationResponse sendSms(String templateId, String phoneNumber, HashMap<String, String> personalisation) throws NotificationClientException {
-        return postRequest("sms", templateId, phoneNumber, personalisation);
-    }
-
-    /**
-     * The sendSms method will create an HTTPS POST request. A JWT token will be created and added as an Authorization header to the request.
-     *
-     * @param templateId Find templateId by clicking API info for the template you want to send
-     * @param phoneNumber The mobile phone number
-     * @return <code>NotificationResponse</code>
-     * @throws NotificationClientException
-     */
-    public NotificationResponse sendSms(String templateId, String phoneNumber) throws NotificationClientException {
-        return postRequest("sms", templateId, phoneNumber, null);
-    }
-
-    private NotificationResponse postRequest(String messageType, String templateId, String recipient, HashMap<String, String> personalisation) throws NotificationClientException {
+    public SendEmailResponse sendEmail(String templateId, String emailAddress, HashMap<String, String> personalisation) throws NotificationClientException {
         HttpsURLConnection conn = null;
         try {
-            JSONObject body = createBodyForRequest(templateId, recipient, personalisation);
+            JSONObject body = createBodyForEmailRequest(templateId, emailAddress, personalisation, null);
 
             Authentication tg = new Authentication();
             String token = tg.create(serviceId, apiKey);
-            URL url = new URL(baseUrl + "/notifications/" + messageType);
+            URL url = new URL(baseUrl + "/v2/notifications/email");
             conn = postConnection(token, url);
 
             OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
@@ -168,7 +127,7 @@ public class NotificationClient implements NotificationClientApi {
             int httpResult = conn.getResponseCode();
             if (httpResult == HttpsURLConnection.HTTP_CREATED) {
                 StringBuilder sb = readStream(new InputStreamReader(conn.getInputStream(), "utf-8"));
-                return new NotificationResponse(sb.toString());
+                return new SendEmailResponse(sb.toString());
             } else {
                 StringBuilder sb = readStream(new InputStreamReader(conn.getErrorStream(), "utf-8"));
                 throw new NotificationClientException(httpResult, sb.toString());
@@ -182,6 +141,73 @@ public class NotificationClient implements NotificationClientApi {
             }
         }
         return null;
+    }
+
+    /**
+     * The sendEmail method will create an HTTPS POST request. A JWT token will be created and added as an Authorization header to the request.
+     *
+     * @param templateId    Find templateId by clicking API info for the template you want to send
+     * @param emailAddress  The email address
+     * @return <code>SendEmailResponse</code>
+     * @throws NotificationClientException
+     */
+    public SendEmailResponse sendEmail(String templateId, String emailAddress) throws NotificationClientException {
+        return sendEmail(templateId, emailAddress, null);
+    }
+
+    /**
+     * The sendSms method will create an HTTPS POST request. A JWT token will be created and added as an Authorization header to the request.
+     *
+     * @param templateId      Find templateId by clicking API info for the template you want to send
+     * @param phoneNumber              The mobile phone number
+     * @param personalisation HashMap representing the placeholders for the template if any. For example, key=name value=Bob
+     * @return <code>SendSmsResponse</code>
+     * @throws NotificationClientException
+     */
+    public SendSmsResponse sendSms(String templateId, String phoneNumber, HashMap<String, String> personalisation) throws NotificationClientException {
+        HttpsURLConnection conn = null;
+
+        try {
+            JSONObject body = createBodyForSmsRequest(templateId, phoneNumber, personalisation, null);
+
+            Authentication tg = new Authentication();
+            String token = tg.create(serviceId, apiKey);
+            URL url = new URL(baseUrl + "/v2/notifications/sms");
+            conn = postConnection(token, url);
+
+            OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+            wr.write(body.toString());
+            wr.flush();
+
+            int httpResult = conn.getResponseCode();
+            if (httpResult == HttpsURLConnection.HTTP_CREATED) {
+                StringBuilder sb = readStream(new InputStreamReader(conn.getInputStream(), "utf-8"));
+                return new SendSmsResponse(sb.toString());
+            } else {
+                StringBuilder sb = readStream(new InputStreamReader(conn.getErrorStream(), "utf-8"));
+                throw new NotificationClientException(httpResult, sb.toString());
+            }
+
+        } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, e.toString(), e);
+        } finally {
+            if (conn != null) {
+                conn.disconnect();
+            }
+        }
+        return null;
+    }
+
+    /**
+     * The sendSms method will create an HTTPS POST request. A JWT token will be created and added as an Authorization header to the request.
+     *
+     * @param templateId Find templateId by clicking API info for the template you want to send
+     * @param phoneNumber The mobile phone number
+     * @return <code>SendSmsResponse</code>
+     * @throws NotificationClientException
+     */
+    public SendSmsResponse sendSms(String templateId, String phoneNumber) throws NotificationClientException {
+        return sendSms(templateId, phoneNumber, new HashMap<String, String>());
     }
 
     /**
@@ -297,16 +323,26 @@ public class NotificationClient implements NotificationClientApi {
         return conn;
     }
 
-    private JSONObject createBodyForRequest(String templateId, String to, HashMap<String, String> personalisation) {
+    private JSONObject createBodyForSmsRequest(final String templateId, final String phoneNumber, final HashMap<String, String> personalisation, final String reference) {
         JSONObject body = new JSONObject();
-        body.put("to", to);
-        body.put("template", templateId);
+        body.put("reference", reference);
+        body.put("phone_number", phoneNumber);
+        body.put("template_id", templateId);
         if (personalisation != null && !personalisation.isEmpty()) {
             body.put("personalisation", new JSONObject(personalisation));
         }
         return body;
     }
-
+    private JSONObject createBodyForEmailRequest(final String templateId, final String emailAddress, final HashMap<String, String> personalisation, final String reference) {
+        JSONObject body = new JSONObject();
+        body.put("reference", reference);
+        body.put("email_address", emailAddress);
+        body.put("template_id", templateId);
+        if (personalisation != null && !personalisation.isEmpty()) {
+            body.put("personalisation", new JSONObject(personalisation));
+        }
+        return body;
+    }
     private StringBuilder readStream(InputStreamReader streamReader) throws IOException {
         StringBuilder sb = new StringBuilder();
         BufferedReader br = new BufferedReader(streamReader);

@@ -3,32 +3,51 @@ package uk.gov.service.notify;
 import org.joda.time.DateTime;
 import org.json.JSONObject;
 
+import java.util.Optional;
+import java.util.UUID;
+
 public class Notification {
-    private String id;
-    private String body;
-    private int contentCharCount;
+//    "id": uuid,
+//            "reference": {"type": ["string", "null"]},
+//            "email_address": {"type": ["string", "null"]},
+//            "phone_number": {"type": ["string", "null"]},
+//            "line_1": {"type": ["string", "null"]},
+//            "line_2": {"type": ["string", "null"]},
+//            "line_3": {"type": ["string", "null"]},
+//            "line_4": {"type": ["string", "null"]},
+//            "line_5": {"type": ["string", "null"]},
+//            "line_6": {"type": ["string", "null"]},
+//            "postcode": {"type": ["string", "null"]},
+//            "type": {"enum": ["sms", "letter", "email"]},
+//            "status": {"type": "string"},
+//            "template": template,
+//            "created_at": {"type": "string"},
+//            "sent_at": {"type": ["string", "null"]},
+//            "completed_at": {"type": ["string", "null"]}
+
+
+    private UUID id;
+    private Optional<String> reference;
+    private Optional<String> emailAddress;
+    private Optional<String> phoneNumber;
+    private Optional<String> line1;
+    private Optional<String> line2;
+    private Optional<String> line3;
+    private Optional<String> line4;
+    private Optional<String> line5;
+    private Optional<String> line6;
+    private Optional<String> postcode;
     private String notificationType;
-    // Reference from email provider, will be null for sms
-    private String reference;
-    private String subject;
-    private String templateId;
-    private String templateName;
-    private int templateVersion;
-    private String to;
-    private String sentBy;
-    private DateTime sentAt;
     private String status;
+    private String templateId;
+    private int templateVersion;
     private DateTime createdAt;
-    private DateTime updatedAt;
-    private String apiKey;
-    private String jobId;
-    private String jobFileName;
-    private int jobRowNumber;
+    private Optional<DateTime> sentAt;
+    private Optional<DateTime> completedAt;
 
     public Notification(String content){
         JSONObject responseBodyAsJson = new JSONObject(content);
-        JSONObject data = responseBodyAsJson.getJSONObject("data").getJSONObject("notification");
-        build(data);
+        build(responseBodyAsJson);
 
     }
 
@@ -38,133 +57,120 @@ public class Notification {
     }
 
     private void build(JSONObject data) {
-        id = data.getString("id");
-        body = data.getString("body");
-        contentCharCount = data.isNull("content_char_count") ? 0 : data.getInt("content_char_count");
-        notificationType = data.getString("notification_type");
-        reference = data.isNull("reference") ? null : data.getString("reference");
-        subject = data.isNull("subject") ? null : data.getString("subject");
+        id = UUID.fromString(data.getString("id"));
+        reference = data.isNull("reference") ? Optional.empty() : Optional.of(data.getString("reference"));
+        emailAddress = data.isNull("email_address") ? Optional.empty() : Optional.of(data.getString("email_address"));
+        phoneNumber = data.isNull("phone_number") ? Optional.empty() : Optional.of(data.getString("phone_number"));
+        line1 = data.isNull("line_1") ? Optional.empty() : Optional.of(data.getString("line_1"));
+        line2 = data.isNull("line_2") ? Optional.empty() : Optional.of(data.getString("line_2"));
+        line3 = data.isNull("line_3") ? Optional.empty() : Optional.of(data.getString("line_3"));
+        line4 = data.isNull("line_4") ? Optional.empty() : Optional.of(data.getString("line_4"));
+        line5 = data.isNull("line_5") ? Optional.empty() : Optional.of(data.getString("line_5"));
+        line6 = data.isNull("line_6") ? Optional.empty() : Optional.of(data.getString("line_6"));
+        postcode = data.isNull("postcode") ? Optional.empty() : Optional.of(data.getString("postcode"));
+        notificationType = data.getString("type");
         JSONObject template = data.getJSONObject("template");
         templateId = template.getString("id");
-        templateName = template.getString("name");
         templateVersion = data.getInt("template_version");
-        to = data.getString("to");
-        sentBy = data.isNull("sent_by") ? null : data.getString("sent_by");
-        sentAt =  data.isNull("sent_at") ? null : new DateTime(data.getString("sent_at"));
         status = data.getString("status");
         createdAt = new DateTime(data.getString("created_at"));
-        updatedAt = data.isNull("updated_at") ? null :  new DateTime(data.getString("updated_at"));
-        apiKey = data.isNull("api_key") ? null : data.getString("api_key");
-        org.json.JSONObject job = data.isNull("job") ? null : data.getJSONObject("job");
-        if(job == null){
-            jobId = null;
-            jobFileName = null;
-        }
-        else {
-            jobId = job.isNull("id") ? null : job.getString("id");
-            jobFileName = job.isNull("original_file_name") ? null : job.getString("original_file_name");
-        }
-        jobRowNumber = data.isNull("job_row_number") ? 0 : data.getInt("job_row_number");
+        sentAt =  data.isNull("sent_at") ? Optional.empty() : Optional.of(new DateTime(data.getString("sent_at")));
+        completedAt = data.isNull("completed_at") ? Optional.empty() : Optional.of(new DateTime(data.getString("completed_at")));
     }
 
-    public String getId() {
+    public UUID getId() {
         return id;
     }
 
-    public String getBody() {
-        return body;
+    public Optional<String> getReference() {
+        return reference;
     }
 
-    public int getContentCharCount() {
-        return contentCharCount;
+    public Optional<String> getEmailAddress() {
+        return emailAddress;
+    }
+
+    public Optional<String> getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public Optional<String> getLine1() {
+        return line1;
+    }
+
+    public Optional<String> getLine2() {
+        return line2;
+    }
+
+    public Optional<String> getLine3() {
+        return line3;
+    }
+
+    public Optional<String> getLine4() {
+        return line4;
+    }
+
+    public Optional<String> getLine5() {
+        return line5;
+    }
+
+    public Optional<String> getLine6() {
+        return line6;
+    }
+
+    public Optional<String> getPostcode() {
+        return postcode;
     }
 
     public String getNotificationType() {
         return notificationType;
     }
 
-    public String getReference() {
-        return reference;
-    }
-
-    public String getSubject() {
-        return subject;
+    public String getStatus() {
+        return status;
     }
 
     public String getTemplateId() {
         return templateId;
     }
 
-    public String getTemplateName() {
-        return templateName;
-    }
-
     public int getTemplateVersion() {
         return templateVersion;
-    }
-
-    public String getTo() {
-        return to;
-    }
-
-    public String getSentBy() {
-        return sentBy;
-    }
-
-    public DateTime getSentAt() {
-        return sentAt;
-    }
-
-    public String getStatus() {
-        return status;
     }
 
     public DateTime getCreatedAt() {
         return createdAt;
     }
 
-    public DateTime getUpdatedAt() {
-        return updatedAt;
+    public Optional<DateTime> getSentAt() {
+        return sentAt;
     }
 
-    public String getApiKey() {
-        return apiKey;
-    }
-
-    public String getJobId() {
-        return jobId;
-    }
-
-    public String getJobFileName() {
-        return jobFileName;
-    }
-
-    public int getJobRowNumber() {
-        return jobRowNumber;
+    public Optional<DateTime> getCompletedAt() {
+        return completedAt;
     }
 
     @Override
     public String toString() {
         return "Notification{" +
-                "id='" + id + '\'' +
-                ", body='" + body + '\'' +
-                ", contentCharCount=" + contentCharCount +
+                "id=" + id +
+                ", reference=" + reference +
+                ", emailAddress=" + emailAddress +
+                ", phoneNumber=" + phoneNumber +
+                ", line1=" + line1 +
+                ", line2=" + line2 +
+                ", line3=" + line3 +
+                ", line4=" + line4 +
+                ", line5=" + line5 +
+                ", line6=" + line6 +
+                ", postcode=" + postcode +
                 ", notificationType='" + notificationType + '\'' +
-                ", reference='" + reference + '\'' +
-                ", subject='" + subject + '\'' +
-                ", templateId='" + templateId + '\'' +
-                ", templateName='" + templateName + '\'' +
-                ", templateVersion=" + templateVersion +
-                ", to='" + to + '\'' +
-                ", sentBy='" + sentBy + '\'' +
-                ", sentAt=" + sentAt +
                 ", status='" + status + '\'' +
+                ", templateId='" + templateId + '\'' +
+                ", templateVersion=" + templateVersion +
                 ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
-                ", apiKey='" + apiKey + '\'' +
-                ", jobId='" + jobId + '\'' +
-                ", jobFileName='" + jobFileName + '\'' +
-                ", jobRowNumber=" + jobRowNumber +
+                ", sentAt=" + sentAt +
+                ", completedAt=" + completedAt +
                 '}';
     }
 }
