@@ -72,7 +72,7 @@ public class ClientIntegrationTestIT {
         String serviceId = System.getenv("SERVICE_ID");
         String apiKey = System.getenv("API_KEY");
         String baseUrl = System.getenv("NOTIFY_API_URL");
-        NotificationClient client = new NotificationClient(apiKey, serviceId, baseUrl);
+        NotificationClient client = new NotificationClient(apiKey, baseUrl);
         return client;
     }
 

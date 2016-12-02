@@ -19,6 +19,7 @@ import org.json.JSONObject;
 public class NotificationClient implements NotificationClientApi {
 
     private static final Logger LOGGER = Logger.getLogger(NotificationClient.class.toString());
+    public static final String LIVE_BASE_URL = "https://api.notifications.service.gov.uk";
 
     private final String apiKey;
     private final String serviceId;
@@ -26,39 +27,54 @@ public class NotificationClient implements NotificationClientApi {
     private final Proxy proxy;
     private final String version;
 
-    public NotificationClient(String apiKey) {
-        this(apiKey, "https://api.notifications.service.gov.uk");
-    }
-
-    public NotificationClient(String apiKey, String baseUrl) {
+    /**
+     * This client constructor given the api key.
+     * @param apiKey Generate an API key by signing in to GOV.UK Notify, https://www.notifications.service.gov.uk, and going to the **API integration** page
+     */
+    public NotificationClient(final String apiKey) {
         this(
-                extractApiKey(apiKey),
-                extractServiceId(apiKey),
-                baseUrl
+                apiKey,
+                LIVE_BASE_URL,
+                null
         );
     }
 
-    public NotificationClient(String apiKey, String baseUrl, Proxy proxy) {
+    /**
+     * Use this client constructor if you require a proxy for https requests.
+     * @param apiKey Generate an API key by signing in to GOV.UK Notify, https://www.notifications.service.gov.uk, and going to the **API integration** page
+     * @param proxy Proxy used on the http requests
+     */
+    public NotificationClient(final String apiKey, final Proxy proxy) {
         this(
-                extractApiKey(apiKey),
-                extractServiceId(apiKey),
-                baseUrl,
+                apiKey,
+                LIVE_BASE_URL,
                 proxy
         );
     }
 
-    public NotificationClient(String apiKey, String serviceId, String baseUrl) {
+    /**
+     * This client constructor is used for testing on other environments, used by the GOV.UK Notify team.
+     * @param apiKey Generate an API key by signing in to GOV.UK Notify, https://www.notifications.service.gov.uk, and going to the **API integration** page
+     * @param baseUrl
+     */
+    public NotificationClient(final String apiKey, final String baseUrl) {
         this(
                 apiKey,
-                serviceId,
                 baseUrl,
                 null
         );
     }
 
-    public NotificationClient(String apiKey, String serviceId, String baseUrl, Proxy proxy) {
+
+    /**
+     *
+     * @param apiKey Generate an API key by signing in to GOV.UK Notify, https://www.notifications.service.gov.uk, and going to the **API integration** page
+     * @param baseUrl base URL, defaults to https://api.notifications.service.gov.uk
+     * @param proxy
+     */
+    public NotificationClient(final String apiKey, final String baseUrl, final Proxy proxy) {
         this.apiKey = extractApiKey(apiKey);
-        this.serviceId = serviceId;
+        this.serviceId = extractServiceId(apiKey);
         this.baseUrl = baseUrl;
         this.proxy = proxy;
         try {
@@ -101,44 +117,44 @@ public class NotificationClient implements NotificationClientApi {
     /**
      * The sendEmail method will create an HTTPS POST request. A JWT token will be created and added as an Authorization header to the request.
      *
-     * @param templateId Find templateId by clicking API info for the template you want to send
-     * @param to         The email address
+     * @param templateId    Find templateId by clicking API info for the template you want to send
+     * @param emailAddress  The email address
      * @return <code>NotificationResponse</code>
      * @throws NotificationClientException
      */
-    public NotificationResponse sendEmail(String templateId, String to) throws NotificationClientException {
-        return postRequest("email", templateId, to, null);
+    public NotificationResponse sendEmail(String templateId, String emailAddress) throws NotificationClientException {
+        return postRequest("email", templateId, emailAddress, null);
     }
 
     /**
      * The sendSms method will create an HTTPS POST request. A JWT token will be created and added as an Authorization header to the request.
      *
      * @param templateId      Find templateId by clicking API info for the template you want to send
-     * @param to              The mobile phone number
+     * @param phoneNumber              The mobile phone number
      * @param personalisation HashMap representing the placeholders for the template if any. For example, key=name value=Bob
      * @return <code>NotificationResponse</code>
      * @throws NotificationClientException
      */
-    public NotificationResponse sendSms(String templateId, String to, HashMap<String, String> personalisation) throws NotificationClientException {
-        return postRequest("sms", templateId, to, personalisation);
+    public NotificationResponse sendSms(String templateId, String phoneNumber, HashMap<String, String> personalisation) throws NotificationClientException {
+        return postRequest("sms", templateId, phoneNumber, personalisation);
     }
 
     /**
      * The sendSms method will create an HTTPS POST request. A JWT token will be created and added as an Authorization header to the request.
      *
      * @param templateId Find templateId by clicking API info for the template you want to send
-     * @param to         The mobile phone number
+     * @param phoneNumber The mobile phone number
      * @return <code>NotificationResponse</code>
      * @throws NotificationClientException
      */
-    public NotificationResponse sendSms(String templateId, String to) throws NotificationClientException {
-        return postRequest("sms", templateId, to, null);
+    public NotificationResponse sendSms(String templateId, String phoneNumber) throws NotificationClientException {
+        return postRequest("sms", templateId, phoneNumber, null);
     }
 
-    private NotificationResponse postRequest(String messageType, String templateId, String to, HashMap<String, String> personalisation) throws NotificationClientException {
+    private NotificationResponse postRequest(String messageType, String templateId, String recipient, HashMap<String, String> personalisation) throws NotificationClientException {
         HttpsURLConnection conn = null;
         try {
-            JSONObject body = createBodyForRequest(templateId, to, personalisation);
+            JSONObject body = createBodyForRequest(templateId, recipient, personalisation);
 
             Authentication tg = new Authentication();
             String token = tg.create(serviceId, apiKey);

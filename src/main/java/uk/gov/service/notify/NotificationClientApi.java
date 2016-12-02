@@ -9,43 +9,43 @@ public interface NotificationClientApi {
      * The sendEmail method will create an HTTPS POST request. A JWT token will be created and added as an Authorization header to the request.
      *
      * @param templateId Find templateId by clicking API info for the template you want to send
-     * @param to The email address
+     * @param emailAddress The email address
      * @param personalisation HashMap representing the placeholders for the template if any. For example, key=name value=Bob
      * @return <code>NotificationResponse</code>
      * @throws NotificationClientException
      */
-    NotificationResponse sendEmail(String templateId, String to, HashMap<String, String> personalisation) throws NotificationClientException;
+    NotificationResponse sendEmail(String templateId, String emailAddress, HashMap<String, String> personalisation) throws NotificationClientException;
 
     /**
      * The sendEmail method will create an HTTPS POST request. A JWT token will be created and added as an Authorization header to the request.
      *
      * @param templateId Find templateId by clicking API info for the template you want to send
-     * @param to The email address
+     * @param emailAddress The email address
      * @return <code>NotificationResponse</code>
      * @throws NotificationClientException
      */
-    NotificationResponse sendEmail(String templateId, String to) throws NotificationClientException;
+    NotificationResponse sendEmail(String templateId, String emailAddress) throws NotificationClientException;
 
     /**
      * The sendSms method will create an HTTPS POST request. A JWT token will be created and added as an Authorization header to the request.
      *
      * @param templateId Find templateId by clicking API info for the template you want to send
-     * @param to The mobile phone number
+     * @param phoneNumber The mobile phone number
      * @param personalisation HashMap representing the placeholders for the template if any. For example, key=name value=Bob
      * @return <code>NotificationResponse</code>
      * @throws NotificationClientException
      */
-    NotificationResponse sendSms(String templateId, String to, HashMap<String, String> personalisation) throws NotificationClientException;
+    NotificationResponse sendSms(String templateId, String phoneNumber, HashMap<String, String> personalisation) throws NotificationClientException;
 
     /**
      * The sendSms method will create an HTTPS POST request. A JWT token will be created and added as an Authorization header to the request.
      *
      * @param templateId Find templateId by clicking API info for the template you want to send
-     * @param to The mobile phone number
+     * @param phoneNumber The mobile phone number
      * @return <code>NotificationResponse</code>
      * @throws NotificationClientException
      */
-    NotificationResponse sendSms(String templateId, String to) throws NotificationClientException;
+    NotificationResponse sendSms(String templateId, String phoneNumber) throws NotificationClientException;
 
     /**
      * The getNotificationById method will return a <code>Notification</code> for a given notification id.

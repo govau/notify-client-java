@@ -82,12 +82,17 @@ Generate an API key by signing in to
 [GOV.UK Notify](https://www.notifications.service.gov.uk) and going to
 the **API integration** page.
 
+Use this constructor if you require a proxy for the https requests.
+```java
+NotificationClient client = new NotificationClient(apiKey, proxy);
+```
+
 ## Send a message
 
 Text message:
 
 ```java
-NotificationResponse response = client.sendSms(templateId, mobileNumber);
+NotificationResponse response = client.sendSms(templateId, phoneNumber);
 ```
 
 Email:

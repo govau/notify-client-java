@@ -29,11 +29,8 @@ public class TestNotificationClient {
         if(args.length == 2) {
             client = new NotificationClient(args[0], args[1]);
         }
-        if(args.length == 3) {
-            client = new NotificationClient(args[0], args[1], args[2]);
-        }
         else{
-            System.out.println("expected either 2 or 3 arguments  got: " + args.length);
+            System.out.println("expected either 2 arguments  got: " + args.length);
             System.exit(1);
         }
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
