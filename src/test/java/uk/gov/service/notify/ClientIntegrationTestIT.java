@@ -4,13 +4,12 @@ import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -19,7 +18,7 @@ public class ClientIntegrationTestIT {
     @Test
     public void testEmailNotificationIT() throws NotificationClientException, InterruptedException {
         NotificationClient client = getClient();
-        SendEmailResponse emailResponse = sendEmail(client);
+        SendEmailResponse emailResponse = sendEmailAndAssertResponse(client);
         Notification notification = client.getNotificationById(emailResponse.getNotificationId().toString());
         assertNotification(notification);
     }
@@ -27,7 +26,7 @@ public class ClientIntegrationTestIT {
     @Test
     public void testSmsNotificationIT() throws NotificationClientException, InterruptedException {
         NotificationClient client = getClient();
-        SendSmsResponse response = sendSms(client);
+        SendSmsResponse response = sendSmsAndAssertResponse(client);
         Notification notification = client.getNotificationById(response.getNotificationId().toString());
         assertNotification(notification);
     }
@@ -37,11 +36,13 @@ public class ClientIntegrationTestIT {
         NotificationClient client = getClient();
         NotificationList notificationList = client.getNotifications(null, null);
         assertNotNull(notificationList);
-        assertNotNull(notificationList.getTotal());
         assertNotNull(notificationList.getNotifications());
         assertFalse(notificationList.getNotifications().isEmpty());
         // Just check the first notification in the list.
         assertNotification(notificationList.getNotifications().get(0));
+        String baseUrl = System.getenv("NOTIFY_API_URL");
+        assertEquals(baseUrl + "/v2/notifications", notificationList.getCurrentPageLink());
+
     }
 
     @Test
@@ -75,7 +76,7 @@ public class ClientIntegrationTestIT {
         return client;
     }
 
-    private SendEmailResponse sendEmail(final NotificationClient client) throws NotificationClientException {
+    private SendEmailResponse sendEmailAndAssertResponse(final NotificationClient client) throws NotificationClientException {
         HashMap<String, String> personalisation = new HashMap<>();
         String uniqueName = UUID.randomUUID().toString();
         personalisation.put("name", uniqueName);
@@ -85,7 +86,7 @@ public class ClientIntegrationTestIT {
         return response;
     }
 
-    private SendSmsResponse sendSms(final NotificationClient client) throws NotificationClientException {
+    private SendSmsResponse sendSmsAndAssertResponse(final NotificationClient client) throws NotificationClientException {
         HashMap<String, String> personalisation = new HashMap<>();
         String uniqueName = UUID.randomUUID().toString();
         personalisation.put("name", uniqueName);
@@ -117,43 +118,42 @@ public class ClientIntegrationTestIT {
         assertNotNull(response.getTemplateVersion());
         assertNotNull(response.getTemplateId());
     }
-
-
-    private Notification assertNotification(Notification notification) throws NotificationClientException {
+    private Notification assertNotification(Notification notification){
         assertNotNull(notification);
         assertNotNull(notification.getId());
         assertNotNull(notification.getTemplateId());
         assertNotNull(notification.getTemplateVersion());
+        assertNotNull(notification.getTemplateUri());
         assertNotNull(notification.getCreatedAt());
         assertNotNull(notification.getStatus());
         assertNotNull(notification.getNotificationType());
         if(notification.getNotificationType().equals("sms")){
-            assertNotNull(notification.getPhoneNumber());
-            assertNull(notification.getEmailAddress());
-            assertNull(notification.getLine1());
-            assertNull(notification.getLine2());
-            assertNull(notification.getLine3());
-            assertNull(notification.getLine4());
-            assertNull(notification.getLine5());
-            assertNull(notification.getLine6());
-            assertNull(notification.getPostcode());
+            assertTrue(notification.getPhoneNumber().isPresent());
+            assertEquals(Optional.empty(), notification.getEmailAddress());
+            assertEquals(Optional.empty(), notification.getLine1());
+            assertEquals(Optional.empty(), notification.getLine2());
+            assertEquals(Optional.empty(), notification.getLine3());
+            assertEquals(Optional.empty(), notification.getLine4());
+            assertEquals(Optional.empty(), notification.getLine5());
+            assertEquals(Optional.empty(), notification.getLine6());
+            assertEquals(Optional.empty(), notification.getPostcode());
         }
         if(notification.getNotificationType().equals("email")){
-            assertNotNull(notification.getEmailAddress());
-            assertNull(notification.getPhoneNumber());
-            assertNull(notification.getLine1());
-            assertNull(notification.getLine2());
-            assertNull(notification.getLine3());
-            assertNull(notification.getLine4());
-            assertNull(notification.getLine5());
-            assertNull(notification.getLine6());
-            assertNull(notification.getPostcode());
+            assertTrue(notification.getEmailAddress().isPresent());
+            assertEquals(Optional.empty(), notification.getPhoneNumber());
+            assertEquals(Optional.empty(), notification.getLine1());
+            assertEquals(Optional.empty(), notification.getLine2());
+            assertEquals(Optional.empty(), notification.getLine3());
+            assertEquals(Optional.empty(), notification.getLine4());
+            assertEquals(Optional.empty(), notification.getLine5());
+            assertEquals(Optional.empty(), notification.getLine6());
+            assertEquals(Optional.empty(), notification.getPostcode());
         }
         if(notification.getNotificationType().equals("letter")){
-            assertNotNull(notification.getLine1());
+            assertTrue(notification.getLine1().isPresent());
             // the other address lines are optional.
-            assertNull(notification.getEmailAddress());
-            assertNull(notification.getPhoneNumber());
+            assertEquals(Optional.empty(), notification.getEmailAddress());
+            assertEquals(Optional.empty(), notification.getPhoneNumber());
         }
 
         assertTrue("expected status to be created, sending or delivered", Arrays.asList("created", "sending", "delivered").contains(notification.getStatus()));

@@ -7,25 +7,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 public class Notification {
-//    "id": uuid,
-//            "reference": {"type": ["string", "null"]},
-//            "email_address": {"type": ["string", "null"]},
-//            "phone_number": {"type": ["string", "null"]},
-//            "line_1": {"type": ["string", "null"]},
-//            "line_2": {"type": ["string", "null"]},
-//            "line_3": {"type": ["string", "null"]},
-//            "line_4": {"type": ["string", "null"]},
-//            "line_5": {"type": ["string", "null"]},
-//            "line_6": {"type": ["string", "null"]},
-//            "postcode": {"type": ["string", "null"]},
-//            "type": {"enum": ["sms", "letter", "email"]},
-//            "status": {"type": "string"},
-//            "template": template,
-//            "created_at": {"type": "string"},
-//            "sent_at": {"type": ["string", "null"]},
-//            "completed_at": {"type": ["string", "null"]}
-
-
     private UUID id;
     private Optional<String> reference;
     private Optional<String> emailAddress;
@@ -39,8 +20,9 @@ public class Notification {
     private Optional<String> postcode;
     private String notificationType;
     private String status;
-    private String templateId;
+    private UUID templateId;
     private int templateVersion;
+    private String templateUri;
     private DateTime createdAt;
     private Optional<DateTime> sentAt;
     private Optional<DateTime> completedAt;
@@ -70,8 +52,9 @@ public class Notification {
         postcode = data.isNull("postcode") ? Optional.empty() : Optional.of(data.getString("postcode"));
         notificationType = data.getString("type");
         JSONObject template = data.getJSONObject("template");
-        templateId = template.getString("id");
-        templateVersion = data.getInt("template_version");
+        templateId = UUID.fromString(template.getString("id"));
+        templateVersion = template.getInt("version");
+        templateUri = template.getString("uri");
         status = data.getString("status");
         createdAt = new DateTime(data.getString("created_at"));
         sentAt =  data.isNull("sent_at") ? Optional.empty() : Optional.of(new DateTime(data.getString("sent_at")));
@@ -130,12 +113,16 @@ public class Notification {
         return status;
     }
 
-    public String getTemplateId() {
+    public UUID getTemplateId() {
         return templateId;
     }
 
     public int getTemplateVersion() {
         return templateVersion;
+    }
+
+    public String getTemplateUri(){
+        return templateUri;
     }
 
     public DateTime getCreatedAt() {
@@ -168,6 +155,7 @@ public class Notification {
                 ", status='" + status + '\'' +
                 ", templateId='" + templateId + '\'' +
                 ", templateVersion=" + templateVersion +
+                ", templateUri=" + templateUri +
                 ", createdAt=" + createdAt +
                 ", sentAt=" + sentAt +
                 ", completedAt=" + completedAt +

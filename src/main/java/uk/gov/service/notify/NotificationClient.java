@@ -222,7 +222,7 @@ public class NotificationClient implements NotificationClientApi {
         StringBuilder stringBuilder;
         HttpsURLConnection conn = null;
         try {
-            URL url = new URL(baseUrl + "/notifications/" + notificationId);
+            URL url = new URL(baseUrl + "/v2/notifications/" + notificationId);
             conn = getConnection(url);
             conn.setRequestMethod("GET");
             Authentication authentication = new Authentication();
@@ -271,7 +271,7 @@ public class NotificationClient implements NotificationClientApi {
         StringBuilder stringBuilder;
         HttpsURLConnection conn = null;
         try {
-            URL url = new URL(baseUrl + "/notifications");
+            URL url = new URL(baseUrl + "/v2/notifications");
             conn = getConnection(url);
             conn.setRequestMethod("GET");
             Authentication authentication = new Authentication();
