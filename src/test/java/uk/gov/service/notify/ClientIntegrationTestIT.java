@@ -81,7 +81,7 @@ public class ClientIntegrationTestIT {
         String uniqueName = UUID.randomUUID().toString();
         personalisation.put("name", uniqueName);
         SendEmailResponse response = client.sendEmail(System.getenv("EMAIL_TEMPLATE_ID"),
-                System.getenv("FUNCTIONAL_TEST_EMAIL"), personalisation);
+                System.getenv("FUNCTIONAL_TEST_EMAIL"), personalisation, uniqueName);
         assertNotificationEmailResponse(response, uniqueName);
         return response;
     }
@@ -90,7 +90,7 @@ public class ClientIntegrationTestIT {
         HashMap<String, String> personalisation = new HashMap<>();
         String uniqueName = UUID.randomUUID().toString();
         personalisation.put("name", uniqueName);
-        SendSmsResponse response = client.sendSms(System.getenv("SMS_TEMPLATE_ID"), System.getenv("FUNCTIONAL_TEST_NUMBER"), personalisation);
+        SendSmsResponse response = client.sendSms(System.getenv("SMS_TEMPLATE_ID"), System.getenv("FUNCTIONAL_TEST_NUMBER"), personalisation, uniqueName);
         assertNotificationSmsResponse(response, uniqueName);
         return response;
     }
@@ -98,6 +98,7 @@ public class ClientIntegrationTestIT {
     private void assertNotificationSmsResponse(final SendSmsResponse response, final String uniqueName){
         assertNotNull(response);
         assertTrue(response.getBody().contains(uniqueName));
+        assertEquals(Optional.of(uniqueName), response.getReference());
         assertNotNull(response.getNotificationId());
         assertNotNull(response.getTemplateVersion());
         assertNotNull(response.getTemplateUri());
@@ -109,6 +110,7 @@ public class ClientIntegrationTestIT {
     private void assertNotificationEmailResponse(final SendEmailResponse response, final String uniqueName){
         assertNotNull(response);
         assertTrue(response.getBody().contains(uniqueName));
+        assertEquals(Optional.of(uniqueName), response.getReference());
         assertNotNull(response.getNotificationId());
         assertNotNull(response.getTemplateVersion());
         assertNotNull(response.getSubject());
