@@ -43,7 +43,7 @@ Then add the Maven dependency to your project.
     <dependency>
         <groupId>uk.gov.service.notify</groupId>
         <artifactId>notifications-java-client</artifactId>
-        <version>2.2.1-RELEASE</version>
+        <version>3.0.0-RELEASE</version>
     </dependency>
 
 ```
@@ -58,7 +58,7 @@ repositories {
 }
 
 dependencies {
-    compile('uk.gov.service.notify:notifications-java-client:2.2.1-RELEASE')
+    compile('uk.gov.service.notify:notifications-java-client:3.0.0-RELEASE')
 }
 ```
 
@@ -82,36 +82,35 @@ Generate an API key by signing in to
 [GOV.UK Notify](https://www.notifications.service.gov.uk) and going to
 the **API integration** page.
 
-Use this constructor if you require a proxy for the https requests.
-```java
-NotificationClient client = new NotificationClient(apiKey, proxy);
-```
+## Send messages
 
-## Send a message
-
-Text message:
-
-```java
-NotificationResponse response = client.sendSms(templateId, phoneNumber);
-```
-
-Email:
-
-```java
-NotificationResponse response = client.sendEmail(templateId, emailAddress);
-```
-
-Find `templateId` by clicking **API info** for the template you want to send.
-
-If a template has placeholders, you need to provide their values in `personalisation`, for example:
+### Text message
 
 ```java
 HashMap<String, String> personalisation = new HashMap<>();
 personalisation.put("name", "Jo");
 personalisation.put("reference_number", "13566");
-NotificationResponse response = client.sendEmail(emailTemplateId,
-        emailAddress, personalisation);
+SendSmsResponse response = client.sendSms(templateId, mobileNumber, personalisation, "yourReferenceString");
 ```
+
+### Email:
+
+```java
+HashMap<String, String> personalisation = new HashMap<>();
+personalisation.put("name", "Jo");
+personalisation.put("reference_number", "13566");
+SendEmailResponse response = client.sendEmail(templateId, mobileNumber, personalisation, "yourReferenceString");
+```
+### Arguments
+#### `templateId`
+
+Find by clicking **API info** for the template you want to send.
+
+#### `personalisation`
+If a template has placeholders, you need to provide their values. `personalisation` can be an empty map or null.
+
+#### `reference`
+An optional unique identifier for the notification or an identifier for a batch of notifications. `reference` can be an empty string or null.
 
 ## Get the status of one message
 
@@ -122,24 +121,33 @@ Notification notification = client.getNotificationById(notificationId);
 ## Get the status of all messages
 
 ```java
-Notification notification = client.getNotification(status, notificationType);
+Notification notification = client.getNotifications(status, notificationType, reference);
 ```
 
-Optional `status` can be one of:
+### Arguments
 
-* `null` (returns all messages)
-* `created`
-* `sending`
-* `delivered`
-* `permanent-failure`
-* `temporary-failure`
-* `technical-failure`
+#### `template_type`
 
-Optional `notificationType` can be one of:
+You can filter the notifications by the following options:
 
-* `null` (returns all messages)
 * `email`
 * `sms`
+* `letter`
+You can also pass in an empty string or null to ignore the filter.
 
+#### `status`
 
+You can filter the notifications by the following options:
 
+* `sending` - the message is queued to be sent by the provider.
+* `delivered` - the message was successfully delivered.
+* `failed` - this will return all failure statuses `permanent-failure`, `temporary-failure` and `technical-failure`.
+* `permanent-failure` - the provider was unable to deliver message, email or phone number does not exist; remove this recipient from your list.
+* `temporary-failure` - the provider was unable to deliver message, email box was full or the phone was turned off; you can try to send the message again.
+* `technical-failure` - Notify had a technical failure; you can try to send the message again.
+
+You can also pass in an empty string or null to ignore the filter.
+
+#### `reference`
+This is the `reference` you gave at the time of sending the notification. You can also pass in an empty string or null to ignore the filter.
+The `reference` can be a unique identifier for the notification or an identifier for a batch of notifications.

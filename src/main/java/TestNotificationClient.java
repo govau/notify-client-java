@@ -149,12 +149,14 @@ public class TestNotificationClient {
                 properties.put(keyValue[0], keyValue[1]);
             }
         }
+        System.out.println("Enter the reference you would like to use for this notification: ");
+        String reference = reader.readLine();
         if (messageType.equals("sms")){
-            SendSmsResponse response = client.sendSms(templateId, to, properties);
+            SendSmsResponse response = client.sendSms(templateId, to, properties, reference);
             System.out.println(response);
         }
         else{
-            SendEmailResponse response = client.sendEmail(templateId, to, properties);
+            SendEmailResponse response = client.sendEmail(templateId, to, properties, reference);
             System.out.println(response);
         }
     }

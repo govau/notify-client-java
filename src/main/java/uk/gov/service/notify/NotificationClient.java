@@ -107,8 +107,10 @@ public class NotificationClient implements NotificationClientApi {
      * @param templateId      Find templateId by clicking API info for the template you want to send
      * @param emailAddress    The email address
      * @param personalisation HashMap representing the placeholders for the template if any. For example, key=name value=Bob
+     *                        Can be an empty map or null.
      * @param reference       A reference specified by the service for the notification. Get all notifications can be filtered by this reference.
      *                        This reference can be unique or used used to refer to a batch of notifications.
+     *                        Can be an empty string or null.
      * @return <code>SendEmailResponse</code>
      * @throws NotificationClientException
      */
@@ -146,38 +148,15 @@ public class NotificationClient implements NotificationClientApi {
     }
 
     /**
-     * The sendEmail method will create an HTTPS POST request. A JWT token will be created and added as an Authorization header to the request.
-     *
-     * @param templateId      Find templateId by clicking API info for the template you want to send
-     * @param emailAddress              The email address
-     * @param personalisation HashMap representing the placeholders for the template if any. For example, key=name value=Bob
-     * @return <code>SendEmailResponse</code>
-     * @throws NotificationClientException
-     */
-    public SendEmailResponse sendEmail(String templateId, String emailAddress, HashMap<String, String> personalisation) throws NotificationClientException {
-        return sendEmail(templateId, emailAddress, personalisation, null);
-    }
-
-    /**
-     * The sendEmail method will create an HTTPS POST request. A JWT token will be created and added as an Authorization header to the request.
-     *
-     * @param templateId    Find templateId by clicking API info for the template you want to send
-     * @param emailAddress  The email address
-     * @return <code>SendEmailResponse</code>
-     * @throws NotificationClientException
-     */
-    public SendEmailResponse sendEmail(String templateId, String emailAddress) throws NotificationClientException {
-        return sendEmail(templateId, emailAddress, null);
-    }
-
-    /**
      * The sendSms method will create an HTTPS POST request. A JWT token will be created and added as an Authorization header to the request.
      *
      * @param templateId      Find templateId by clicking API info for the template you want to send
      * @param phoneNumber              The mobile phone number
      * @param personalisation HashMap representing the placeholders for the template if any. For example, key=name value=Bob
+     *                        Can be an empty map or null.
      * @param reference       A reference specified by the service for the notification. Get all notifications can be filtered by this reference.
      *                        This reference can be unique or used used to refer to a batch of notifications.
+     *                        Can be an empty string or null.
      * @return <code>SendSmsResponse</code>
      * @throws NotificationClientException
      */
@@ -213,30 +192,6 @@ public class NotificationClient implements NotificationClientApi {
             }
         }
         return null;
-    }
-
-    /**
-     * The sendSms method will create an HTTPS POST request. A JWT token will be created and added as an Authorization header to the request.
-     *
-     * @param templateId      Find templateId by clicking API info for the template you want to send
-     * @param phoneNumber              The mobile phone number
-     * @param personalisation HashMap representing the placeholders for the template if any. For example, key=name value=Bob
-     * @return <code>SendSmsResponse</code>
-     * @throws NotificationClientException
-     */
-    public SendSmsResponse sendSms(String templateId, String phoneNumber, HashMap<String, String> personalisation) throws NotificationClientException {
-        return sendSms(templateId, phoneNumber, personalisation, null);
-    }
-    /**
-     * The sendSms method will create an HTTPS POST request. A JWT token will be created and added as an Authorization header to the request.
-     *
-     * @param templateId Find templateId by clicking API info for the template you want to send
-     * @param phoneNumber The mobile phone number
-     * @return <code>SendSmsResponse</code>
-     * @throws NotificationClientException
-     */
-    public SendSmsResponse sendSms(String templateId, String phoneNumber) throws NotificationClientException {
-        return sendSms(templateId, phoneNumber, new HashMap<String, String>());
     }
 
     /**
@@ -354,21 +309,25 @@ public class NotificationClient implements NotificationClientApi {
 
     private JSONObject createBodyForSmsRequest(final String templateId, final String phoneNumber, final HashMap<String, String> personalisation, final String reference) {
         JSONObject body = new JSONObject();
-        body.put("reference", reference);
         body.put("phone_number", phoneNumber);
         body.put("template_id", templateId);
         if (personalisation != null && !personalisation.isEmpty()) {
             body.put("personalisation", new JSONObject(personalisation));
         }
+        if(reference != null && !reference.isEmpty()){
+            body.put("reference", reference);
+        }
         return body;
     }
     private JSONObject createBodyForEmailRequest(final String templateId, final String emailAddress, final HashMap<String, String> personalisation, final String reference) {
         JSONObject body = new JSONObject();
-        body.put("reference", reference);
         body.put("email_address", emailAddress);
         body.put("template_id", templateId);
         if (personalisation != null && !personalisation.isEmpty()) {
             body.put("personalisation", new JSONObject(personalisation));
+        }
+        if(reference != null && !reference.isEmpty()){
+            body.put("reference", reference);
         }
         return body;
     }

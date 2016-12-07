@@ -1,0 +1,18 @@
+## 3.0.0-RELEASE
+
+### Changed
+* Using version 2 of the notification-api.
+* Update to `NotificationClient.sendSms()`: 
+    * added `reference`: an optional unique identifier for the notification or an identifier for a batch of notifications. `reference` can be an empty string or null.
+    * returns SendSmsResponse, this object only contains the necessary information about the notification.
+    * only one method signature:
+            `public SendSmsResponse sendSms(String templateId, String phoneNumber, HashMap<String, String> personalisation, String reference) throws NotificationClientException;`
+      Where `personalisation` can be an empty map or null and `reference` can be an empty string or null.
+* Update to `NotificationClient.sendEmail()`: 
+    * added `reference`: an optional unique identifier for the notification or an identifier for a batch of notifications. `reference` can be an empty string or null.
+    * returns SendEmailResponse, this object only contains the necessary information about the notification.
+    * only one method signature:
+            `public SendEmailResponse sendEmail(String templateId, String emailAddress, HashMap<String, String> personalisation, String reference) throws NotificationClientException;`
+      Where `personalisation` can be an empty map or null and `reference` can be an empty string or null.
+* Notifications can be filtered by `reference` using the getNotifications() method.
+* Notification class has been changed to reflect the changes to the version 2 api changes. 

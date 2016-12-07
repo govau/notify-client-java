@@ -49,7 +49,7 @@ public class ClientIntegrationTestIT {
     public void testEmailNotificationWithoutPersonalisationReturnsErrorMessageIT() {
         NotificationClient client = getClient();
         try {
-            client.sendEmail(System.getenv("EMAIL_TEMPLATE_ID"), System.getenv("FUNCTIONAL_TEST_EMAIL"));
+            client.sendEmail(System.getenv("EMAIL_TEMPLATE_ID"), System.getenv("FUNCTIONAL_TEST_EMAIL"), null, null);
             fail("Expected NotificationClientException: Template missing personalisation: name");
         } catch (NotificationClientException e) {
             assert(e.getMessage().contains("Template missing personalisation: name"));
@@ -61,7 +61,7 @@ public class ClientIntegrationTestIT {
     public void testSmsNotificationWithoutPersonalisationReturnsErrorMessageIT() {
         NotificationClient client = getClient();
         try {
-            client.sendSms(System.getenv("SMS_TEMPLATE_ID"), System.getenv("FUNCTIONAL_TEST_NUMBER"));
+            client.sendSms(System.getenv("SMS_TEMPLATE_ID"), System.getenv("FUNCTIONAL_TEST_NUMBER"), null, null);
             fail("Expected NotificationClientException: Template missing personalisation: name");
         } catch (NotificationClientException e) {
             assert(e.getMessage().contains("Template missing personalisation: name"));
@@ -72,8 +72,7 @@ public class ClientIntegrationTestIT {
     private NotificationClient getClient(){
         String apiKey = System.getenv("API_KEY");
         String baseUrl = System.getenv("NOTIFY_API_URL");
-        NotificationClient client = new NotificationClient(apiKey, baseUrl);
-        return client;
+        return new NotificationClient(apiKey, baseUrl);
     }
 
     private SendEmailResponse sendEmailAndAssertResponse(final NotificationClient client) throws NotificationClientException {
