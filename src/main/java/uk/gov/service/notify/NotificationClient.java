@@ -107,10 +107,10 @@ public class NotificationClient implements NotificationClientApi {
      * @param templateId      Find templateId by clicking API info for the template you want to send
      * @param emailAddress    The email address
      * @param personalisation HashMap representing the placeholders for the template if any. For example, key=name value=Bob
-     *                        Can be an empty map or null.
+     *                        Can be an empty map or null when the template does not require placeholders.
      * @param reference       A reference specified by the service for the notification. Get all notifications can be filtered by this reference.
      *                        This reference can be unique or used used to refer to a batch of notifications.
-     *                        Can be an empty string or null.
+     *                        Can be an empty string or null, when you do not require a reference for the notifications.
      * @return <code>SendEmailResponse</code>
      * @throws NotificationClientException
      */
@@ -153,10 +153,10 @@ public class NotificationClient implements NotificationClientApi {
      * @param templateId      Find templateId by clicking API info for the template you want to send
      * @param phoneNumber              The mobile phone number
      * @param personalisation HashMap representing the placeholders for the template if any. For example, key=name value=Bob
-     *                        Can be an empty map or null.
+     *                        Can be an empty map or null when the template does not require placeholders.
      * @param reference       A reference specified by the service for the notification. Get all notifications can be filtered by this reference.
      *                        This reference can be unique or used used to refer to a batch of notifications.
-     *                        Can be an empty string or null.
+     *                        Can be an empty string or null, when you do not require a reference for the notifications.
      * @return <code>SendSmsResponse</code>
      * @throws NotificationClientException
      */

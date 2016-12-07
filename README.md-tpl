@@ -83,7 +83,6 @@ Generate an API key by signing in to
 the **API integration** page.
 
 ## Send messages
-
 ### Text message
 
 ```java
@@ -93,6 +92,79 @@ personalisation.put("reference_number", "13566");
 SendSmsResponse response = client.sendSms(templateId, mobileNumber, personalisation, "yourReferenceString");
 ```
 
+<details>
+<summary>
+SendSmsResponse
+</summary>
+
+If the request is successful, the SendSmsResponse is returned from the client. Attributes of the SendSmsResponse are listed below.
+
+```java
+    private UUID notificationId;
+    private Optional<String> reference;
+    private UUID templateId;
+    private int templateVersion;
+    private String templateUri;
+    private String body;
+    private Optional<String> fromNumber;
+
+```
+
+Otherwise the client will raise a `NotificationClientException`:
+
+<table>
+<thead>
+<tr>
+<th>message</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<pre>
+Status code: 400 {
+"errors":
+[{
+    "error": "TooManyRequestsError",
+    "message": "Exceeded send limits (50) for today"
+}]
+}
+</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre>
+Status code 400: {
+"errors":
+[{
+    "error": "BadRequestError",
+    "message": "Can"t send to this recipient using a team-only API key"
+]}
+}
+</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre>
+Status code: 400 {
+"errors":
+[{
+    "error": "BadRequestError",
+    "message": "Can"t send to this recipient when service is in trial mode
+                - see https://www.notifications.service.gov.uk/trial-mode"
+}]
+}
+</pre>
+</td>
+</tr>
+<tr>
+</tbody>
+</table>
+</details>
+
+
 ### Email:
 
 ```java
@@ -101,13 +173,94 @@ personalisation.put("name", "Jo");
 personalisation.put("reference_number", "13566");
 SendEmailResponse response = client.sendEmail(templateId, mobileNumber, personalisation, "yourReferenceString");
 ```
+
+
+<details>
+<summary>
+SendEmailResponse
+</summary>
+
+If the request is successful, the SendEmailResponse is returned from the client. Attributes of the SendEmailResponse are listed below.
+
+```java
+	UUID notificationId;
+	Optional<String> reference;
+	UUID templateId;
+	int templateVersion;
+	String templateUri;
+	String body;
+	String subject;
+	Optional<String> fromEmail;
+
+```
+
+Otherwise the client will raise a `NotificationClientException`:
+
+<table>
+<thead>
+<tr>
+<th>message</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<pre>
+Status code: 400 {
+"errors":
+[{
+    "error": "TooManyRequestsError",
+    "message": "Exceeded send limits (50) for today"
+}]
+}
+</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre>
+Status code 400: {
+"errors":
+[{
+    "error": "BadRequestError",
+    "message": "Can"t send to this recipient using a team-only API key"
+]}
+}
+</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre>
+Status code: 400 {
+"errors":
+[{
+    "error": "BadRequestError",
+    "message": "Can"t send to this recipient when service is in trial mode
+                - see https://www.notifications.service.gov.uk/trial-mode"
+}]
+}
+</pre>
+</td>
+</tr>
+<tr>
+</tbody>
+</table>
+</details>
+
 ### Arguments
+#### `phoneNumber`
+The mobile number the notification is sent to.
+
+#### `emailAddress`
+The email address the notification is sent to.
+
 #### `templateId`
 
 Find by clicking **API info** for the template you want to send.
 
 #### `personalisation`
-If a template has placeholders, you need to provide their values. `personalisation` can be an empty map or null.
+If a template has placeholders, you need to provide their values. `personalisation` can be an empty or null in which case no placeholders are provided for the notification.
 
 #### `reference`
 An optional unique identifier for the notification or an identifier for a batch of notifications. `reference` can be an empty string or null.
@@ -117,23 +270,120 @@ An optional unique identifier for the notification or an identifier for a batch 
 ```java
 Notification notification = client.getNotificationById(notificationId);
 ```
- 
+
+
+<details>
+<summary>
+Notification
+</summary>
+
+If successful a `notification` is returned. Below is a list of attributes in a `notification`.
+```java
+    UUID id;
+    Optional<String> reference;
+    Optional<String> emailAddress;
+    Optional<String> phoneNumber;
+    Optional<String> line1;
+    Optional<String> line2;
+    Optional<String> line3;
+    Optional<String> line4;
+    Optional<String> line5;
+    Optional<String> line6;
+    Optional<String> postcode;
+    String notificationType;
+    String status;
+    UUID templateId;
+    int templateVersion;
+    String templateUri;
+    DateTime createdAt;
+    Optional<DateTime> sentAt;
+    Optional<DateTime> completedAt;
+```
+
+Otherwise the client will raise a `NotificationClientException`.
+
+<table>
+<thead>
+<tr>
+<th>message</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<pre>
+Status code: 404 {
+"errors":
+[{
+    "error": "NoResultFound",
+    "message": "No result found"
+}]
+}
+</pre>
+<pre>
+Status code: 400 {
+"errors":
+[{
+    "error": "ValidationError",
+    "message": "id is not a valid UUID"
+}]
+}
+</pre>
+</tbody>
+</table>
+</details>
+
 ## Get the status of all messages
 
 ```java
-Notification notification = client.getNotifications(status, notificationType, reference);
+NotificationList notification = client.getNotifications(status, notificationType, reference);
 ```
 
+<details>
+<summary>
+NotificationList
+</summary>
+If successful a `NotificationList` is returned. Below is a list of attributes in a`NotificationList`.
+```java
+    List<Notification> notifications;
+    String currentPageLink;
+    Optional<String> nextPageLink;
+```
+
+Otherwise the client will raise a NotificationClientException.
+
+<table>
+<thead>
+<tr>
+<th>message</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<pre>
+Status code: 404 {
+"errors":
+[{
+	'error': 'ValidationError',
+    'message': 'bad status is not one of [created, sending, delivered, pending, failed, technical-failure, temporary-failure, permanent-failure]'
+}]
+}
+</pre>
+<pre>
+Status code: 400 {
+"errors":
+[{
+    "error": "ValidationError",
+    "message": "Apple is not one of [sms, email, letter]"
+}]
+}
+</pre>
+</tbody>
+</table>
+</details>
+
 ### Arguments
-
-#### `template_type`
-
-You can filter the notifications by the following options:
-
-* `email`
-* `sms`
-* `letter`
-You can also pass in an empty string or null to ignore the filter.
 
 #### `status`
 
@@ -146,6 +396,15 @@ You can filter the notifications by the following options:
 * `temporary-failure` - the provider was unable to deliver message, email box was full or the phone was turned off; you can try to send the message again.
 * `technical-failure` - Notify had a technical failure; you can try to send the message again.
 
+You can also pass in an empty string or null to ignore the filter.
+
+#### `notificationType`
+
+You can filter the notifications by the following options:
+
+* `email`
+* `sms`
+* `letter`
 You can also pass in an empty string or null to ignore the filter.
 
 #### `reference`
