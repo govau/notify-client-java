@@ -237,20 +237,24 @@ public class NotificationClient implements NotificationClientApi {
     /**
      * The getNotifications method will create a GET HTTPS request to retrieve all the notifications.
      *
-     * @param status            If status is not null notifications will only return notifications for the given status.
-     *                          Possible statuses are created|sending|delivered|permanent-failure|temporary-failure|technical-failure
-     * @param notification_type If notification_type is not null only notification of the given status will be returned.
+     * @param status If status is not empty or null notifications will only return notifications for the given status.
+     *               Possible statuses are created|sending|delivered|permanent-failure|temporary-failure|technical-failure
+     * @param notification_type If notification_type is not empty or null only notifications of the given status will be returned.
      *                          Possible notificationTypes are sms|email
+     * @param reference If reference is not empty or null only the notifications with that reference are returned.
      * @return <code>NotificationList</code>
      * @throws NotificationClientException
      */
-    public NotificationList getNotifications(String status, String notification_type) throws NotificationClientException {
+    public NotificationList getNotifications(String status, String notification_type, String reference) throws NotificationClientException {
         JSONObject data = new JSONObject();
         if (status != null && !status.isEmpty()) {
             data.put("status", status);
         }
         if (notification_type != null && !notification_type.isEmpty()) {
             data.put("template_type", notification_type);
+        }
+        if (reference != null && !reference.isEmpty()) {
+            data.put("reference", reference);
         }
         StringBuilder stringBuilder;
         HttpsURLConnection conn = null;

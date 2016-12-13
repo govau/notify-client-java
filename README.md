@@ -73,7 +73,8 @@ Click 'set me up!' on https://bintray.com/gov-uk-notify/maven/notifications-java
 import uk.gov.service.notify.NotificationClient;
 import uk.gov.service.notify.Notification;
 import uk.gov.service.notify.NotificationList;
-import uk.gov.service.notify.NotificationResponse;
+import uk.gov.service.notify.SendEmailResponse;
+import uk.gov.service.notify.SendSmsResponse;
 
 NotificationClient client = new NotificationClient(apiKey);
 ```

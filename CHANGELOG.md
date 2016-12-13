@@ -14,5 +14,7 @@
     * only one method signature:
             `public SendEmailResponse sendEmail(String templateId, String emailAddress, HashMap<String, String> personalisation, String reference) throws NotificationClientException;`
       Where `personalisation` can be an empty map or null and `reference` can be an empty string or null.
-* Notifications can be filtered by `reference` using the getNotifications() method.
-* Notification class has been changed to reflect the changes to the version 2 api changes. 
+* Notification class has been changed; return type of `NotificationClient.getNotificationById(id)`, see the README for details.
+* `NotificationClient.getAllNotifications()` 
+    * Notifications can be now be filtered by `reference`, see the README for details.
+    * NotificationList response has changed, see the README for details.

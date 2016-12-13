@@ -34,7 +34,7 @@ public class ClientIntegrationTestIT {
     @Test
     public void testGetAllNotifications() throws NotificationClientException {
         NotificationClient client = getClient();
-        NotificationList notificationList = client.getNotifications(null, null);
+        NotificationList notificationList = client.getNotifications(null, null, null);
         assertNotNull(notificationList);
         assertNotNull(notificationList.getNotifications());
         assertFalse(notificationList.getNotifications().isEmpty());

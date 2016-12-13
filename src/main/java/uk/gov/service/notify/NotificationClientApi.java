@@ -49,14 +49,15 @@ public interface NotificationClientApi {
     /**
      * The getNotifications method will create a GET HTTPS request to retrieve all the notifications.
      *
-     * @param status If status is not null notifications will only return notifications for the given status.
+     * @param status If status is not empty or null notifications will only return notifications for the given status.
      *               Possible statuses are created|sending|delivered|permanent-failure|temporary-failure|technical-failure
-     * @param notification_type If notification_type is not null only notification of the given status will be returned.
+     * @param notification_type If notification_type is not empty or null only notifications of the given status will be returned.
      *                          Possible notificationTypes are sms|email
+     * @param reference If reference is not empty or null only the notifications with that reference are returned.
      * @return <code>NotificationList</code>
      * @throws NotificationClientException
      */
 
-    NotificationList getNotifications(String status, String notification_type) throws NotificationClientException;
+    NotificationList getNotifications(String status, String notification_type, String reference) throws NotificationClientException;
 
 }

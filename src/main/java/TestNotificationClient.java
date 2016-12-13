@@ -100,7 +100,7 @@ public class TestNotificationClient {
                 System.exit(1);
                 break;
         }
-        NotificationList notificationList = client.getNotifications(status, notificationType);
+        NotificationList notificationList = client.getNotifications(status, notificationType, null);
         System.out.println(notificationList);
     }
 
