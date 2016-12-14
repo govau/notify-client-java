@@ -101,13 +101,13 @@ SendSmsResponse
 If the request is successful, the SendSmsResponse is returned from the client. Attributes of the SendSmsResponse are listed below.
 
 ```java
-    private UUID notificationId;
-    private Optional<String> reference;
-    private UUID templateId;
-    private int templateVersion;
-    private String templateUri;
-    private String body;
-    private Optional<String> fromNumber;
+    UUID notificationId;
+    Optional<String> reference;
+    UUID templateId;
+    int templateVersion;
+    String templateUri;
+    String body;
+    Optional<String> fromNumber;
 
 ```
 
@@ -251,10 +251,10 @@ Status code: 400 {
 
 ### Arguments
 #### `phoneNumber`
-The mobile number the notification is sent to.
+The mobile number the SMS notification is sent to.
 
 #### `emailAddress`
-The email address the notification is sent to.
+The email address the email notification is sent to.
 
 #### `templateId`
 
@@ -337,7 +337,7 @@ Status code: 400 {
 ## Get the status of all messages
 
 ```java
-NotificationList notification = client.getNotifications(status, notificationType, reference);
+NotificationList notification = client.getNotifications(status, notificationType, reference, otherThanId);
 ```
 
 <details>
@@ -397,7 +397,7 @@ You can filter the notifications by the following options:
 * `temporary-failure` - the provider was unable to deliver message, email box was full or the phone was turned off; you can try to send the message again.
 * `technical-failure` - Notify had a technical failure; you can try to send the message again.
 
-You can also pass in an empty string or null to ignore the filter.
+You can pass an empty string or null to ignore the filter.
 
 #### `notificationType`
 
@@ -409,5 +409,9 @@ You can filter the notifications by the following options:
 You can also pass in an empty string or null to ignore the filter.
 
 #### `reference`
-This is the `reference` you gave at the time of sending the notification. You can also pass in an empty string or null to ignore the filter.
-The `reference` can be a unique identifier for the notification or an identifier for a batch of notifications.
+This is the `reference` you gave at the time of sending the notification. The `reference` can be a unique identifier for the notification or an identifier for a batch of notifications.
+You can pass an empty string or null to ignore the filter.
+
+#### `olderThanId`
+You can get the notifications older than a given `Notification.notificationId`.
+You can pass an empty string or null to ignore the filter

@@ -16,5 +16,6 @@
       Where `personalisation` can be an empty map or null and `reference` can be an empty string or null.
 * Notification class has been changed; return type of `NotificationClient.getNotificationById(id)`, see the README for details.
 * `NotificationClient.getAllNotifications()` 
-    * Notifications can be now be filtered by `reference`, see the README for details.
+    * Notifications can be filtered by `reference`, see the README for details.
+    * Notifications can be filtered by `olderThanId`, see the README for details.
     * NotificationList response has changed, see the README for details.

@@ -100,7 +100,11 @@ public class TestNotificationClient {
                 System.exit(1);
                 break;
         }
-        NotificationList notificationList = client.getNotifications(status, notificationType, null);
+        System.out.println("Enter a reference to filter the notifications (leave empty to ignore this filter):");
+        String reference = reader.readLine();
+        System.out.println("Enter the notificaiton id to get the notifications older than that notification (leave empty to get the latest list of notifications):");
+        String olderThanId = reader.readLine();
+        NotificationList notificationList = client.getNotifications(status, notificationType, reference, olderThanId);
         System.out.println(notificationList);
     }
 
@@ -149,7 +153,7 @@ public class TestNotificationClient {
                 properties.put(keyValue[0], keyValue[1]);
             }
         }
-        System.out.println("Enter the reference you would like to use for this notification: ");
+        System.out.println("Enter the reference you would like to use for this notification (leave empty if you do not need a reference): ");
         String reference = reader.readLine();
         if (messageType.equals("sms")){
             SendSmsResponse response = client.sendSms(templateId, to, properties, reference);

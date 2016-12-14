@@ -54,10 +54,11 @@ public interface NotificationClientApi {
      * @param notification_type If notification_type is not empty or null only notifications of the given status will be returned.
      *                          Possible notificationTypes are sms|email
      * @param reference If reference is not empty or null only the notifications with that reference are returned.
+     * @param olderThanId If olderThanId is not empty or null only the notifications older than that notification id are returned.
      * @return <code>NotificationList</code>
      * @throws NotificationClientException
      */
 
-    NotificationList getNotifications(String status, String notification_type, String reference) throws NotificationClientException;
+    NotificationList getNotifications(String status, String notification_type, String reference, String olderThanId) throws NotificationClientException;
 
 }

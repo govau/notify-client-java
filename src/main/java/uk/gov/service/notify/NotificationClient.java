@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.http.client.utils.URIBuilder;
 
 import org.json.JSONObject;
 
@@ -139,12 +140,12 @@ public class NotificationClient implements NotificationClientApi {
 
         } catch (IOException e) {
             LOGGER.log(Level.SEVERE, e.toString(), e);
+            throw new NotificationClientException(e);
         } finally {
             if (conn != null) {
                 conn.disconnect();
             }
         }
-        return null;
     }
 
     /**
@@ -186,12 +187,12 @@ public class NotificationClient implements NotificationClientApi {
 
         } catch (IOException e) {
             LOGGER.log(Level.SEVERE, e.toString(), e);
+            throw new NotificationClientException(e);
         } finally {
             if (conn != null) {
                 conn.disconnect();
             }
         }
-        return null;
     }
 
     /**
@@ -226,12 +227,12 @@ public class NotificationClient implements NotificationClientApi {
             }
         } catch (IOException e) {
             LOGGER.log(Level.SEVERE, e.toString(), e);
+            throw new NotificationClientException(e);
         } finally {
             if (conn != null) {
                 conn.disconnect();
             }
         }
-        return null;
     }
 
     /**
@@ -242,31 +243,34 @@ public class NotificationClient implements NotificationClientApi {
      * @param notification_type If notification_type is not empty or null only notifications of the given status will be returned.
      *                          Possible notificationTypes are sms|email
      * @param reference If reference is not empty or null only the notifications with that reference are returned.
+     * @param olderThanId If olderThanId is not empty or null only the notifications older than that notification id are returned.
      * @return <code>NotificationList</code>
      * @throws NotificationClientException
      */
-    public NotificationList getNotifications(String status, String notification_type, String reference) throws NotificationClientException {
-        JSONObject data = new JSONObject();
-        if (status != null && !status.isEmpty()) {
-            data.put("status", status);
-        }
-        if (notification_type != null && !notification_type.isEmpty()) {
-            data.put("template_type", notification_type);
-        }
-        if (reference != null && !reference.isEmpty()) {
-            data.put("reference", reference);
-        }
+    public NotificationList getNotifications(String status, String notification_type, String reference, String olderThanId) throws NotificationClientException {
         StringBuilder stringBuilder;
         HttpsURLConnection conn = null;
         try {
-            URL url = new URL(baseUrl + "/v2/notifications");
-            conn = getConnection(url);
+            URIBuilder builder = new URIBuilder(baseUrl + "/v2/notifications");
+            if (status != null && !status.isEmpty()) {
+                builder.addParameter("status", status);
+            }
+            if (notification_type != null && !notification_type.isEmpty()) {
+                builder.addParameter("template_type", notification_type);
+            }
+            if (reference != null && !reference.isEmpty()) {
+                builder.addParameter("reference", reference);
+            }
+            if (olderThanId != null && !olderThanId.isEmpty()) {
+                builder.addParameter("older_than", olderThanId);
+            }
+
+            conn = getConnection(builder.build().toURL());
             conn.setRequestMethod("GET");
             Authentication authentication = new Authentication();
             String token = authentication.create(serviceId, apiKey);
             conn.setRequestProperty("Authorization", "Bearer " + token);
             conn.setRequestProperty("User-agent", "NOTIFY-API-JAVA-CLIENT/" + version);
-
             conn.connect();
             int httpResult = conn.getResponseCode();
             if (httpResult == 200) {
@@ -277,14 +281,18 @@ public class NotificationClient implements NotificationClientApi {
                 stringBuilder = readStream(new InputStreamReader(conn.getErrorStream(), "utf-8"));
                 throw new NotificationClientException(httpResult, stringBuilder.toString());
             }
+
         } catch (IOException e) {
             LOGGER.log(Level.SEVERE, e.toString(), e);
+            throw new NotificationClientException(e);
+        } catch (URISyntaxException e) {
+            LOGGER.log(Level.SEVERE, e.toString(), e);
+            throw new NotificationClientException(e);
         } finally {
             if (conn != null) {
                 conn.disconnect();
             }
         }
-        return null;
     }
 
     private HttpsURLConnection getConnection(URL url) throws IOException {
