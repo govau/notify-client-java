@@ -23,6 +23,8 @@ public class Notification {
     private UUID templateId;
     private int templateVersion;
     private String templateUri;
+    private String body;
+    private Optional<String> subject;
     private DateTime createdAt;
     private Optional<DateTime> sentAt;
     private Optional<DateTime> completedAt;
@@ -55,6 +57,8 @@ public class Notification {
         templateId = UUID.fromString(template.getString("id"));
         templateVersion = template.getInt("version");
         templateUri = template.getString("uri");
+        body = data.getString("body");
+        subject = data.isNull("subject") ? Optional.empty() : Optional.of(data.getString("subject"));
         status = data.getString("status");
         createdAt = new DateTime(data.getString("created_at"));
         sentAt =  data.isNull("sent_at") ? Optional.empty() : Optional.of(new DateTime(data.getString("sent_at")));
@@ -125,6 +129,14 @@ public class Notification {
         return templateUri;
     }
 
+    public String getBody() {
+        return body;
+    }
+
+    public Optional<String> getSubject() {
+        return subject;
+    }
+
     public DateTime getCreatedAt() {
         return createdAt;
     }
@@ -156,6 +168,8 @@ public class Notification {
                 ", templateId='" + templateId + '\'' +
                 ", templateVersion=" + templateVersion +
                 ", templateUri=" + templateUri +
+                ", body=" + body +
+                ", subject=" + subject +
                 ", createdAt=" + createdAt +
                 ", sentAt=" + sentAt +
                 ", completedAt=" + completedAt +

@@ -34,6 +34,8 @@ public class NotificationTest {
         template.put("version", 1);
         template.put("uri", "https://api.notifications.service.gov.uk/templates/" + templateId);
         content.put("template", template);
+        content.put("body", "Body of the message");
+        content.put("subject", "Subject of the message");
         content.put("created_at", "2016-03-01T08:30:00.000Z");
         content.put("sent_at", "2016-03-01T08:30:03.000Z");
         content.put("completed_at", "2016-03-01T08:30:43.000Z");
@@ -55,6 +57,8 @@ public class NotificationTest {
         assertEquals(UUID.fromString(templateId), notification.getTemplateId());
         assertEquals(1, notification.getTemplateVersion());
         assertEquals("https://api.notifications.service.gov.uk/templates/" + templateId, notification.getTemplateUri());
+        assertEquals("Body of the message", notification.getBody());
+        assertEquals(Optional.of("Subject of the message"), notification.getSubject());
         assertEquals(new DateTime("2016-03-01T08:30:00.000Z"), notification.getCreatedAt());
         assertEquals(Optional.of(new DateTime("2016-03-01T08:30:03.000Z")), notification.getSentAt());
         assertEquals(Optional.of(new DateTime("2016-03-01T08:30:43.000Z")), notification.getCompletedAt());
@@ -84,6 +88,8 @@ public class NotificationTest {
         template.put("version", 1);
         template.put("uri", "https://api.notifications.service.gov.uk/templates/" + templateId);
         content.put("template", template);
+        content.put("body", "Body of the message");
+        content.put("subject", null);
         content.put("created_at", "2016-03-01T08:30:00.000Z");
         content.put("sent_at", "2016-03-01T08:30:03.000Z");
         content.put("completed_at", "2016-03-01T08:30:43.000Z");
@@ -107,6 +113,8 @@ public class NotificationTest {
         assertEquals(UUID.fromString(templateId), notification.getTemplateId());
         assertEquals(1, notification.getTemplateVersion());
         assertEquals("https://api.notifications.service.gov.uk/templates/" + templateId, notification.getTemplateUri());
+        assertEquals("Body of the message", notification.getBody());
+        assertEquals(Optional.empty(), notification.getSubject());
         assertEquals(new DateTime("2016-03-01T08:30:00.000Z"), notification.getCreatedAt());
         assertEquals(Optional.of(new DateTime("2016-03-01T08:30:03.000Z")), notification.getSentAt());
         assertEquals(Optional.of(new DateTime("2016-03-01T08:30:43.000Z")), notification.getCompletedAt());

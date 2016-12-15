@@ -296,6 +296,8 @@ If successful a `notification` is returned. Below is a list of attributes in a `
     UUID templateId;
     int templateVersion;
     String templateUri;
+    String body;
+    Optional<String subject;
     DateTime createdAt;
     Optional<DateTime> sentAt;
     Optional<DateTime> completedAt;

@@ -34,6 +34,8 @@ public class NotificationListTest {
         template.put("version", 1);
         template.put("uri", "https://api.notifications.service.gov.uk/templates/" + templateId);
         email.put("template", template);
+        email.put("body", "Body of the message");
+        email.put("subject", "Subject of the message");
         email.put("created_at", "2016-03-01T08:30:00.000Z");
         email.put("sent_at", "2016-03-01T08:30:03.000Z");
         email.put("completed_at", "2016-03-01T08:30:43.000Z");
@@ -56,6 +58,8 @@ public class NotificationListTest {
         template.put("version", 1);
         template.put("uri", "https://api.notifications.service.gov.uk/templates/" + templateId);
         sms.put("template", template);
+        sms.put("body", "Body of the message");
+        sms.put("subject", null);
         sms.put("created_at", "2016-03-01T08:30:00.000Z");
         sms.put("sent_at", "2016-03-01T08:30:03.000Z");
         sms.put("completed_at", "2016-03-01T08:30:43.000Z");
