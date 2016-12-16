@@ -116,7 +116,7 @@ public class NotificationClient {
      * @throws NotificationClientException
      */
     public SendEmailResponse sendEmail(String templateId, String emailAddress, HashMap<String, String> personalisation, String reference) throws NotificationClientException {
-        JSONObject body = createBodyForEmailRequest(templateId, emailAddress, personalisation, reference);
+        JSONObject body = createBodyForPostRequest(templateId, null, emailAddress, personalisation, reference);
         HttpsURLConnection conn = createConnectionAndSetHeaders(baseUrl + "/v2/notifications/email", "POST");
         String response = performPostRequest(conn, body);
         return new SendEmailResponse(response);
@@ -136,7 +136,7 @@ public class NotificationClient {
      * @throws NotificationClientException
      */
     public SendSmsResponse sendSms(String templateId, String phoneNumber, HashMap<String, String> personalisation, String reference) throws NotificationClientException {
-        JSONObject body = createBodyForSmsRequest(templateId, phoneNumber, personalisation, reference);
+        JSONObject body = createBodyForPostRequest(templateId, phoneNumber, null, personalisation, reference);
         HttpsURLConnection conn = createConnectionAndSetHeaders(baseUrl + "/v2/notifications/sms", "POST");
         String response = performPostRequest(conn, body);
         return new SendSmsResponse(response);
@@ -276,22 +276,14 @@ public class NotificationClient {
         return conn;
     }
 
-    private HttpsURLConnection postConnection(String token, URL url) throws IOException {
-        HttpsURLConnection conn = getConnection(url);
-        conn.setRequestMethod("POST");
-        conn.setDoOutput(true);
-        conn.setRequestProperty("Authorization", "Bearer " + token);
-        conn.setRequestProperty("Content-Type", "application/json");
-        conn.setRequestProperty("Accept", "application/json");
-        conn.setRequestProperty("User-agent", "NOTIFY-API-JAVA-CLIENT/" + version);
-
-        conn.connect();
-        return conn;
-    }
-
-    private JSONObject createBodyForSmsRequest(final String templateId, final String phoneNumber, final HashMap<String, String> personalisation, final String reference) {
+    private JSONObject createBodyForPostRequest(final String templateId, final String phoneNumber, final String emailAddress, final HashMap<String, String> personalisation, final String reference) {
         JSONObject body = new JSONObject();
-        body.put("phone_number", phoneNumber);
+        if(phoneNumber != null && !phoneNumber.isEmpty()) {
+            body.put("phone_number", phoneNumber);
+        }
+        if(emailAddress != null && !emailAddress.isEmpty()) {
+            body.put("email_address", emailAddress);
+        }
         body.put("template_id", templateId);
         if (personalisation != null && !personalisation.isEmpty()) {
             body.put("personalisation", new JSONObject(personalisation));
@@ -301,18 +293,7 @@ public class NotificationClient {
         }
         return body;
     }
-    private JSONObject createBodyForEmailRequest(final String templateId, final String emailAddress, final HashMap<String, String> personalisation, final String reference) {
-        JSONObject body = new JSONObject();
-        body.put("email_address", emailAddress);
-        body.put("template_id", templateId);
-        if (personalisation != null && !personalisation.isEmpty()) {
-            body.put("personalisation", new JSONObject(personalisation));
-        }
-        if(reference != null && !reference.isEmpty()){
-            body.put("reference", reference);
-        }
-        return body;
-    }
+
     private StringBuilder readStream(InputStreamReader streamReader) throws IOException {
         StringBuilder sb = new StringBuilder();
         BufferedReader br = new BufferedReader(streamReader);
