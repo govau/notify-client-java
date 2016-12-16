@@ -28,7 +28,7 @@ public class NotificationList {
     public NotificationList(String content){
         JSONObject data = new JSONObject(content);
         JSONObject links = data.getJSONObject("links");
-        currentPageLink = links.isNull("current") ? null : links.getString("current");
+        currentPageLink = links.getString("current");
         nextPageLink = links.isNull("next") ? Optional.<String>empty() : Optional.of(links.getString("next"));
         notifications =  new ArrayList<>();
 

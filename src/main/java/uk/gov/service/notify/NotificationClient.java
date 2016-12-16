@@ -17,7 +17,7 @@ import org.apache.http.client.utils.URIBuilder;
 
 import org.json.JSONObject;
 
-public class NotificationClient implements NotificationClientApi {
+public class NotificationClient {
 
     private static final Logger LOGGER = Logger.getLogger(NotificationClient.class.toString());
     public static final String LIVE_BASE_URL = "https://api.notifications.service.gov.uk";
@@ -116,36 +116,10 @@ public class NotificationClient implements NotificationClientApi {
      * @throws NotificationClientException
      */
     public SendEmailResponse sendEmail(String templateId, String emailAddress, HashMap<String, String> personalisation, String reference) throws NotificationClientException {
-        HttpsURLConnection conn = null;
-        try {
-            JSONObject body = createBodyForEmailRequest(templateId, emailAddress, personalisation, reference);
-
-            Authentication tg = new Authentication();
-            String token = tg.create(serviceId, apiKey);
-            URL url = new URL(baseUrl + "/v2/notifications/email");
-            conn = postConnection(token, url);
-
-            OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
-            wr.write(body.toString());
-            wr.flush();
-
-            int httpResult = conn.getResponseCode();
-            if (httpResult == HttpsURLConnection.HTTP_CREATED) {
-                StringBuilder sb = readStream(new InputStreamReader(conn.getInputStream(), "utf-8"));
-                return new SendEmailResponse(sb.toString());
-            } else {
-                StringBuilder sb = readStream(new InputStreamReader(conn.getErrorStream(), "utf-8"));
-                throw new NotificationClientException(httpResult, sb.toString());
-            }
-
-        } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, e.toString(), e);
-            throw new NotificationClientException(e);
-        } finally {
-            if (conn != null) {
-                conn.disconnect();
-            }
-        }
+        JSONObject body = createBodyForEmailRequest(templateId, emailAddress, personalisation, reference);
+        HttpsURLConnection conn = createConnectionAndSetHeaders(baseUrl + "/v2/notifications/email", "POST");
+        String response = performPostRequest(conn, body);
+        return new SendEmailResponse(response);
     }
 
     /**
@@ -162,37 +136,10 @@ public class NotificationClient implements NotificationClientApi {
      * @throws NotificationClientException
      */
     public SendSmsResponse sendSms(String templateId, String phoneNumber, HashMap<String, String> personalisation, String reference) throws NotificationClientException {
-        HttpsURLConnection conn = null;
-
-        try {
-            JSONObject body = createBodyForSmsRequest(templateId, phoneNumber, personalisation, reference);
-
-            Authentication tg = new Authentication();
-            String token = tg.create(serviceId, apiKey);
-            URL url = new URL(baseUrl + "/v2/notifications/sms");
-            conn = postConnection(token, url);
-
-            OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
-            wr.write(body.toString());
-            wr.flush();
-
-            int httpResult = conn.getResponseCode();
-            if (httpResult == HttpsURLConnection.HTTP_CREATED) {
-                StringBuilder sb = readStream(new InputStreamReader(conn.getInputStream(), "utf-8"));
-                return new SendSmsResponse(sb.toString());
-            } else {
-                StringBuilder sb = readStream(new InputStreamReader(conn.getErrorStream(), "utf-8"));
-                throw new NotificationClientException(httpResult, sb.toString());
-            }
-
-        } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, e.toString(), e);
-            throw new NotificationClientException(e);
-        } finally {
-            if (conn != null) {
-                conn.disconnect();
-            }
-        }
+        JSONObject body = createBodyForSmsRequest(templateId, phoneNumber, personalisation, reference);
+        HttpsURLConnection conn = createConnectionAndSetHeaders(baseUrl + "/v2/notifications/sms", "POST");
+        String response = performPostRequest(conn, body);
+        return new SendSmsResponse(response);
     }
 
     /**
@@ -204,35 +151,11 @@ public class NotificationClient implements NotificationClientApi {
      * @throws NotificationClientException
      */
     public Notification getNotificationById(String notificationId) throws NotificationClientException {
-        StringBuilder stringBuilder;
-        HttpsURLConnection conn = null;
-        try {
-            URL url = new URL(baseUrl + "/v2/notifications/" + notificationId);
-            conn = getConnection(url);
-            conn.setRequestMethod("GET");
-            Authentication authentication = new Authentication();
-            String token = authentication.create(serviceId, apiKey);
-            conn.setRequestProperty("Authorization", "Bearer " + token);
-            conn.setRequestProperty("User-agent", "NOTIFY-API-JAVA-CLIENT/" + version);
+        String url = baseUrl + "/v2/notifications/" + notificationId;
+        HttpsURLConnection conn = createConnectionAndSetHeaders(url, "GET");
+        String response = performGetRequest(conn);
+        return new Notification(response);
 
-            conn.connect();
-            int httpResult = conn.getResponseCode();
-            if (httpResult == 200) {
-                stringBuilder = readStream(new InputStreamReader(conn.getInputStream()));
-                conn.disconnect();
-                return new Notification(stringBuilder.toString());
-            } else {
-                stringBuilder = readStream(new InputStreamReader(conn.getErrorStream(), "utf-8"));
-                throw new NotificationClientException(httpResult, stringBuilder.toString());
-            }
-        } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, e.toString(), e);
-            throw new NotificationClientException(e);
-        } finally {
-            if (conn != null) {
-                conn.disconnect();
-            }
-        }
     }
 
     /**
@@ -248,8 +171,6 @@ public class NotificationClient implements NotificationClientApi {
      * @throws NotificationClientException
      */
     public NotificationList getNotifications(String status, String notification_type, String reference, String olderThanId) throws NotificationClientException {
-        StringBuilder stringBuilder;
-        HttpsURLConnection conn = null;
         try {
             URIBuilder builder = new URIBuilder(baseUrl + "/v2/notifications");
             if (status != null && !status.isEmpty()) {
@@ -265,33 +186,82 @@ public class NotificationClient implements NotificationClientApi {
                 builder.addParameter("older_than", olderThanId);
             }
 
-            conn = getConnection(builder.build().toURL());
-            conn.setRequestMethod("GET");
-            Authentication authentication = new Authentication();
-            String token = authentication.create(serviceId, apiKey);
-            conn.setRequestProperty("Authorization", "Bearer " + token);
-            conn.setRequestProperty("User-agent", "NOTIFY-API-JAVA-CLIENT/" + version);
-            conn.connect();
+            HttpsURLConnection conn = createConnectionAndSetHeaders(builder.toString(), "GET");
+            String response = performGetRequest(conn);
+            return new NotificationList(response);
+        } catch (URISyntaxException e) {
+            LOGGER.log(Level.SEVERE, e.toString(), e);
+            throw new NotificationClientException(e);
+        }
+    }
+
+    private String performPostRequest(HttpsURLConnection conn, JSONObject body) throws NotificationClientException {
+        try{
+            OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+            wr.write(body.toString());
+            wr.flush();
+
             int httpResult = conn.getResponseCode();
-            if (httpResult == 200) {
-                stringBuilder = readStream(new InputStreamReader(conn.getInputStream()));
-                conn.disconnect();
-                return new NotificationList(stringBuilder.toString());
+            if (httpResult == HttpsURLConnection.HTTP_CREATED) {
+                StringBuilder sb = readStream(new InputStreamReader(conn.getInputStream(), "utf-8"));
+                return sb.toString();
             } else {
-                stringBuilder = readStream(new InputStreamReader(conn.getErrorStream(), "utf-8"));
-                throw new NotificationClientException(httpResult, stringBuilder.toString());
+                StringBuilder sb = readStream(new InputStreamReader(conn.getErrorStream(), "utf-8"));
+                throw new NotificationClientException(httpResult, sb.toString());
             }
 
         } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, e.toString(), e);
-            throw new NotificationClientException(e);
-        } catch (URISyntaxException e) {
             LOGGER.log(Level.SEVERE, e.toString(), e);
             throw new NotificationClientException(e);
         } finally {
             if (conn != null) {
                 conn.disconnect();
             }
+    }
+    }
+
+    private String performGetRequest(HttpsURLConnection conn) throws NotificationClientException {
+        try{
+            int httpResult = conn.getResponseCode();
+            StringBuilder stringBuilder;
+            if (httpResult == 200) {
+                stringBuilder = readStream(new InputStreamReader(conn.getInputStream()));
+                conn.disconnect();
+                return stringBuilder.toString();
+            } else {
+                stringBuilder = readStream(new InputStreamReader(conn.getErrorStream(), "utf-8"));
+                throw new NotificationClientException(httpResult, stringBuilder.toString());
+            }
+        } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, e.toString(), e);
+            throw new NotificationClientException(e);
+        } finally {
+            if (conn != null) {
+                conn.disconnect();
+            }
+        }
+    }
+
+    private HttpsURLConnection createConnectionAndSetHeaders(String urlString, String method) throws NotificationClientException {
+        try
+        {
+            URL url = new URL(urlString);
+            HttpsURLConnection conn = getConnection(url);
+            conn.setRequestMethod(method);
+            Authentication authentication = new Authentication();
+            String token = authentication.create(serviceId, apiKey);
+            conn.setRequestProperty("Authorization", "Bearer " + token);
+            conn.setRequestProperty("User-agent", "NOTIFY-API-JAVA-CLIENT/" + version);
+            if (method.equals("POST")) {
+                conn.setDoOutput(true);
+                conn.setRequestProperty("Content-Type", "application/json");
+                conn.setRequestProperty("Accept", "application/json");
+
+            }
+            return conn;
+        }catch (IOException e) {
+            LOGGER.log(Level.SEVERE, e.toString(), e);
+            throw new NotificationClientException(e);
         }
     }
 

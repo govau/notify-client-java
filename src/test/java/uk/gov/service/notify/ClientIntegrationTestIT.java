@@ -42,7 +42,14 @@ public class ClientIntegrationTestIT {
         assertNotification(notificationList.getNotifications().get(0));
         String baseUrl = System.getenv("NOTIFY_API_URL");
         assertEquals(baseUrl + "/v2/notifications", notificationList.getCurrentPageLink());
-
+        if (notificationList.getNextPageLink().isPresent()){
+            String nextUri = notificationList.getNextPageLink().get();
+            String olderThanId = nextUri.substring(nextUri.indexOf("older_than=") + "other_than=".length());
+            NotificationList nextList = client.getNotifications(null, null, null, olderThanId);
+            assertNotNull(nextList);
+            assertNotNull(nextList.getNotifications());
+            assertFalse(nextList.getNotifications().isEmpty());
+        }
     }
 
     @Test
