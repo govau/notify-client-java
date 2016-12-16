@@ -46,6 +46,7 @@ public class ClientIntegrationTestIT {
             String nextUri = notificationList.getNextPageLink().get();
             String olderThanId = nextUri.substring(nextUri.indexOf("older_than=") + "other_than=".length());
             NotificationList nextList = client.getNotifications(null, null, null, olderThanId);
+            assertNotNull(notificationList.getCurrentPageLink());
             assertNotNull(nextList);
             assertNotNull(nextList.getNotifications());
             assertFalse(nextList.getNotifications().isEmpty());
@@ -59,6 +60,7 @@ public class ClientIntegrationTestIT {
             client.sendEmail(System.getenv("EMAIL_TEMPLATE_ID"), System.getenv("FUNCTIONAL_TEST_EMAIL"), null, null);
             fail("Expected NotificationClientException: Template missing personalisation: name");
         } catch (NotificationClientException e) {
+            System.out.println(e.getMessage());
             assert(e.getMessage().contains("Template missing personalisation: name"));
             assert(e.getMessage().contains("Status code: 400"));
         }
@@ -120,10 +122,9 @@ public class ClientIntegrationTestIT {
         assertEquals(Optional.of(uniqueName), response.getReference());
         assertNotNull(response.getNotificationId());
         assertNotNull(response.getTemplateVersion());
-        assertNotNull(response.getTemplateUri());
+        assertNotNull(response.getTemplateId());
         assertNotNull(response.getTemplateUri());
         assertNotNull(response.getTemplateVersion());
-        assertNotNull(response.getTemplateId());
     }
 
     private void assertNotificationEmailResponse(final SendEmailResponse response, final String uniqueName){
@@ -131,13 +132,11 @@ public class ClientIntegrationTestIT {
         assertTrue(response.getBody().contains(uniqueName));
         assertEquals(Optional.of(uniqueName), response.getReference());
         assertNotNull(response.getNotificationId());
-        assertNotNull(response.getTemplateVersion());
         assertNotNull(response.getSubject());
-        assertNotNull(response.getTemplateUri());
         assertNotNull(response.getFromEmail());
         assertNotNull(response.getTemplateUri());
-        assertNotNull(response.getTemplateVersion());
         assertNotNull(response.getTemplateId());
+        assertNotNull(response.getTemplateVersion());
     }
     private Notification assertNotification(Notification notification){
         assertNotNull(notification);
@@ -148,38 +147,53 @@ public class ClientIntegrationTestIT {
         assertNotNull(notification.getCreatedAt());
         assertNotNull(notification.getStatus());
         assertNotNull(notification.getNotificationType());
-        if(notification.getNotificationType().equals("sms")){
-            assertTrue(notification.getPhoneNumber().isPresent());
-            assertEquals(Optional.empty(), notification.getEmailAddress());
-            assertEquals(Optional.empty(), notification.getLine1());
-            assertEquals(Optional.empty(), notification.getLine2());
-            assertEquals(Optional.empty(), notification.getLine3());
-            assertEquals(Optional.empty(), notification.getLine4());
-            assertEquals(Optional.empty(), notification.getLine5());
-            assertEquals(Optional.empty(), notification.getLine6());
-            assertEquals(Optional.empty(), notification.getPostcode());
+        if(notification.getNotificationType().equals("sms")) {
+            assertNotificationWhenSms(notification);
         }
         if(notification.getNotificationType().equals("email")){
-            assertTrue(notification.getEmailAddress().isPresent());
-            assertEquals(Optional.empty(), notification.getPhoneNumber());
-            assertEquals(Optional.empty(), notification.getLine1());
-            assertEquals(Optional.empty(), notification.getLine2());
-            assertEquals(Optional.empty(), notification.getLine3());
-            assertEquals(Optional.empty(), notification.getLine4());
-            assertEquals(Optional.empty(), notification.getLine5());
-            assertEquals(Optional.empty(), notification.getLine6());
-            assertEquals(Optional.empty(), notification.getPostcode());
+            assertNotificationWhenEmail(notification);
         }
         if(notification.getNotificationType().equals("letter")){
-            assertTrue(notification.getLine1().isPresent());
-            // the other address lines are optional.
-            assertEquals(Optional.empty(), notification.getEmailAddress());
-            assertEquals(Optional.empty(), notification.getPhoneNumber());
+            assertNotificationWhenLetter(notification);
         }
 
         assertTrue("expected status to be created, sending or delivered", Arrays.asList("created", "sending", "delivered").contains(notification.getStatus()));
 
         return notification;
     }
+
+    private void assertNotificationWhenLetter(Notification notification) {
+        assertTrue(notification.getLine1().isPresent());
+        // the other address lines are optional.
+        assertEquals(Optional.empty(), notification.getEmailAddress());
+        assertEquals(Optional.empty(), notification.getPhoneNumber());
+    }
+
+    private void assertNotificationWhenEmail(Notification notification) {
+        assertTrue(notification.getSubject().isPresent());
+        assertTrue(notification.getEmailAddress().isPresent());
+        assertFalse(notification.getPhoneNumber().isPresent());
+        assertFalse(notification.getLine1().isPresent());
+        assertFalse(notification.getLine2().isPresent());
+        assertFalse(notification.getLine3().isPresent());
+        assertFalse(notification.getLine4().isPresent());
+        assertFalse(notification.getLine5().isPresent());
+        assertFalse(notification.getLine6().isPresent());
+        assertFalse(notification.getPostcode().isPresent());
+    }
+
+    private void assertNotificationWhenSms(Notification notification) {
+        assertTrue(notification.getPhoneNumber().isPresent());
+        assertFalse(notification.getSubject().isPresent());
+        assertFalse(notification.getEmailAddress().isPresent());
+        assertFalse(notification.getLine1().isPresent());
+        assertFalse(notification.getLine2().isPresent());
+        assertFalse(notification.getLine3().isPresent());
+        assertFalse(notification.getLine4().isPresent());
+        assertFalse(notification.getLine5().isPresent());
+        assertFalse(notification.getLine6().isPresent());
+        assertFalse(notification.getPostcode().isPresent());
+    }
+
 
 }

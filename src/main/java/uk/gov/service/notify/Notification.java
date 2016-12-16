@@ -165,10 +165,10 @@ public class Notification {
                 ", postcode=" + postcode +
                 ", notificationType='" + notificationType + '\'' +
                 ", status='" + status + '\'' +
-                ", templateId='" + templateId + '\'' +
+                ", templateId=" + templateId +
                 ", templateVersion=" + templateVersion +
-                ", templateUri=" + templateUri +
-                ", body=" + body +
+                ", templateUri='" + templateUri + '\'' +
+                ", body='" + body + '\'' +
                 ", subject=" + subject +
                 ", createdAt=" + createdAt +
                 ", sentAt=" + sentAt +
