@@ -7,21 +7,21 @@ import java.util.UUID;
 
 public class SendSmsResponse {
     private UUID notificationId;
-    private Optional<String> reference;
+    private String reference;
     private UUID templateId;
     private int templateVersion;
     private String templateUri;
     private String body;
-    private Optional<String> fromNumber;
+    private String fromNumber;
 
 
     public SendSmsResponse(String response) {
         JSONObject data = new JSONObject(response);
         notificationId = UUID.fromString(data.getString("id"));
-        reference = !data.isNull("reference") ? Optional.of(data.getString("reference")) : Optional.empty();
+        reference = data.isNull("reference") ? null : data.getString("reference");
         JSONObject content = data.getJSONObject("content");
         body = content.getString("body");
-        fromNumber = !content.isNull("from_number") ? Optional.of(content.getString("from_number")) : Optional.empty();
+        fromNumber = content.isNull("from_number") ? null : content.getString("from_number");
         JSONObject template = data.getJSONObject("template");
         templateId = UUID.fromString(template.getString("id"));
         templateVersion = template.getInt("version");
@@ -33,7 +33,7 @@ public class SendSmsResponse {
     }
 
     public Optional<String> getReference() {
-        return reference;
+        return Optional.ofNullable(reference);
     }
 
     public UUID getTemplateId() {
@@ -53,7 +53,7 @@ public class SendSmsResponse {
     }
 
     public Optional<String> getFromNumber() {
-        return fromNumber;
+        return Optional.ofNullable(fromNumber);
     }
 
     @Override

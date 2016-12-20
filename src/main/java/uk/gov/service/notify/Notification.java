@@ -8,26 +8,26 @@ import java.util.UUID;
 
 public class Notification {
     private UUID id;
-    private Optional<String> reference;
-    private Optional<String> emailAddress;
-    private Optional<String> phoneNumber;
-    private Optional<String> line1;
-    private Optional<String> line2;
-    private Optional<String> line3;
-    private Optional<String> line4;
-    private Optional<String> line5;
-    private Optional<String> line6;
-    private Optional<String> postcode;
+    private String reference;
+    private String emailAddress;
+    private String phoneNumber;
+    private String line1;
+    private String line2;
+    private String line3;
+    private String line4;
+    private String line5;
+    private String line6;
+    private String postcode;
     private String notificationType;
     private String status;
     private UUID templateId;
     private int templateVersion;
     private String templateUri;
     private String body;
-    private Optional<String> subject;
+    private String subject;
     private DateTime createdAt;
-    private Optional<DateTime> sentAt;
-    private Optional<DateTime> completedAt;
+    private DateTime sentAt;
+    private DateTime completedAt;
 
     public Notification(String content){
         JSONObject responseBodyAsJson = new JSONObject(content);
@@ -42,27 +42,27 @@ public class Notification {
 
     private void build(JSONObject data) {
         id = UUID.fromString(data.getString("id"));
-        reference = data.isNull("reference") ? Optional.empty() : Optional.of(data.getString("reference"));
-        emailAddress = data.isNull("email_address") ? Optional.empty() : Optional.of(data.getString("email_address"));
-        phoneNumber = data.isNull("phone_number") ? Optional.empty() : Optional.of(data.getString("phone_number"));
-        line1 = data.isNull("line_1") ? Optional.empty() : Optional.of(data.getString("line_1"));
-        line2 = data.isNull("line_2") ? Optional.empty() : Optional.of(data.getString("line_2"));
-        line3 = data.isNull("line_3") ? Optional.empty() : Optional.of(data.getString("line_3"));
-        line4 = data.isNull("line_4") ? Optional.empty() : Optional.of(data.getString("line_4"));
-        line5 = data.isNull("line_5") ? Optional.empty() : Optional.of(data.getString("line_5"));
-        line6 = data.isNull("line_6") ? Optional.empty() : Optional.of(data.getString("line_6"));
-        postcode = data.isNull("postcode") ? Optional.empty() : Optional.of(data.getString("postcode"));
+        reference = data.isNull("reference") ? null : data.getString("reference");
+        emailAddress = data.isNull("email_address") ? null : data.getString("email_address");
+        phoneNumber = data.isNull("phone_number") ? null : data.getString("phone_number");
+        line1 = data.isNull("line_1") ? null : data.getString("line_1");
+        line2 = data.isNull("line_2") ? null : data.getString("line_2");
+        line3 = data.isNull("line_3") ? null : data.getString("line_3");
+        line4 = data.isNull("line_4") ? null : data.getString("line_4");
+        line5 = data.isNull("line_5") ? null : data.getString("line_5");
+        line6 = data.isNull("line_6") ? null : data.getString("line_6");
+        postcode = data.isNull("postcode") ? null : data.getString("postcode");
         notificationType = data.getString("type");
         JSONObject template = data.getJSONObject("template");
         templateId = UUID.fromString(template.getString("id"));
         templateVersion = template.getInt("version");
         templateUri = template.getString("uri");
         body = data.getString("body");
-        subject = data.isNull("subject") ? Optional.empty() : Optional.of(data.getString("subject"));
+        subject = data.isNull("subject") ? null : data.getString("subject");
         status = data.getString("status");
         createdAt = new DateTime(data.getString("created_at"));
-        sentAt =  data.isNull("sent_at") ? Optional.empty() : Optional.of(new DateTime(data.getString("sent_at")));
-        completedAt = data.isNull("completed_at") ? Optional.empty() : Optional.of(new DateTime(data.getString("completed_at")));
+        sentAt =  data.isNull("sent_at") ? null : new DateTime(data.getString("sent_at"));
+        completedAt = data.isNull("completed_at") ? null : new DateTime(data.getString("completed_at"));
     }
 
     public UUID getId() {
@@ -70,43 +70,43 @@ public class Notification {
     }
 
     public Optional<String> getReference() {
-        return reference;
+        return Optional.ofNullable(reference);
     }
 
     public Optional<String> getEmailAddress() {
-        return emailAddress;
+        return Optional.ofNullable(emailAddress);
     }
 
     public Optional<String> getPhoneNumber() {
-        return phoneNumber;
+        return Optional.ofNullable(phoneNumber);
     }
 
     public Optional<String> getLine1() {
-        return line1;
+        return Optional.ofNullable(line1);
     }
 
     public Optional<String> getLine2() {
-        return line2;
+        return Optional.ofNullable(line2);
     }
 
     public Optional<String> getLine3() {
-        return line3;
+        return Optional.ofNullable(line3);
     }
 
     public Optional<String> getLine4() {
-        return line4;
+        return Optional.ofNullable(line4);
     }
 
     public Optional<String> getLine5() {
-        return line5;
+        return Optional.ofNullable(line5);
     }
 
     public Optional<String> getLine6() {
-        return line6;
+        return Optional.ofNullable(line6);
     }
 
     public Optional<String> getPostcode() {
-        return postcode;
+        return Optional.ofNullable(postcode);
     }
 
     public String getNotificationType() {
@@ -134,7 +134,7 @@ public class Notification {
     }
 
     public Optional<String> getSubject() {
-        return subject;
+        return Optional.ofNullable(subject);
     }
 
     public DateTime getCreatedAt() {
@@ -142,34 +142,34 @@ public class Notification {
     }
 
     public Optional<DateTime> getSentAt() {
-        return sentAt;
+        return Optional.ofNullable(sentAt);
     }
 
     public Optional<DateTime> getCompletedAt() {
-        return completedAt;
+        return Optional.ofNullable(completedAt);
     }
 
     @Override
     public String toString() {
         return "Notification{" +
                 "id=" + id +
-                ", reference=" + reference +
-                ", emailAddress=" + emailAddress +
-                ", phoneNumber=" + phoneNumber +
-                ", line1=" + line1 +
-                ", line2=" + line2 +
-                ", line3=" + line3 +
-                ", line4=" + line4 +
-                ", line5=" + line5 +
-                ", line6=" + line6 +
-                ", postcode=" + postcode +
+                ", reference='" + reference + '\'' +
+                ", emailAddress='" + emailAddress + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", line1='" + line1 + '\'' +
+                ", line2='" + line2 + '\'' +
+                ", line3='" + line3 + '\'' +
+                ", line4='" + line4 + '\'' +
+                ", line5='" + line5 + '\'' +
+                ", line6='" + line6 + '\'' +
+                ", postcode='" + postcode + '\'' +
                 ", notificationType='" + notificationType + '\'' +
                 ", status='" + status + '\'' +
                 ", templateId=" + templateId +
                 ", templateVersion=" + templateVersion +
                 ", templateUri='" + templateUri + '\'' +
                 ", body='" + body + '\'' +
-                ", subject=" + subject +
+                ", subject='" + subject + '\'' +
                 ", createdAt=" + createdAt +
                 ", sentAt=" + sentAt +
                 ", completedAt=" + completedAt +

@@ -10,14 +10,14 @@ import org.json.JSONArray;
 public class NotificationList {
     private List<Notification> notifications;
     private String currentPageLink;
-    private Optional<String> nextPageLink;
+    private String nextPageLink;
 
     public List<Notification> getNotifications() {
         return notifications;
     }
 
     public Optional<String> getNextPageLink() {
-        return nextPageLink;
+        return Optional.ofNullable(nextPageLink);
     }
 
     public String getCurrentPageLink() {
@@ -29,7 +29,7 @@ public class NotificationList {
         JSONObject data = new JSONObject(content);
         JSONObject links = data.getJSONObject("links");
         currentPageLink = links.getString("current");
-        nextPageLink = links.isNull("next") ? Optional.<String>empty() : Optional.of(links.getString("next"));
+        nextPageLink = links.isNull("next") ? null : links.getString("next");
         notifications =  new ArrayList<>();
 
         JSONArray notificationsData = data.getJSONArray("notifications");

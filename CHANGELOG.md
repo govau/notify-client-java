@@ -19,3 +19,4 @@
     * Notifications can be filtered by `reference`, see the README for details.
     * Notifications can be filtered by `olderThanId`, see the README for details.
     * NotificationList response has changed, see the README for details.
+* `NotificationClient` removed the constructors containing the serviceId, which is no longer needed because the api key contains the service id.

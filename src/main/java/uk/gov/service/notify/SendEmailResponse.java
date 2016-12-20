@@ -7,22 +7,22 @@ import java.util.UUID;
 
 public class SendEmailResponse {
     private UUID notificationId;
-    private Optional<String> reference;
+    private String reference;
     private UUID templateId;
     private int templateVersion;
     private String templateUri;
     private String body;
     private String subject;
-    private Optional<String> fromEmail;
+    private String fromEmail;
 
 
     public SendEmailResponse(String response) {
         JSONObject data = new JSONObject(response);
         notificationId = UUID.fromString(data.getString("id"));
-        reference = !data.isNull("reference") ? Optional.of(data.getString("reference")) : Optional.empty();
+        reference = data.isNull("reference") ? null : data.getString("reference");
         JSONObject content = data.getJSONObject("content");
         body = content.getString("body");
-        fromEmail = !content.isNull("from_email") ? Optional.of(content.getString("from_email")) : Optional.empty();
+        fromEmail = content.isNull("from_email") ? null : content.getString("from_email");
         subject = content.getString("subject");
         JSONObject template = data.getJSONObject("template");
         templateId = UUID.fromString(template.getString("id"));
@@ -35,7 +35,7 @@ public class SendEmailResponse {
     }
 
     public Optional<String> getReference() {
-        return reference;
+        return Optional.ofNullable(reference);
     }
 
     public UUID getTemplateId() {
@@ -59,7 +59,7 @@ public class SendEmailResponse {
     }
 
     public Optional<String> getFromEmail() {
-        return fromEmail;
+        return Optional.ofNullable(fromEmail);
     }
 
     @Override

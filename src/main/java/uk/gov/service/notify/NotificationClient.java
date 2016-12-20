@@ -9,7 +9,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.*;
 import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -107,7 +107,7 @@ public class NotificationClient {
      *
      * @param templateId      Find templateId by clicking API info for the template you want to send
      * @param emailAddress    The email address
-     * @param personalisation HashMap representing the placeholders for the template if any. For example, key=name value=Bob
+     * @param personalisation Map representing the placeholders for the template if any. For example, key=name value=Bob
      *                        Can be an empty map or null when the template does not require placeholders.
      * @param reference       A reference specified by the service for the notification. Get all notifications can be filtered by this reference.
      *                        This reference can be unique or used used to refer to a batch of notifications.
@@ -115,7 +115,7 @@ public class NotificationClient {
      * @return <code>SendEmailResponse</code>
      * @throws NotificationClientException
      */
-    public SendEmailResponse sendEmail(String templateId, String emailAddress, HashMap<String, String> personalisation, String reference) throws NotificationClientException {
+    public SendEmailResponse sendEmail(String templateId, String emailAddress, Map<String, String> personalisation, String reference) throws NotificationClientException {
         JSONObject body = createBodyForPostRequest(templateId, null, emailAddress, personalisation, reference);
         HttpsURLConnection conn = createConnectionAndSetHeaders(baseUrl + "/v2/notifications/email", "POST");
         String response = performPostRequest(conn, body);
@@ -127,7 +127,7 @@ public class NotificationClient {
      *
      * @param templateId      Find templateId by clicking API info for the template you want to send
      * @param phoneNumber              The mobile phone number
-     * @param personalisation HashMap representing the placeholders for the template if any. For example, key=name value=Bob
+     * @param personalisation Map representing the placeholders for the template if any. For example, key=name value=Bob
      *                        Can be an empty map or null when the template does not require placeholders.
      * @param reference       A reference specified by the service for the notification. Get all notifications can be filtered by this reference.
      *                        This reference can be unique or used used to refer to a batch of notifications.
@@ -135,7 +135,7 @@ public class NotificationClient {
      * @return <code>SendSmsResponse</code>
      * @throws NotificationClientException
      */
-    public SendSmsResponse sendSms(String templateId, String phoneNumber, HashMap<String, String> personalisation, String reference) throws NotificationClientException {
+    public SendSmsResponse sendSms(String templateId, String phoneNumber, Map<String, String> personalisation, String reference) throws NotificationClientException {
         JSONObject body = createBodyForPostRequest(templateId, phoneNumber, null, personalisation, reference);
         HttpsURLConnection conn = createConnectionAndSetHeaders(baseUrl + "/v2/notifications/sms", "POST");
         String response = performPostRequest(conn, body);
@@ -276,7 +276,7 @@ public class NotificationClient {
         return conn;
     }
 
-    private JSONObject createBodyForPostRequest(final String templateId, final String phoneNumber, final String emailAddress, final HashMap<String, String> personalisation, final String reference) {
+    private JSONObject createBodyForPostRequest(final String templateId, final String phoneNumber, final String emailAddress, final Map<String, String> personalisation, final String reference) {
         JSONObject body = new JSONObject();
         if(phoneNumber != null && !phoneNumber.isEmpty()) {
             body.put("phone_number", phoneNumber);

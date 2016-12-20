@@ -60,7 +60,6 @@ public class ClientIntegrationTestIT {
             client.sendEmail(System.getenv("EMAIL_TEMPLATE_ID"), System.getenv("FUNCTIONAL_TEST_EMAIL"), null, null);
             fail("Expected NotificationClientException: Template missing personalisation: name");
         } catch (NotificationClientException e) {
-            System.out.println(e.getMessage());
             assert(e.getMessage().contains("Template missing personalisation: name"));
             assert(e.getMessage().contains("Status code: 400"));
         }
@@ -133,7 +132,7 @@ public class ClientIntegrationTestIT {
         assertEquals(Optional.of(uniqueName), response.getReference());
         assertNotNull(response.getNotificationId());
         assertNotNull(response.getSubject());
-        assertNotNull(response.getFromEmail());
+        assertNotNull(response.getFromEmail().orElse(null));
         assertNotNull(response.getTemplateUri());
         assertNotNull(response.getTemplateId());
         assertNotNull(response.getTemplateVersion());
@@ -165,8 +164,8 @@ public class ClientIntegrationTestIT {
     private void assertNotificationWhenLetter(Notification notification) {
         assertTrue(notification.getLine1().isPresent());
         // the other address lines are optional.
-        assertEquals(Optional.empty(), notification.getEmailAddress());
-        assertEquals(Optional.empty(), notification.getPhoneNumber());
+        assertFalse(notification.getEmailAddress().isPresent());
+        assertFalse(notification.getPhoneNumber().isPresent());
     }
 
     private void assertNotificationWhenEmail(Notification notification) {
