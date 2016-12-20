@@ -87,7 +87,7 @@ the **API integration** page.
 ### Text message
 
 ```java
-HashMap<String, String> personalisation = new HashMap<>();
+Map<String, String> personalisation = new HashMap<>();
 personalisation.put("name", "Jo");
 personalisation.put("reference_number", "13566");
 SendSmsResponse response = client.sendSms(templateId, mobileNumber, personalisation, "yourReferenceString");

@@ -9,6 +9,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
+import java.util.Map;
 
 public class TestNotificationClient {
 
@@ -145,7 +146,7 @@ public class TestNotificationClient {
         }
         System.out.println("Enter the personalisation (key:value,key:value) without spaces after the commas: ");
         String personalisation = reader.readLine();
-        HashMap<String, String> properties = new HashMap<>();
+        Map<String, String> properties = new HashMap<>();
         if (personalisation != null && !personalisation.isEmpty()){
             String[] pairs = personalisation.split(",");
             for(String pair : pairs){
