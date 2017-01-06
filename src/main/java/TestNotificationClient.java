@@ -2,12 +2,14 @@ import uk.gov.service.notify.Notification;
 import uk.gov.service.notify.NotificationClient;
 import uk.gov.service.notify.NotificationClientException;
 import uk.gov.service.notify.NotificationList;
-import uk.gov.service.notify.NotificationResponse;
+import uk.gov.service.notify.SendEmailResponse;
+import uk.gov.service.notify.SendSmsResponse;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
+import java.util.Map;
 
 public class TestNotificationClient {
 
@@ -26,14 +28,14 @@ public class TestNotificationClient {
      */
     public static void main(String[] args) throws Exception {
         NotificationClient client = null;
+        if(args.length == 1) {
+            client = new NotificationClient(args[0]);
+        }
         if(args.length == 2) {
             client = new NotificationClient(args[0], args[1]);
         }
-        if(args.length == 3) {
-            client = new NotificationClient(args[0], args[1], args[2]);
-        }
         else{
-            System.out.println("expected either 2 or 3 arguments  got: " + args.length);
+            System.out.println("expected either 2 arguments  got: " + args.length);
             System.exit(1);
         }
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
@@ -99,7 +101,11 @@ public class TestNotificationClient {
                 System.exit(1);
                 break;
         }
-        NotificationList notificationList = client.getNotifications(status, notificationType);
+        System.out.println("Enter a reference to filter the notifications (leave empty to ignore this filter):");
+        String reference = reader.readLine();
+        System.out.println("Enter the notificaiton id to get the notifications older than that notification (leave empty to get the latest list of notifications):");
+        String olderThanId = reader.readLine();
+        NotificationList notificationList = client.getNotifications(status, notificationType, reference, olderThanId);
         System.out.println(notificationList);
     }
 
@@ -140,7 +146,7 @@ public class TestNotificationClient {
         }
         System.out.println("Enter the personalisation (key:value,key:value) without spaces after the commas: ");
         String personalisation = reader.readLine();
-        HashMap<String, String> properties = new HashMap<>();
+        Map<String, String> properties = new HashMap<>();
         if (personalisation != null && !personalisation.isEmpty()){
             String[] pairs = personalisation.split(",");
             for(String pair : pairs){
@@ -148,12 +154,14 @@ public class TestNotificationClient {
                 properties.put(keyValue[0], keyValue[1]);
             }
         }
+        System.out.println("Enter the reference you would like to use for this notification (leave empty if you do not need a reference): ");
+        String reference = reader.readLine();
         if (messageType.equals("sms")){
-            NotificationResponse response = client.sendSms(templateId, to, properties);
+            SendSmsResponse response = client.sendSms(templateId, to, properties, reference);
             System.out.println(response);
         }
         else{
-            NotificationResponse response = client.sendEmail(templateId, to, properties);
+            SendEmailResponse response = client.sendEmail(templateId, to, properties, reference);
             System.out.println(response);
         }
     }

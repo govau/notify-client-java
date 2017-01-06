@@ -1,45 +1,35 @@
 package uk.gov.service.notify;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
+
 import org.json.JSONObject;
 import org.json.JSONArray;
 
 public class NotificationList {
     private List<Notification> notifications;
+    private String currentPageLink;
     private String nextPageLink;
-    private String lastPageLink;
-    private int pageSize;
-    private int total;
 
     public List<Notification> getNotifications() {
         return notifications;
     }
 
-    public String getNextPageLink() {
-        return nextPageLink;
+    public Optional<String> getNextPageLink() {
+        return Optional.ofNullable(nextPageLink);
     }
 
-    public String getLastPageLink() {
-        return lastPageLink;
+    public String getCurrentPageLink() {
+        return currentPageLink;
     }
 
-    public int getPageSize() {
-        return pageSize;
-    }
-
-    public int getTotal() {
-        return total;
-    }
 
     public NotificationList(String content){
         JSONObject data = new JSONObject(content);
         JSONObject links = data.getJSONObject("links");
+        currentPageLink = links.getString("current");
         nextPageLink = links.isNull("next") ? null : links.getString("next");
-        lastPageLink = links.isNull("last") ? null : links.getString("last");
-        pageSize = data.getInt("page_size");
-        total = data.getInt("total");
         notifications =  new ArrayList<>();
 
         JSONArray notificationsData = data.getJSONArray("notifications");
@@ -57,10 +47,8 @@ public class NotificationList {
         }
         return "NotificationList{" +
                 "notifications=" + notifications_string.toString() +
+                ", currentPageLink='" + currentPageLink + '\'' +
                 ", nextPageLink='" + nextPageLink + '\'' +
-                ", lastPageLink='" + lastPageLink + '\'' +
-                ", pageSize=" + pageSize +
-                ", total=" + total +
                 '}';
     }
 }

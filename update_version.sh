@@ -11,6 +11,6 @@ version=$(prop 'project.version')
 
 echo $version
 
-sed -e "s/{version}/${version}/" README.md-tpl > README.md
+sed -e "s/{version}/${version}/" README-tpl.md > README.md
 
 mvn versions:set -DnewVersion=${version}

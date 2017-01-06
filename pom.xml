@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>uk.gov.service.notify</groupId>
     <artifactId>notifications-java-client</artifactId>
-    <version>2.2.1-RELEASE</version>
+    <version>3.0.0-RELEASE</version>
     <properties>
        <maven.compiler.source>1.8</maven.compiler.source>
        <maven.compiler.target>1.8</maven.compiler.target>
@@ -36,6 +36,11 @@
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
             <version>2.7</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.2</version>
         </dependency>
     </dependencies>
     <distributionManagement>

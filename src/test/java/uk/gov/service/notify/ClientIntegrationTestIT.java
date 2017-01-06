@@ -4,13 +4,12 @@ import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -19,39 +18,49 @@ public class ClientIntegrationTestIT {
     @Test
     public void testEmailNotificationIT() throws NotificationClientException, InterruptedException {
         NotificationClient client = getClient();
-        NotificationResponse emailResponse = sendEmail(client);
-        Notification notification = client.getNotificationById(emailResponse.getNotificationId());
+        SendEmailResponse emailResponse = sendEmailAndAssertResponse(client);
+        Notification notification = client.getNotificationById(emailResponse.getNotificationId().toString());
         assertNotification(notification);
     }
 
     @Test
     public void testSmsNotificationIT() throws NotificationClientException, InterruptedException {
         NotificationClient client = getClient();
-        NotificationResponse response = sendSms(client);
-        Notification notification = client.getNotificationById(response.getNotificationId());
+        SendSmsResponse response = sendSmsAndAssertResponse(client);
+        Notification notification = client.getNotificationById(response.getNotificationId().toString());
         assertNotification(notification);
     }
 
     @Test
     public void testGetAllNotifications() throws NotificationClientException {
         NotificationClient client = getClient();
-        NotificationList notificationList = client.getNotifications(null, null);
+        NotificationList notificationList = client.getNotifications(null, null, null, null);
         assertNotNull(notificationList);
-        assertNotNull(notificationList.getTotal());
         assertNotNull(notificationList.getNotifications());
         assertFalse(notificationList.getNotifications().isEmpty());
         // Just check the first notification in the list.
         assertNotification(notificationList.getNotifications().get(0));
+        String baseUrl = System.getenv("NOTIFY_API_URL");
+        assertEquals(baseUrl + "/v2/notifications", notificationList.getCurrentPageLink());
+        if (notificationList.getNextPageLink().isPresent()){
+            String nextUri = notificationList.getNextPageLink().get();
+            String olderThanId = nextUri.substring(nextUri.indexOf("older_than=") + "other_than=".length());
+            NotificationList nextList = client.getNotifications(null, null, null, olderThanId);
+            assertNotNull(notificationList.getCurrentPageLink());
+            assertNotNull(nextList);
+            assertNotNull(nextList.getNotifications());
+            assertFalse(nextList.getNotifications().isEmpty());
+        }
     }
 
     @Test
     public void testEmailNotificationWithoutPersonalisationReturnsErrorMessageIT() {
         NotificationClient client = getClient();
         try {
-            client.sendEmail(System.getenv("EMAIL_TEMPLATE_ID"), System.getenv("FUNCTIONAL_TEST_EMAIL"));
-            fail("Expected NotificationClientException: Missing personalisation: name");
+            client.sendEmail(System.getenv("EMAIL_TEMPLATE_ID"), System.getenv("FUNCTIONAL_TEST_EMAIL"), null, null);
+            fail("Expected NotificationClientException: Template missing personalisation: name");
         } catch (NotificationClientException e) {
-            assert(e.getMessage().contains("Missing personalisation: name"));
+            assert(e.getMessage().contains("Template missing personalisation: name"));
             assert(e.getMessage().contains("Status code: 400"));
         }
     }
@@ -60,88 +69,130 @@ public class ClientIntegrationTestIT {
     public void testSmsNotificationWithoutPersonalisationReturnsErrorMessageIT() {
         NotificationClient client = getClient();
         try {
-            client.sendSms(System.getenv("SMS_TEMPLATE_ID"), System.getenv("FUNCTIONAL_TEST_NUMBER"));
-            fail("Expected NotificationClientException: Missing personalisation: name");
+            client.sendSms(System.getenv("SMS_TEMPLATE_ID"), System.getenv("FUNCTIONAL_TEST_NUMBER"), null, null);
+            fail("Expected NotificationClientException: Template missing personalisation: name");
         } catch (NotificationClientException e) {
-            assert(e.getMessage().contains("Missing personalisation: name"));
+            assert(e.getMessage().contains("Template missing personalisation: name"));
             assert(e.getMessage().contains("Status code: 400"));
         }
     }
 
+    @Test
+    public void testSendAndGetNotificationWithReference() throws NotificationClientException {
+        NotificationClient client = getClient();
+        HashMap<String, String> personalisation = new HashMap<String, String>();
+        String uniqueString = UUID.randomUUID().toString();
+        personalisation.put("name", uniqueString);
+        SendEmailResponse response = client.sendEmail(System.getenv("EMAIL_TEMPLATE_ID"), System.getenv("FUNCTIONAL_TEST_EMAIL"), personalisation, uniqueString);
+        assertNotificationEmailResponse(response, uniqueString);
+        NotificationList notifications = client.getNotifications(null, null, uniqueString, null);
+        assertEquals(1, notifications.getNotifications().size());
+        assertEquals(response.getNotificationId(), notifications.getNotifications().get(0).getId());
+    }
+
     private NotificationClient getClient(){
-        String serviceId = System.getenv("SERVICE_ID");
         String apiKey = System.getenv("API_KEY");
         String baseUrl = System.getenv("NOTIFY_API_URL");
-        NotificationClient client = new NotificationClient(apiKey, serviceId, baseUrl);
-        return client;
+        return new NotificationClient(apiKey, baseUrl);
     }
 
-    private NotificationResponse sendEmail(final NotificationClient client) throws NotificationClientException {
+    private SendEmailResponse sendEmailAndAssertResponse(final NotificationClient client) throws NotificationClientException {
         HashMap<String, String> personalisation = new HashMap<>();
         String uniqueName = UUID.randomUUID().toString();
         personalisation.put("name", uniqueName);
-        NotificationResponse response = client.sendEmail(System.getenv("EMAIL_TEMPLATE_ID"),
-                System.getenv("FUNCTIONAL_TEST_EMAIL"), personalisation);
-        assertNotificationResponse(response, uniqueName);
+        SendEmailResponse response = client.sendEmail(System.getenv("EMAIL_TEMPLATE_ID"),
+                System.getenv("FUNCTIONAL_TEST_EMAIL"), personalisation, uniqueName);
+        assertNotificationEmailResponse(response, uniqueName);
         return response;
     }
 
-    private NotificationResponse sendSms(final NotificationClient client) throws NotificationClientException {
+    private SendSmsResponse sendSmsAndAssertResponse(final NotificationClient client) throws NotificationClientException {
         HashMap<String, String> personalisation = new HashMap<>();
         String uniqueName = UUID.randomUUID().toString();
         personalisation.put("name", uniqueName);
-        NotificationResponse response = client.sendSms(System.getenv("SMS_TEMPLATE_ID"), System.getenv("FUNCTIONAL_TEST_NUMBER"), personalisation);
-        assertNotificationResponse(response, uniqueName);
+        SendSmsResponse response = client.sendSms(System.getenv("SMS_TEMPLATE_ID"), System.getenv("FUNCTIONAL_TEST_NUMBER"), personalisation, uniqueName);
+        assertNotificationSmsResponse(response, uniqueName);
         return response;
     }
 
-    private void assertNotificationResponse(final NotificationResponse response, final String uniqueName){
+    private void assertNotificationSmsResponse(final SendSmsResponse response, final String uniqueName){
         assertNotNull(response);
         assertTrue(response.getBody().contains(uniqueName));
+        assertEquals(Optional.of(uniqueName), response.getReference());
         assertNotNull(response.getNotificationId());
+        assertNotNull(response.getTemplateVersion());
+        assertNotNull(response.getTemplateId());
+        assertNotNull(response.getTemplateUri());
         assertNotNull(response.getTemplateVersion());
     }
 
-
-    private Notification assertNotification(Notification notification) throws NotificationClientException {
+    private void assertNotificationEmailResponse(final SendEmailResponse response, final String uniqueName){
+        assertNotNull(response);
+        assertTrue(response.getBody().contains(uniqueName));
+        assertEquals(Optional.of(uniqueName), response.getReference());
+        assertNotNull(response.getNotificationId());
+        assertNotNull(response.getSubject());
+        assertNotNull(response.getFromEmail().orElse(null));
+        assertNotNull(response.getTemplateUri());
+        assertNotNull(response.getTemplateId());
+        assertNotNull(response.getTemplateVersion());
+    }
+    private Notification assertNotification(Notification notification){
         assertNotNull(notification);
         assertNotNull(notification.getId());
-        assertNotNull(notification.getBody());
-        assertTrue(Arrays.asList("email", "sms").contains(notification.getNotificationType()));
-        assertNotNull(notification.getStatus());
-        if(notification.getNotificationType().equals("email")){
-            assertNotNull(notification.getSubject());
-            if(notification.getStatus().equals("created")){
-                assertNull(notification.getReference());
-            }else{
-                assertNotNull(notification.getReference());
-            }
-            assertEquals(0, notification.getContentCharCount());
-        }
-        else{
-            assertNull(notification.getSubject());
-            assertNull(notification.getReference());
-            assertNotEquals(0, notification.getContentCharCount());
-        }
         assertNotNull(notification.getTemplateId());
-        assertNotNull(notification.getTemplateName());
         assertNotNull(notification.getTemplateVersion());
-        assertNotNull(notification.getTo());
-        if(notification.getStatus().equals("created")) {
-            assertNull(notification.getSentBy());
-            assertNull(notification.getSentAt());
+        assertNotNull(notification.getTemplateUri());
+        assertNotNull(notification.getCreatedAt());
+        assertNotNull(notification.getStatus());
+        assertNotNull(notification.getNotificationType());
+        if(notification.getNotificationType().equals("sms")) {
+            assertNotificationWhenSms(notification);
         }
-        else{
-            assertNotNull(notification.getSentBy());
-            assertNotNull(notification.getSentAt());
+        if(notification.getNotificationType().equals("email")){
+            assertNotificationWhenEmail(notification);
         }
+        if(notification.getNotificationType().equals("letter")){
+            assertNotificationWhenLetter(notification);
+        }
+
         assertTrue("expected status to be created, sending or delivered", Arrays.asList("created", "sending", "delivered").contains(notification.getStatus()));
-        assertNotNull(notification.getApiKey());
-        assertNull(notification.getJobId());
-        assertNull(notification.getJobFileName());
-        assertEquals(0, notification.getJobRowNumber());
 
         return notification;
     }
+
+    private void assertNotificationWhenLetter(Notification notification) {
+        assertTrue(notification.getLine1().isPresent());
+        // the other address lines are optional.
+        assertFalse(notification.getEmailAddress().isPresent());
+        assertFalse(notification.getPhoneNumber().isPresent());
+    }
+
+    private void assertNotificationWhenEmail(Notification notification) {
+        assertTrue(notification.getSubject().isPresent());
+        assertTrue(notification.getEmailAddress().isPresent());
+        assertFalse(notification.getPhoneNumber().isPresent());
+        assertFalse(notification.getLine1().isPresent());
+        assertFalse(notification.getLine2().isPresent());
+        assertFalse(notification.getLine3().isPresent());
+        assertFalse(notification.getLine4().isPresent());
+        assertFalse(notification.getLine5().isPresent());
+        assertFalse(notification.getLine6().isPresent());
+        assertFalse(notification.getPostcode().isPresent());
+    }
+
+    private void assertNotificationWhenSms(Notification notification) {
+        assertTrue(notification.getPhoneNumber().isPresent());
+        assertFalse(notification.getSubject().isPresent());
+        assertFalse(notification.getEmailAddress().isPresent());
+        assertFalse(notification.getLine1().isPresent());
+        assertFalse(notification.getLine2().isPresent());
+        assertFalse(notification.getLine3().isPresent());
+        assertFalse(notification.getLine4().isPresent());
+        assertFalse(notification.getLine5().isPresent());
+        assertFalse(notification.getLine6().isPresent());
+        assertFalse(notification.getPostcode().isPresent());
+    }
+
 
 }

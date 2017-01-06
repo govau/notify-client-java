@@ -9,16 +9,18 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.*;
 import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.http.client.utils.URIBuilder;
 
 import org.json.JSONObject;
 
-public class NotificationClient implements NotificationClientApi {
+public class NotificationClient {
 
     private static final Logger LOGGER = Logger.getLogger(NotificationClient.class.toString());
+    public static final String LIVE_BASE_URL = "https://api.notifications.service.gov.uk";
 
     private final String apiKey;
     private final String serviceId;
@@ -26,39 +28,54 @@ public class NotificationClient implements NotificationClientApi {
     private final Proxy proxy;
     private final String version;
 
-    public NotificationClient(String apiKey) {
-        this(apiKey, "https://api.notifications.service.gov.uk");
-    }
-
-    public NotificationClient(String apiKey, String baseUrl) {
+    /**
+     * This client constructor given the api key.
+     * @param apiKey Generate an API key by signing in to GOV.UK Notify, https://www.notifications.service.gov.uk, and going to the **API integration** page
+     */
+    public NotificationClient(final String apiKey) {
         this(
-                extractApiKey(apiKey),
-                extractServiceId(apiKey),
-                baseUrl
+                apiKey,
+                LIVE_BASE_URL,
+                null
         );
     }
 
-    public NotificationClient(String apiKey, String baseUrl, Proxy proxy) {
+    /**
+     * Use this client constructor if you require a proxy for https requests.
+     * @param apiKey Generate an API key by signing in to GOV.UK Notify, https://www.notifications.service.gov.uk, and going to the **API integration** page
+     * @param proxy Proxy used on the http requests
+     */
+    public NotificationClient(final String apiKey, final Proxy proxy) {
         this(
-                extractApiKey(apiKey),
-                extractServiceId(apiKey),
-                baseUrl,
+                apiKey,
+                LIVE_BASE_URL,
                 proxy
         );
     }
 
-    public NotificationClient(String apiKey, String serviceId, String baseUrl) {
+    /**
+     * This client constructor is used for testing on other environments, used by the GOV.UK Notify team.
+     * @param apiKey Generate an API key by signing in to GOV.UK Notify, https://www.notifications.service.gov.uk, and going to the **API integration** page
+     * @param baseUrl
+     */
+    public NotificationClient(final String apiKey, final String baseUrl) {
         this(
                 apiKey,
-                serviceId,
                 baseUrl,
                 null
         );
     }
 
-    public NotificationClient(String apiKey, String serviceId, String baseUrl, Proxy proxy) {
+
+    /**
+     *
+     * @param apiKey Generate an API key by signing in to GOV.UK Notify, https://www.notifications.service.gov.uk, and going to the **API integration** page
+     * @param baseUrl base URL, defaults to https://api.notifications.service.gov.uk
+     * @param proxy
+     */
+    public NotificationClient(final String apiKey, final String baseUrl, final Proxy proxy) {
         this.apiKey = extractApiKey(apiKey);
-        this.serviceId = serviceId;
+        this.serviceId = extractServiceId(apiKey);
         this.baseUrl = baseUrl;
         this.proxy = proxy;
         try {
@@ -89,83 +106,40 @@ public class NotificationClient implements NotificationClientApi {
      * The sendEmail method will create an HTTPS POST request. A JWT token will be created and added as an Authorization header to the request.
      *
      * @param templateId      Find templateId by clicking API info for the template you want to send
-     * @param to              The email address
-     * @param personalisation HashMap representing the placeholders for the template if any. For example, key=name value=Bob
-     * @return <code>NotificationResponse</code>
+     * @param emailAddress    The email address
+     * @param personalisation Map representing the placeholders for the template if any. For example, key=name value=Bob
+     *                        Can be an empty map or null when the template does not require placeholders.
+     * @param reference       A reference specified by the service for the notification. Get all notifications can be filtered by this reference.
+     *                        This reference can be unique or used used to refer to a batch of notifications.
+     *                        Can be an empty string or null, when you do not require a reference for the notifications.
+     * @return <code>SendEmailResponse</code>
      * @throws NotificationClientException
      */
-    public NotificationResponse sendEmail(String templateId, String to, HashMap<String, String> personalisation) throws NotificationClientException {
-        return postRequest("email", templateId, to, personalisation);
-    }
-
-    /**
-     * The sendEmail method will create an HTTPS POST request. A JWT token will be created and added as an Authorization header to the request.
-     *
-     * @param templateId Find templateId by clicking API info for the template you want to send
-     * @param to         The email address
-     * @return <code>NotificationResponse</code>
-     * @throws NotificationClientException
-     */
-    public NotificationResponse sendEmail(String templateId, String to) throws NotificationClientException {
-        return postRequest("email", templateId, to, null);
+    public SendEmailResponse sendEmail(String templateId, String emailAddress, Map<String, String> personalisation, String reference) throws NotificationClientException {
+        JSONObject body = createBodyForPostRequest(templateId, null, emailAddress, personalisation, reference);
+        HttpsURLConnection conn = createConnectionAndSetHeaders(baseUrl + "/v2/notifications/email", "POST");
+        String response = performPostRequest(conn, body);
+        return new SendEmailResponse(response);
     }
 
     /**
      * The sendSms method will create an HTTPS POST request. A JWT token will be created and added as an Authorization header to the request.
      *
      * @param templateId      Find templateId by clicking API info for the template you want to send
-     * @param to              The mobile phone number
-     * @param personalisation HashMap representing the placeholders for the template if any. For example, key=name value=Bob
-     * @return <code>NotificationResponse</code>
+     * @param phoneNumber              The mobile phone number
+     * @param personalisation Map representing the placeholders for the template if any. For example, key=name value=Bob
+     *                        Can be an empty map or null when the template does not require placeholders.
+     * @param reference       A reference specified by the service for the notification. Get all notifications can be filtered by this reference.
+     *                        This reference can be unique or used used to refer to a batch of notifications.
+     *                        Can be an empty string or null, when you do not require a reference for the notifications.
+     * @return <code>SendSmsResponse</code>
      * @throws NotificationClientException
      */
-    public NotificationResponse sendSms(String templateId, String to, HashMap<String, String> personalisation) throws NotificationClientException {
-        return postRequest("sms", templateId, to, personalisation);
-    }
-
-    /**
-     * The sendSms method will create an HTTPS POST request. A JWT token will be created and added as an Authorization header to the request.
-     *
-     * @param templateId Find templateId by clicking API info for the template you want to send
-     * @param to         The mobile phone number
-     * @return <code>NotificationResponse</code>
-     * @throws NotificationClientException
-     */
-    public NotificationResponse sendSms(String templateId, String to) throws NotificationClientException {
-        return postRequest("sms", templateId, to, null);
-    }
-
-    private NotificationResponse postRequest(String messageType, String templateId, String to, HashMap<String, String> personalisation) throws NotificationClientException {
-        HttpsURLConnection conn = null;
-        try {
-            JSONObject body = createBodyForRequest(templateId, to, personalisation);
-
-            Authentication tg = new Authentication();
-            String token = tg.create(serviceId, apiKey);
-            URL url = new URL(baseUrl + "/notifications/" + messageType);
-            conn = postConnection(token, url);
-
-            OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
-            wr.write(body.toString());
-            wr.flush();
-
-            int httpResult = conn.getResponseCode();
-            if (httpResult == HttpsURLConnection.HTTP_CREATED) {
-                StringBuilder sb = readStream(new InputStreamReader(conn.getInputStream(), "utf-8"));
-                return new NotificationResponse(sb.toString());
-            } else {
-                StringBuilder sb = readStream(new InputStreamReader(conn.getErrorStream(), "utf-8"));
-                throw new NotificationClientException(httpResult, sb.toString());
-            }
-
-        } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, e.toString(), e);
-        } finally {
-            if (conn != null) {
-                conn.disconnect();
-            }
-        }
-        return null;
+    public SendSmsResponse sendSms(String templateId, String phoneNumber, Map<String, String> personalisation, String reference) throws NotificationClientException {
+        JSONObject body = createBodyForPostRequest(templateId, phoneNumber, null, personalisation, reference);
+        HttpsURLConnection conn = createConnectionAndSetHeaders(baseUrl + "/v2/notifications/sms", "POST");
+        String response = performPostRequest(conn, body);
+        return new SendSmsResponse(response);
     }
 
     /**
@@ -177,84 +151,118 @@ public class NotificationClient implements NotificationClientApi {
      * @throws NotificationClientException
      */
     public Notification getNotificationById(String notificationId) throws NotificationClientException {
-        StringBuilder stringBuilder;
-        HttpsURLConnection conn = null;
-        try {
-            URL url = new URL(baseUrl + "/notifications/" + notificationId);
-            conn = getConnection(url);
-            conn.setRequestMethod("GET");
-            Authentication authentication = new Authentication();
-            String token = authentication.create(serviceId, apiKey);
-            conn.setRequestProperty("Authorization", "Bearer " + token);
-            conn.setRequestProperty("User-agent", "NOTIFY-API-JAVA-CLIENT/" + version);
+        String url = baseUrl + "/v2/notifications/" + notificationId;
+        HttpsURLConnection conn = createConnectionAndSetHeaders(url, "GET");
+        String response = performGetRequest(conn);
+        return new Notification(response);
 
-            conn.connect();
-            int httpResult = conn.getResponseCode();
-            if (httpResult == 200) {
-                stringBuilder = readStream(new InputStreamReader(conn.getInputStream()));
-                conn.disconnect();
-                return new Notification(stringBuilder.toString());
-            } else {
-                stringBuilder = readStream(new InputStreamReader(conn.getErrorStream(), "utf-8"));
-                throw new NotificationClientException(httpResult, stringBuilder.toString());
-            }
-        } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, e.toString(), e);
-        } finally {
-            if (conn != null) {
-                conn.disconnect();
-            }
-        }
-        return null;
     }
 
     /**
      * The getNotifications method will create a GET HTTPS request to retrieve all the notifications.
      *
-     * @param status            If status is not null notifications will only return notifications for the given status.
-     *                          Possible statuses are created|sending|delivered|permanent-failure|temporary-failure|technical-failure
-     * @param notification_type If notification_type is not null only notification of the given status will be returned.
+     * @param status If status is not empty or null notifications will only return notifications for the given status.
+     *               Possible statuses are created|sending|delivered|permanent-failure|temporary-failure|technical-failure
+     * @param notification_type If notification_type is not empty or null only notifications of the given status will be returned.
      *                          Possible notificationTypes are sms|email
+     * @param reference If reference is not empty or null only the notifications with that reference are returned.
+     * @param olderThanId If olderThanId is not empty or null only the notifications older than that notification id are returned.
      * @return <code>NotificationList</code>
      * @throws NotificationClientException
      */
-    public NotificationList getNotifications(String status, String notification_type) throws NotificationClientException {
-        JSONObject data = new JSONObject();
-        if (status != null && !status.isEmpty()) {
-            data.put("status", status);
-        }
-        if (notification_type != null && !notification_type.isEmpty()) {
-            data.put("template_type", notification_type);
-        }
-        StringBuilder stringBuilder;
-        HttpsURLConnection conn = null;
+    public NotificationList getNotifications(String status, String notification_type, String reference, String olderThanId) throws NotificationClientException {
         try {
-            URL url = new URL(baseUrl + "/notifications");
-            conn = getConnection(url);
-            conn.setRequestMethod("GET");
-            Authentication authentication = new Authentication();
-            String token = authentication.create(serviceId, apiKey);
-            conn.setRequestProperty("Authorization", "Bearer " + token);
-            conn.setRequestProperty("User-agent", "NOTIFY-API-JAVA-CLIENT/" + version);
+            URIBuilder builder = new URIBuilder(baseUrl + "/v2/notifications");
+            if (status != null && !status.isEmpty()) {
+                builder.addParameter("status", status);
+            }
+            if (notification_type != null && !notification_type.isEmpty()) {
+                builder.addParameter("template_type", notification_type);
+            }
+            if (reference != null && !reference.isEmpty()) {
+                builder.addParameter("reference", reference);
+            }
+            if (olderThanId != null && !olderThanId.isEmpty()) {
+                builder.addParameter("older_than", olderThanId);
+            }
 
-            conn.connect();
+            HttpsURLConnection conn = createConnectionAndSetHeaders(builder.toString(), "GET");
+            String response = performGetRequest(conn);
+            return new NotificationList(response);
+        } catch (URISyntaxException e) {
+            LOGGER.log(Level.SEVERE, e.toString(), e);
+            throw new NotificationClientException(e);
+        }
+    }
+
+    private String performPostRequest(HttpsURLConnection conn, JSONObject body) throws NotificationClientException {
+        try{
+            OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+            wr.write(body.toString());
+            wr.flush();
+
             int httpResult = conn.getResponseCode();
+            if (httpResult == HttpsURLConnection.HTTP_CREATED) {
+                StringBuilder sb = readStream(new InputStreamReader(conn.getInputStream(), "utf-8"));
+                return sb.toString();
+            } else {
+                StringBuilder sb = readStream(new InputStreamReader(conn.getErrorStream(), "utf-8"));
+                throw new NotificationClientException(httpResult, sb.toString());
+            }
+
+        } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, e.toString(), e);
+            throw new NotificationClientException(e);
+        } finally {
+            if (conn != null) {
+                conn.disconnect();
+            }
+    }
+    }
+
+    private String performGetRequest(HttpsURLConnection conn) throws NotificationClientException {
+        try{
+            int httpResult = conn.getResponseCode();
+            StringBuilder stringBuilder;
             if (httpResult == 200) {
                 stringBuilder = readStream(new InputStreamReader(conn.getInputStream()));
                 conn.disconnect();
-                return new NotificationList(stringBuilder.toString());
+                return stringBuilder.toString();
             } else {
                 stringBuilder = readStream(new InputStreamReader(conn.getErrorStream(), "utf-8"));
                 throw new NotificationClientException(httpResult, stringBuilder.toString());
             }
         } catch (IOException e) {
             LOGGER.log(Level.SEVERE, e.toString(), e);
+            throw new NotificationClientException(e);
         } finally {
             if (conn != null) {
                 conn.disconnect();
             }
         }
-        return null;
+    }
+
+    private HttpsURLConnection createConnectionAndSetHeaders(String urlString, String method) throws NotificationClientException {
+        try
+        {
+            URL url = new URL(urlString);
+            HttpsURLConnection conn = getConnection(url);
+            conn.setRequestMethod(method);
+            Authentication authentication = new Authentication();
+            String token = authentication.create(serviceId, apiKey);
+            conn.setRequestProperty("Authorization", "Bearer " + token);
+            conn.setRequestProperty("User-agent", "NOTIFY-API-JAVA-CLIENT/" + version);
+            if (method.equals("POST")) {
+                conn.setDoOutput(true);
+                conn.setRequestProperty("Content-Type", "application/json");
+                conn.setRequestProperty("Accept", "application/json");
+
+            }
+            return conn;
+        }catch (IOException e) {
+            LOGGER.log(Level.SEVERE, e.toString(), e);
+            throw new NotificationClientException(e);
+        }
     }
 
     private HttpsURLConnection getConnection(URL url) throws IOException {
@@ -268,25 +276,20 @@ public class NotificationClient implements NotificationClientApi {
         return conn;
     }
 
-    private HttpsURLConnection postConnection(String token, URL url) throws IOException {
-        HttpsURLConnection conn = getConnection(url);
-        conn.setRequestMethod("POST");
-        conn.setDoOutput(true);
-        conn.setRequestProperty("Authorization", "Bearer " + token);
-        conn.setRequestProperty("Content-Type", "application/json");
-        conn.setRequestProperty("Accept", "application/json");
-        conn.setRequestProperty("User-agent", "NOTIFY-API-JAVA-CLIENT/" + version);
-
-        conn.connect();
-        return conn;
-    }
-
-    private JSONObject createBodyForRequest(String templateId, String to, HashMap<String, String> personalisation) {
+    private JSONObject createBodyForPostRequest(final String templateId, final String phoneNumber, final String emailAddress, final Map<String, String> personalisation, final String reference) {
         JSONObject body = new JSONObject();
-        body.put("to", to);
-        body.put("template", templateId);
+        if(phoneNumber != null && !phoneNumber.isEmpty()) {
+            body.put("phone_number", phoneNumber);
+        }
+        if(emailAddress != null && !emailAddress.isEmpty()) {
+            body.put("email_address", emailAddress);
+        }
+        body.put("template_id", templateId);
         if (personalisation != null && !personalisation.isEmpty()) {
             body.put("personalisation", new JSONObject(personalisation));
+        }
+        if(reference != null && !reference.isEmpty()){
+            body.put("reference", reference);
         }
         return body;
     }
