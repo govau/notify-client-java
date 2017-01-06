@@ -49,7 +49,6 @@ public class ClientIntegrationTestIT {
             assertNotNull(notificationList.getCurrentPageLink());
             assertNotNull(nextList);
             assertNotNull(nextList.getNotifications());
-            assertFalse(nextList.getNotifications().isEmpty());
         }
     }
 
