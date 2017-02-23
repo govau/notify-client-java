@@ -17,7 +17,7 @@ public interface NotificationClientApi {
      * @return <code>SendEmailResponse</code>
      * @throws NotificationClientException
      */
-    public SendEmailResponse sendEmail(String templateId, String emailAddress, Map<String, String> personalisation, String reference) throws NotificationClientException;
+    SendEmailResponse sendEmail(String templateId, String emailAddress, Map<String, String> personalisation, String reference) throws NotificationClientException;
 
     /**
      * The sendSms method will create an HTTPS POST request. A JWT token will be created and added as an Authorization header to the request.
@@ -32,7 +32,7 @@ public interface NotificationClientApi {
      * @return <code>SendSmsResponse</code>
      * @throws NotificationClientException
      */
-    public SendSmsResponse sendSms(String templateId, String phoneNumber, Map<String, String> personalisation, String reference) throws NotificationClientException;
+    SendSmsResponse sendSms(String templateId, String phoneNumber, Map<String, String> personalisation, String reference) throws NotificationClientException;
 
     /**
      * The getNotificationById method will return a <code>Notification</code> for a given notification id.
@@ -42,7 +42,7 @@ public interface NotificationClientApi {
      * @return <code>Notification</code>
      * @throws NotificationClientException
      */
-    public Notification getNotificationById(String notificationId) throws NotificationClientException;
+    Notification getNotificationById(String notificationId) throws NotificationClientException;
 
     /**
      * The getNotifications method will create a GET HTTPS request to retrieve all the notifications.
@@ -56,7 +56,7 @@ public interface NotificationClientApi {
      * @return <code>NotificationList</code>
      * @throws NotificationClientException
      */
-    public NotificationList getNotifications(String status, String notification_type, String reference, String olderThanId) throws NotificationClientException;
+    NotificationList getNotifications(String status, String notification_type, String reference, String olderThanId) throws NotificationClientException;
 
 
 }
