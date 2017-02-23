@@ -17,7 +17,7 @@ import org.apache.http.client.utils.URIBuilder;
 
 import org.json.JSONObject;
 
-public class NotificationClient {
+public class NotificationClient implements NotificationClientApi {
 
     private static final Logger LOGGER = Logger.getLogger(NotificationClient.class.toString());
     public static final String LIVE_BASE_URL = "https://api.notifications.service.gov.uk";
