@@ -1,3 +1,11 @@
+## 3.1.0-RELEASE
+
+### Changed
+* `NotificationClientException` now has a getter for the httpResult, `NotificationClientException.getHttpResult()`
+* Added `NotificationClientApi` interface for `NotificationClient` 
+  * The interface is useful if you want to stub the `NotificationClient` for tests.
+
+
 ## 3.0.0-RELEASE
 
 ### Changed
