@@ -60,7 +60,8 @@ public class ClientIntegrationTestIT {
             fail("Expected NotificationClientException: Template missing personalisation: name");
         } catch (NotificationClientException e) {
             assert(e.getMessage().contains("Template missing personalisation: name"));
-            assert(e.getMessage().contains("Status code: 400"));
+            assert e.getHttpResult() == 400;
+            assert(e.getMessage().contains(" \"error\": \"BadRequestError\""));
         }
     }
 
