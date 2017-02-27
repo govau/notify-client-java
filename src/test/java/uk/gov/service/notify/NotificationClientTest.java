@@ -38,6 +38,11 @@ public class NotificationClientTest {
         assertNotificationWithProxy(proxy, client);
     }
 
+    @Test
+    public void testCreateNotificationClientSetsUserAgent() {
+        NotificationClient client = new NotificationClient(combinedApiKey, baseUrl);
+        assertEquals(client.getUserAgent(), "NOTIFY-API-JAVA-CLIENT/3.1.1-RELEASE");
+    }
 
     private void assertNotificationWithProxy(Proxy proxy, NotificationClient client) {
         assertEquals(client.getApiKey(), apiKey);

@@ -86,6 +86,10 @@ public class NotificationClient implements NotificationClientApi {
         this.version = getVersion();
     }
 
+    public String getUserAgent() {
+      return "NOTIFY-API-JAVA-CLIENT/" + version;
+    }
+
     public String getApiKey() {
         return apiKey;
     }
@@ -251,7 +255,7 @@ public class NotificationClient implements NotificationClientApi {
             Authentication authentication = new Authentication();
             String token = authentication.create(serviceId, apiKey);
             conn.setRequestProperty("Authorization", "Bearer " + token);
-            conn.setRequestProperty("User-agent", "NOTIFY-API-JAVA-CLIENT/" + version);
+            conn.setRequestProperty("User-agent", getUserAgent());
             if (method.equals("POST")) {
                 conn.setDoOutput(true);
                 conn.setRequestProperty("Content-Type", "application/json");
@@ -347,6 +351,6 @@ public class NotificationClient implements NotificationClientApi {
                 }
             }
         }
-        return prop.getProperty("version");
+        return prop.getProperty("project.version");
     }
 }
