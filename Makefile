@@ -38,7 +38,7 @@ prepare-docker-runner-image: ## Prepare the Docker builder image
 build-with-docker: prepare-docker-runner-image ## Build inside a Docker container
 	docker run -i --rm \
 		--name "${DOCKER_CONTAINER_PREFIX}-build" \
-		-v `pwd`:/var/project \
+		-v "`pwd`:/var/project" \
 		-v `pwd`/.m2:/root/.m2 \
 		-e http_proxy="${HTTP_PROXY}" \
 		-e HTTP_PROXY="${HTTP_PROXY}" \
@@ -52,7 +52,7 @@ build-with-docker: prepare-docker-runner-image ## Build inside a Docker containe
 test-with-docker: prepare-docker-runner-image generate-env-file ## Run tests inside a Docker container
 	docker run -i --rm \
 		--name "${DOCKER_CONTAINER_PREFIX}-test" \
-		-v `pwd`:/var/project \
+		-v "`pwd`:/var/project" \
 		-v `pwd`/.m2:/root/.m2 \
 		-e http_proxy="${HTTP_PROXY}" \
 		-e HTTP_PROXY="${HTTP_PROXY}" \
@@ -67,7 +67,7 @@ test-with-docker: prepare-docker-runner-image generate-env-file ## Run tests ins
 integration-test-with-docker: prepare-docker-runner-image generate-env-file ## Run integration tests inside a Docker container
 	docker run -i --rm \
 		--name "${DOCKER_CONTAINER_PREFIX}-integration-test" \
-		-v `pwd`:/var/project \
+		-v "`pwd`:/var/project" \
 		-v `pwd`/.m2:/root/.m2 \
 		-e http_proxy="${HTTP_PROXY}" \
 		-e HTTP_PROXY="${HTTP_PROXY}" \
