@@ -75,19 +75,19 @@ public class ClientIntegrationTestIT {
             assert(e.getMessage().contains("Status code: 400"));
         }
     }
-
-    @Test
-    public void testSendAndGetNotificationWithReference() throws NotificationClientException {
-        NotificationClient client = getClient();
-        HashMap<String, String> personalisation = new HashMap<String, String>();
-        String uniqueString = UUID.randomUUID().toString();
-        personalisation.put("name", uniqueString);
-        SendEmailResponse response = client.sendEmail(System.getenv("EMAIL_TEMPLATE_ID"), System.getenv("FUNCTIONAL_TEST_EMAIL"), personalisation, uniqueString);
-        assertNotificationEmailResponse(response, uniqueString);
-        NotificationList notifications = client.getNotifications(null, null, uniqueString, null);
-        assertEquals(1, notifications.getNotifications().size());
-        assertEquals(response.getNotificationId(), notifications.getNotifications().get(0).getId());
-    }
+//
+//    @Test
+//    public void testSendAndGetNotificationWithReference() throws NotificationClientException {
+//        NotificationClient client = getClient();
+//        HashMap<String, String> personalisation = new HashMap<String, String>();
+//        String uniqueString = UUID.randomUUID().toString();
+//        personalisation.put("name", uniqueString);
+//        SendEmailResponse response = client.sendEmail(System.getenv("EMAIL_TEMPLATE_ID"), System.getenv("FUNCTIONAL_TEST_EMAIL"), personalisation, uniqueString);
+//        assertNotificationEmailResponse(response, uniqueString);
+//        NotificationList notifications = client.getNotifications(null, null, uniqueString, null);
+//        assertEquals(1, notifications.getNotifications().size());
+//        assertEquals(response.getNotificationId(), notifications.getNotifications().get(0).getId());
+//    }
 
     private NotificationClient getClient(){
         String apiKey = System.getenv("API_KEY");
