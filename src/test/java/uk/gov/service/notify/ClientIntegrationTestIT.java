@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Optional;
 import java.util.UUID;
 
+import static java.lang.Thread.sleep;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -19,16 +20,14 @@ public class ClientIntegrationTestIT {
     public void testEmailNotificationIT() throws NotificationClientException, InterruptedException {
         NotificationClient client = getClient();
         SendEmailResponse emailResponse = sendEmailAndAssertResponse(client);
-        Notification notification = client.getNotificationById(emailResponse.getNotificationId().toString());
-        assertNotification(notification);
+        waitForNotification(client, emailResponse.getNotificationId().toString());
     }
 
     @Test
     public void testSmsNotificationIT() throws NotificationClientException, InterruptedException {
         NotificationClient client = getClient();
         SendSmsResponse response = sendSmsAndAssertResponse(client);
-        Notification notification = client.getNotificationById(response.getNotificationId().toString());
-        assertNotification(notification);
+        waitForNotification(client, response.getNotificationId().toString());
     }
 
     @Test
@@ -76,19 +75,19 @@ public class ClientIntegrationTestIT {
             assert(e.getMessage().contains("Status code: 400"));
         }
     }
-
-    @Test
-    public void testSendAndGetNotificationWithReference() throws NotificationClientException {
-        NotificationClient client = getClient();
-        HashMap<String, String> personalisation = new HashMap<String, String>();
-        String uniqueString = UUID.randomUUID().toString();
-        personalisation.put("name", uniqueString);
-        SendEmailResponse response = client.sendEmail(System.getenv("EMAIL_TEMPLATE_ID"), System.getenv("FUNCTIONAL_TEST_EMAIL"), personalisation, uniqueString);
-        assertNotificationEmailResponse(response, uniqueString);
-        NotificationList notifications = client.getNotifications(null, null, uniqueString, null);
-        assertEquals(1, notifications.getNotifications().size());
-        assertEquals(response.getNotificationId(), notifications.getNotifications().get(0).getId());
-    }
+//
+//    @Test
+//    public void testSendAndGetNotificationWithReference() throws NotificationClientException {
+//        NotificationClient client = getClient();
+//        HashMap<String, String> personalisation = new HashMap<String, String>();
+//        String uniqueString = UUID.randomUUID().toString();
+//        personalisation.put("name", uniqueString);
+//        SendEmailResponse response = client.sendEmail(System.getenv("EMAIL_TEMPLATE_ID"), System.getenv("FUNCTIONAL_TEST_EMAIL"), personalisation, uniqueString);
+//        assertNotificationEmailResponse(response, uniqueString);
+//        NotificationList notifications = client.getNotifications(null, null, uniqueString, null);
+//        assertEquals(1, notifications.getNotifications().size());
+//        assertEquals(response.getNotificationId(), notifications.getNotifications().get(0).getId());
+//    }
 
     private NotificationClient getClient(){
         String apiKey = System.getenv("API_KEY");
@@ -192,6 +191,31 @@ public class ClientIntegrationTestIT {
         assertFalse(notification.getLine5().isPresent());
         assertFalse(notification.getLine6().isPresent());
         assertFalse(notification.getPostcode().isPresent());
+    }
+
+
+    private void waitForNotification(NotificationClient client, String id) throws InterruptedException, NotificationClientException {
+        int i = 0;
+        boolean has_not_finished = true;
+        while(i < 14 && has_not_finished) {
+            try {
+                Notification notification = client.getNotificationById(id);
+                assertNotification(notification);
+                has_not_finished = false;
+            } catch (NotificationClientException ex) {
+                if (ex.getHttpResult() == 404) {
+                    sleep(5000);
+                    i++;
+                }
+                else{
+                    throw ex;
+                }
+
+            }
+        }
+        if(has_not_finished){
+            fail("Message was not found");
+        }
     }
 
 
