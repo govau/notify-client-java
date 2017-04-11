@@ -94,7 +94,7 @@ public class NotificationClient implements NotificationClientApi {
         this.proxy = proxy;
         if (sslContext != null){
             try {
-                setCustomSSLContent(sslContext);
+                setCustomSSLContext(sslContext);
             } catch (NoSuchAlgorithmException e) {
                 LOGGER.log(Level.SEVERE, e.toString(), e);
             }
@@ -339,7 +339,7 @@ public class NotificationClient implements NotificationClientApi {
         HttpsURLConnection.setDefaultSSLSocketFactory(SSLContext.getDefault().getSocketFactory());
     }
 
-    private static void setCustomSSLContent(final SSLContext sslContext) throws NoSuchAlgorithmException {
+    private static void setCustomSSLContext(final SSLContext sslContext) throws NoSuchAlgorithmException {
         HttpsURLConnection.setDefaultSSLSocketFactory(sslContext.getSocketFactory());
     }
 
