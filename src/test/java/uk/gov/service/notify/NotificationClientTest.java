@@ -2,8 +2,10 @@ package uk.gov.service.notify;
 
 import org.junit.Test;
 
+import javax.net.ssl.SSLContext;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
+import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
@@ -41,7 +43,15 @@ public class NotificationClientTest {
     @Test
     public void testCreateNotificationClientSetsUserAgent() {
         NotificationClient client = new NotificationClient(combinedApiKey, baseUrl);
-        assertEquals(client.getUserAgent(), "NOTIFY-API-JAVA-CLIENT/3.1.1-RELEASE");
+        assertEquals(client.getUserAgent(), "NOTIFY-API-JAVA-CLIENT/3.1.2-RELEASE");
+    }
+
+    @Test
+    public void testCreateNotificationClient_withSSLContext() throws NoSuchAlgorithmException {
+        SSLContext sslContext = SSLContext.getDefault();
+        NotificationClient client = new NotificationClient(combinedApiKey, baseUrl, null, sslContext);
+        assertNotificationClient(client);
+
     }
 
     private void assertNotificationWithProxy(Proxy proxy, NotificationClient client) {
