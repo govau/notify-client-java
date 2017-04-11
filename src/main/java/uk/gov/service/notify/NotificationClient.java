@@ -74,14 +74,30 @@ public class NotificationClient implements NotificationClientApi {
      * @param proxy
      */
     public NotificationClient(final String apiKey, final String baseUrl, final Proxy proxy) {
-        this.apiKey = extractApiKey(apiKey);
-        this.serviceId = extractServiceId(apiKey);
-        this.baseUrl = baseUrl;
-        this.proxy = proxy;
+        this(
+                apiKey,
+                baseUrl,
+                proxy,
+                null
+        );
         try {
             setDefaultSSLContext();
         } catch (NoSuchAlgorithmException e) {
             LOGGER.log(Level.SEVERE, e.toString(), e);
+        }
+    }
+
+    public NotificationClient(final String apiKey, final String baseUrl, final Proxy proxy, final SSLContext sslContext){
+        this.apiKey = extractApiKey(apiKey);
+        this.serviceId = extractServiceId(apiKey);
+        this.baseUrl = baseUrl;
+        this.proxy = proxy;
+        if (sslContext != null){
+            try {
+                setCustomSSLContent(sslContext);
+            } catch (NoSuchAlgorithmException e) {
+                LOGGER.log(Level.SEVERE, e.toString(), e);
+            }
         }
         this.version = getVersion();
     }
@@ -322,6 +338,11 @@ public class NotificationClient implements NotificationClientApi {
     private static void setDefaultSSLContext() throws NoSuchAlgorithmException {
         HttpsURLConnection.setDefaultSSLSocketFactory(SSLContext.getDefault().getSocketFactory());
     }
+
+    private static void setCustomSSLContent(final SSLContext sslContext) throws NoSuchAlgorithmException {
+        HttpsURLConnection.setDefaultSSLSocketFactory(sslContext.getSocketFactory());
+    }
+
 
     private static String extractServiceId(String apiKey) {
         return apiKey.substring(Math.max(0, apiKey.length() - 73), Math.max(0, apiKey.length() - 37));

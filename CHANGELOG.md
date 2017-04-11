@@ -1,3 +1,9 @@
+## 3.1.2-RELEASE
+
+### Changed
+* Added SSLContext to `NotificationClient` constructor, to allow clients to be created with a specified SSL Context.
+
+
 ## 3.1.1-RELEASE
 
 ### Fixed
