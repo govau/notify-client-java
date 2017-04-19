@@ -1,3 +1,9 @@
+## 3.1.3-RELEASE
+
+### Changed
+* Updated the jose4j dependency in light of the security issues: [https://auth0.com/blog/critical-vulnerability-in-json-web-encryption/](https://auth0.com/blog/critical-vulnerability-in-json-web-encryption/)
+
+
 ## 3.1.2-RELEASE
 
 ### Changed
