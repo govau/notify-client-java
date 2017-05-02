@@ -574,3 +574,52 @@ You can filter the templates by the following options:
 * `sms`
 * `letter`
 You can also pass in an empty string or null to ignore the filter.
+
+
+## Generate a preview template
+If successful returns a template with the placeholders replaced with the given personalisation.
+
+<details>
+<summary>
+Response
+</summary>
+```java
+    private UUID id;
+    private String templateType;
+    private int version;
+    private String body;
+    private String subject;
+```
+
+Otherwise a `NotificationClientException` is thrown.
+<table>
+<thead>
+<tr>
+<th>message</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<pre>
+Status code: 404 {
+"errors":
+[{
+    "error": "NoResultFound",
+    "message": "No result found"
+}]
+}
+</pre>
+<pre>
+Status code: 400 {
+"errors":
+[{
+    "error": "ValidationError",
+    "message": "id is not a valid UUID"
+}]
+}
+</pre>
+</tbody>
+</table>
+
+</details>

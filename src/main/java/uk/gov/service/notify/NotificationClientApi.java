@@ -86,4 +86,15 @@ public interface NotificationClientApi {
      * @throws NotificationClientException
      */
     TemplateList getAllTemplates(String templateType) throws NotificationClientException;
+
+    /**
+     * The getTemplatePreview returns a template with the placeholders replaced with the given personalisation.
+     *
+     * @param templateId The template id is visible from the template page in the application.
+     * @param personalisation Map representing the placeholders for the template if any. For example, key=name value=Bob
+     *                        Can be an empty map or null when the template does not require placeholders.
+     * @return <code>Template</code>
+     * @throws NotificationClientException
+     */
+    TemplatePreview getTemplatePreview(String templateId, Map<String, String> personalisation) throws NotificationClientException;
 }

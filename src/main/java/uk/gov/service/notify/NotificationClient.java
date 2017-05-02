@@ -138,7 +138,7 @@ public class NotificationClient implements NotificationClientApi {
     public SendEmailResponse sendEmail(String templateId, String emailAddress, Map<String, String> personalisation, String reference) throws NotificationClientException {
         JSONObject body = createBodyForPostRequest(templateId, null, emailAddress, personalisation, reference);
         HttpsURLConnection conn = createConnectionAndSetHeaders(baseUrl + "/v2/notifications/email", "POST");
-        String response = performPostRequest(conn, body);
+        String response = performPostRequest(conn, body, HttpsURLConnection.HTTP_CREATED);
         return new SendEmailResponse(response);
     }
 
@@ -158,7 +158,7 @@ public class NotificationClient implements NotificationClientApi {
     public SendSmsResponse sendSms(String templateId, String phoneNumber, Map<String, String> personalisation, String reference) throws NotificationClientException {
         JSONObject body = createBodyForPostRequest(templateId, phoneNumber, null, personalisation, reference);
         HttpsURLConnection conn = createConnectionAndSetHeaders(baseUrl + "/v2/notifications/sms", "POST");
-        String response = performPostRequest(conn, body);
+        String response = performPostRequest(conn, body, HttpsURLConnection.HTTP_CREATED);
         return new SendSmsResponse(response);
     }
 
@@ -267,14 +267,33 @@ public class NotificationClient implements NotificationClientApi {
         }
     }
 
-    private String performPostRequest(HttpsURLConnection conn, JSONObject body) throws NotificationClientException {
+    /**
+     * The getTemplatePreview returns a template with the placeholders replaced with the given personalisation.
+     *
+     * @param templateId The template id is visible from the template page in the application.
+     * @param personalisation Map representing the placeholders for the template if any. For example, key=name value=Bob
+     *                        Can be an empty map or null when the template does not require placeholders.
+     * @return <code>TemplatePreview</code>
+     * @throws NotificationClientException
+     */
+    public TemplatePreview getTemplatePreview(String templateId, Map<String, String> personalisation) throws NotificationClientException {
+        JSONObject body = new JSONObject();
+        if (personalisation != null && !personalisation.isEmpty()) {
+            body.put("personalisation", new JSONObject(personalisation));
+        }
+        HttpsURLConnection conn = createConnectionAndSetHeaders(baseUrl + "/v2/template/" + templateId + "/preview", "POST");
+        String response = performPostRequest(conn, body, HttpsURLConnection.HTTP_OK);
+        return new TemplatePreview(response);
+    }
+
+    private String performPostRequest(HttpsURLConnection conn, JSONObject body, int expectedStatusCode) throws NotificationClientException {
         try{
             OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
             wr.write(body.toString());
             wr.flush();
 
             int httpResult = conn.getResponseCode();
-            if (httpResult == HttpsURLConnection.HTTP_CREATED) {
+            if (httpResult == expectedStatusCode) {
                 StringBuilder sb = readStream(new InputStreamReader(conn.getInputStream(), "utf-8"));
                 return sb.toString();
             } else {
