@@ -7,7 +7,7 @@ public interface NotificationClientApi {
     /**
      * The sendEmail method will create an HTTPS POST request. A JWT token will be created and added as an Authorization header to the request.
      *
-     * @param templateId      Find templateId by clicking API info for the template you want to send
+     * @param templateId      The template id is visible from the template page in the application.
      * @param emailAddress    The email address
      * @param personalisation Map representing the placeholders for the template if any. For example, key=name value=Bob
      *                        Can be an empty map or null when the template does not require placeholders.
@@ -22,7 +22,7 @@ public interface NotificationClientApi {
     /**
      * The sendSms method will create an HTTPS POST request. A JWT token will be created and added as an Authorization header to the request.
      *
-     * @param templateId      Find templateId by clicking API info for the template you want to send
+     * @param templateId      The template id is visible from the template page in the application.
      * @param phoneNumber              The mobile phone number
      * @param personalisation Map representing the placeholders for the template if any. For example, key=name value=Bob
      *                        Can be an empty map or null when the template does not require placeholders.
@@ -58,5 +58,14 @@ public interface NotificationClientApi {
      */
     NotificationList getNotifications(String status, String notification_type, String reference, String olderThanId) throws NotificationClientException;
 
+    /**
+     * The getTemplateById returns a <code>Template</code> given the template id.
+     *
+     *
+     * @param templateId The template id is visible from the template page in the application.
+     * @return <code>Template</code>
+     * @throws NotificationClientException
+     */
+    Template getTemplateById(String templateId) throws NotificationClientException;
 
 }

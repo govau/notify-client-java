@@ -417,3 +417,58 @@ You can pass an empty string or null to ignore the filter.
 #### `olderThanId`
 You can get the notifications older than a given `Notification.notificationId`.
 You can pass an empty string or null to ignore the filter
+
+
+## Get a template by ID
+This will return the latest version of the template. Use get_template_version to retrieve a specific template version.
+
+```java
+Template template = client.getTemplateById(templateId);
+```
+
+<details>
+<summary>
+SendSmsResponse
+</summary>
+    private UUID id;
+    private String templateType;
+    private DateTime createdAt;
+    private DateTime updatedAt;
+    private String createdBy;
+    private int version;
+    private String body;
+    private String subject;
+</details>
+
+Otherwise the client will raise a `NotificationClientException`.
+
+<table>
+<thead>
+<tr>
+<th>message</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<pre>
+Status code: 404 {
+"errors":
+[{
+    "error": "NoResultFound",
+    "message": "No result found"
+}]
+}
+</pre>
+<pre>
+Status code: 400 {
+"errors":
+[{
+    "error": "ValidationError",
+    "message": "id is not a valid UUID"
+}]
+}
+</pre>
+</tbody>
+</table>
+</details>

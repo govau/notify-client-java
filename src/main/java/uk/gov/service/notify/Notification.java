@@ -32,12 +32,10 @@ public class Notification {
     public Notification(String content){
         JSONObject responseBodyAsJson = new JSONObject(content);
         build(responseBodyAsJson);
-
     }
 
     public Notification(org.json.JSONObject data){
         build(data);
-
     }
 
     private void build(JSONObject data) {

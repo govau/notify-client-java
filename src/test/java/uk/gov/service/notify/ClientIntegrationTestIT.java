@@ -90,6 +90,18 @@ public class ClientIntegrationTestIT {
         assertEquals(response.getNotificationId(), notifications.getNotifications().get(0).getId());
     }
 
+    @Test
+    public void testGetTemplateById() throws NotificationClientException {
+        NotificationClient client = getClient();
+        Template template = client.getTemplateById(System.getenv("EMAIL_TEMPLATE_ID"));
+        assertEquals(System.getenv("EMAIL_TEMPLATE_ID"), template.getId().toString());
+        assertNotNull(template.getVersion());
+        assertNotNull(template.getCreatedAt());
+        assertNotNull(template.getTemplateType());
+        assertNotNull(template.getBody());
+        assertNotNull(template.getSubject());
+    }
+
     private NotificationClient getClient(){
         String apiKey = System.getenv("API_KEY");
         String baseUrl = System.getenv("NOTIFY_API_URL");

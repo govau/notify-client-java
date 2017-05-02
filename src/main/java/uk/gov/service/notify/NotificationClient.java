@@ -103,7 +103,7 @@ public class NotificationClient implements NotificationClientApi {
     }
 
     public String getUserAgent() {
-      return "NOTIFY-API-JAVA-CLIENT/" + version;
+        return "NOTIFY-API-JAVA-CLIENT/" + version;
     }
 
     public String getApiKey() {
@@ -215,6 +215,20 @@ public class NotificationClient implements NotificationClientApi {
         }
     }
 
+    /**
+     * The getTemplateById returns a <code>Template</code> given the template id.
+     *
+     *
+     * @param templateId The template id is visible from the template page in the application.
+     * @return <code>Template</code>
+     */
+    public Template getTemplateById(String templateId) throws NotificationClientException{
+        String url = baseUrl + "/v2/template/" + templateId;
+        HttpsURLConnection conn = createConnectionAndSetHeaders(url, "GET");
+        String response = performGetRequest(conn);
+        return new Template(response);
+    }
+
     private String performPostRequest(HttpsURLConnection conn, JSONObject body) throws NotificationClientException {
         try{
             OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
@@ -237,7 +251,7 @@ public class NotificationClient implements NotificationClientApi {
             if (conn != null) {
                 conn.disconnect();
             }
-    }
+        }
     }
 
     private String performGetRequest(HttpsURLConnection conn) throws NotificationClientException {
