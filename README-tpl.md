@@ -420,7 +420,7 @@ You can pass an empty string or null to ignore the filter
 
 
 ## Get a template by ID
-This will return the latest version of the template. Use get_template_version to retrieve a specific template version.
+This will return the latest version of the template. Use [getTemplateVersion](#get-a-template-by-id-and-version) to retrieve a specific template version.
 
 ```java
 Template template = client.getTemplateById(templateId);
@@ -472,3 +472,72 @@ Status code: 400 {
 </tbody>
 </table>
 </details>
+
+### Arguments
+
+#### `templateId`
+The template id is visible on the template page in the application.
+
+
+## Get a template by ID and version
+This will return the template for the given id and version.
+
+```java
+Template template = client.getTemplateVersion(templateId, version);
+```
+
+<details>
+<summary>
+SendSmsResponse
+</summary>
+    private UUID id;
+    private String templateType;
+    private DateTime createdAt;
+    private DateTime updatedAt;
+    private String createdBy;
+    private int version;
+    private String body;
+    private String subject;
+</details>
+
+Otherwise the client will raise a `NotificationClientException`.
+
+<table>
+<thead>
+<tr>
+<th>message</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<pre>
+Status code: 404 {
+"errors":
+[{
+    "error": "NoResultFound",
+    "message": "No result found"
+}]
+}
+</pre>
+<pre>
+Status code: 400 {
+"errors":
+[{
+    "error": "ValidationError",
+    "message": "id is not a valid UUID"
+}]
+}
+</pre>
+</tbody>
+</table>
+</details>
+
+### Arguments
+
+#### `templateId`
+The template id is visible on the template page in the application.
+
+#### `version`
+A history of the template is kept. There is a link to `See previous versions` on the template page in the application.
+

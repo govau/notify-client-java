@@ -218,12 +218,27 @@ public class NotificationClient implements NotificationClientApi {
     /**
      * The getTemplateById returns a <code>Template</code> given the template id.
      *
-     *
      * @param templateId The template id is visible from the template page in the application.
      * @return <code>Template</code>
      */
     public Template getTemplateById(String templateId) throws NotificationClientException{
         String url = baseUrl + "/v2/template/" + templateId;
+        HttpsURLConnection conn = createConnectionAndSetHeaders(url, "GET");
+        String response = performGetRequest(conn);
+        return new Template(response);
+    }
+
+    /**
+     * The getTemplateVersion returns a <code>Template</code> given the template id and version.
+     *
+     *
+     * @param templateId The template id is visible from the template page in the application.
+     * @param version The version of the template to return
+     * @return <code>Template</code>
+     * @throws NotificationClientException
+     */
+    public Template getTemplateVersion(String templateId, int version) throws NotificationClientException{
+        String url = baseUrl + "/v2/template/" + templateId + "/version/" + version;
         HttpsURLConnection conn = createConnectionAndSetHeaders(url, "GET");
         String response = performGetRequest(conn);
         return new Template(response);

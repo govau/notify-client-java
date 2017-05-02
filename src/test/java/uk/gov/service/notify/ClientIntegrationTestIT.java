@@ -102,6 +102,17 @@ public class ClientIntegrationTestIT {
         assertNotNull(template.getSubject());
     }
 
+    @Test
+    public void testGetTemplateVersion() throws NotificationClientException {
+        NotificationClient client = getClient();
+        Template template = client.getTemplateVersion(System.getenv("SMS_TEMPLATE_ID"), 1);
+        assertEquals(System.getenv("SMS_TEMPLATE_ID"), template.getId().toString());
+        assertNotNull(template.getVersion());
+        assertNotNull(template.getCreatedAt());
+        assertNotNull(template.getTemplateType());
+        assertNotNull(template.getBody());
+    }
+
     private NotificationClient getClient(){
         String apiKey = System.getenv("API_KEY");
         String baseUrl = System.getenv("NOTIFY_API_URL");
