@@ -77,4 +77,13 @@ public interface NotificationClientApi {
      */
     Template getTemplateVersion(String templateId, int version) throws NotificationClientException;
 
+    /**
+     * Returns all the templates for your service. Filtered by template type if not null.
+     *
+     * @param templateType If templateType is not empty or null templates will be filtered by type.
+     *          Possible template types are email|sms|letter
+     * @return <code>TemplateList</code>
+     * @throws NotificationClientException
+     */
+    TemplateList getAllTemplates(String templateType) throws NotificationClientException;
 }

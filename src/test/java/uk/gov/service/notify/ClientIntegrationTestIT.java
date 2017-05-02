@@ -113,6 +113,13 @@ public class ClientIntegrationTestIT {
         assertNotNull(template.getBody());
     }
 
+    @Test
+    public void testGetAllTemplates() throws NotificationClientException {
+        NotificationClient client = getClient();
+        TemplateList templateList = client.getAllTemplates("");
+        assertTrue(2 <= templateList.getTemplates().size());
+    }
+
     private NotificationClient getClient(){
         String apiKey = System.getenv("API_KEY");
         String baseUrl = System.getenv("NOTIFY_API_URL");

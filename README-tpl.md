@@ -541,3 +541,36 @@ The template id is visible on the template page in the application.
 #### `version`
 A history of the template is kept. There is a link to `See previous versions` on the template page in the application.
 
+
+## Get all templates
+This will return the latest version of each template for your service.
+
+```java
+TemplateList templates = client.getAllTemplates(templateType);
+```
+
+<details>
+<summary>
+Response
+</summary>
+```java
+    List<Template> templates;
+```
+If the response is successful, a TemplateList is returned.
+  
+If no templates exist for a template type or there no templates for a service, the templates list will be empty.
+
+Otherwise the client will raise a `NotificationClientException`.
+
+
+</details>
+
+### Arguments
+
+#### `templateType`
+You can filter the templates by the following options:
+
+* `email`
+* `sms`
+* `letter`
+You can also pass in an empty string or null to ignore the filter.

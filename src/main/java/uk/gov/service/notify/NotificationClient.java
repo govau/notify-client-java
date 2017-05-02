@@ -244,6 +244,29 @@ public class NotificationClient implements NotificationClientApi {
         return new Template(response);
     }
 
+    /**
+     * Returns all the templates for your service. Filtered by template type if not null.
+     *
+     * @param templateType If templateType is not empty or null templates will be filtered by type.
+     *          Possible template types are email|sms|letter
+     * @return <code>TemplateList</code>
+     * @throws NotificationClientException
+     */
+    public TemplateList getAllTemplates(String templateType) throws NotificationClientException{
+        try{
+            URIBuilder builder = new URIBuilder(baseUrl + "/v2/templates");
+            if (templateType != null && !templateType.isEmpty()) {
+                builder.addParameter("type", templateType);
+            }
+            HttpsURLConnection conn = createConnectionAndSetHeaders(builder.toString(), "GET");
+            String response = performGetRequest(conn);
+            return new TemplateList(response);
+        } catch (URISyntaxException e) {
+            LOGGER.log(Level.SEVERE, e.toString(), e);
+            throw new NotificationClientException(e);
+        }
+    }
+
     private String performPostRequest(HttpsURLConnection conn, JSONObject body) throws NotificationClientException {
         try{
             OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
