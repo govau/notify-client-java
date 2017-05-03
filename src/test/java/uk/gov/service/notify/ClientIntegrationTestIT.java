@@ -90,6 +90,66 @@ public class ClientIntegrationTestIT {
         assertEquals(response.getNotificationId(), notifications.getNotifications().get(0).getId());
     }
 
+    @Test
+    public void testGetTemplateById() throws NotificationClientException {
+        NotificationClient client = getClient();
+        Template template = client.getTemplateById(System.getenv("EMAIL_TEMPLATE_ID"));
+        assertEquals(System.getenv("EMAIL_TEMPLATE_ID"), template.getId().toString());
+        assertNotNull(template.getVersion());
+        assertNotNull(template.getCreatedAt());
+        assertNotNull(template.getTemplateType());
+        assertNotNull(template.getBody());
+        assertNotNull(template.getSubject());
+    }
+
+    @Test
+    public void testGetTemplateVersion() throws NotificationClientException {
+        NotificationClient client = getClient();
+        Template template = client.getTemplateVersion(System.getenv("SMS_TEMPLATE_ID"), 1);
+        assertEquals(System.getenv("SMS_TEMPLATE_ID"), template.getId().toString());
+        assertNotNull(template.getVersion());
+        assertNotNull(template.getCreatedAt());
+        assertNotNull(template.getTemplateType());
+        assertNotNull(template.getBody());
+    }
+
+    @Test
+    public void testGetAllTemplates() throws NotificationClientException {
+        NotificationClient client = getClient();
+        TemplateList templateList = client.getAllTemplates("");
+        assertTrue(2 <= templateList.getTemplates().size());
+    }
+
+    @Test
+    public void testGetTemplatePreview() throws NotificationClientException {
+        NotificationClient client = getClient();
+        HashMap<String, String> personalisation = new HashMap<>();
+        String uniqueName = UUID.randomUUID().toString();
+        personalisation.put("name", uniqueName);
+        TemplatePreview template = client.generateTemplatePreview(System.getenv("EMAIL_TEMPLATE_ID"), personalisation);
+        assertEquals(System.getenv("EMAIL_TEMPLATE_ID"), template.getId().toString());
+        assertNotNull(template.getVersion());
+        assertNotNull(template.getTemplateType());
+        assertNotNull(template.getBody());
+        assertNotNull(template.getSubject());
+        assertTrue(template.getBody().contains(uniqueName));
+    }
+
+    @Test
+    public void testGetTemplatePreviewThrowsErrorIfMissingPersonalisation() throws NotificationClientException {
+        NotificationClient client = getClient();
+        HashMap<String, String> personalisation = new HashMap<>();
+        String uniqueName = UUID.randomUUID().toString();
+        personalisation.put("name", uniqueName);
+        try {
+            TemplatePreview template = client.generateTemplatePreview(System.getenv("SMS_TEMPLATE_ID"), personalisation);
+        } catch (NotificationClientException e) {
+            assert(e.getMessage().contains("Template missing personalisation: name"));
+            assert e.getHttpResult() == 400;
+            assert(e.getMessage().contains(" \"error\": \"BadRequestError\""));
+        }
+    }
+
     private NotificationClient getClient(){
         String apiKey = System.getenv("API_KEY");
         String baseUrl = System.getenv("NOTIFY_API_URL");

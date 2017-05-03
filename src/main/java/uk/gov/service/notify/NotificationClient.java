@@ -103,7 +103,7 @@ public class NotificationClient implements NotificationClientApi {
     }
 
     public String getUserAgent() {
-      return "NOTIFY-API-JAVA-CLIENT/" + version;
+        return "NOTIFY-API-JAVA-CLIENT/" + version;
     }
 
     public String getApiKey() {
@@ -138,7 +138,7 @@ public class NotificationClient implements NotificationClientApi {
     public SendEmailResponse sendEmail(String templateId, String emailAddress, Map<String, String> personalisation, String reference) throws NotificationClientException {
         JSONObject body = createBodyForPostRequest(templateId, null, emailAddress, personalisation, reference);
         HttpsURLConnection conn = createConnectionAndSetHeaders(baseUrl + "/v2/notifications/email", "POST");
-        String response = performPostRequest(conn, body);
+        String response = performPostRequest(conn, body, HttpsURLConnection.HTTP_CREATED);
         return new SendEmailResponse(response);
     }
 
@@ -158,7 +158,7 @@ public class NotificationClient implements NotificationClientApi {
     public SendSmsResponse sendSms(String templateId, String phoneNumber, Map<String, String> personalisation, String reference) throws NotificationClientException {
         JSONObject body = createBodyForPostRequest(templateId, phoneNumber, null, personalisation, reference);
         HttpsURLConnection conn = createConnectionAndSetHeaders(baseUrl + "/v2/notifications/sms", "POST");
-        String response = performPostRequest(conn, body);
+        String response = performPostRequest(conn, body, HttpsURLConnection.HTTP_CREATED);
         return new SendSmsResponse(response);
     }
 
@@ -215,14 +215,85 @@ public class NotificationClient implements NotificationClientApi {
         }
     }
 
-    private String performPostRequest(HttpsURLConnection conn, JSONObject body) throws NotificationClientException {
+    /**
+     * The getTemplateById returns a <code>Template</code> given the template id.
+     *
+     * @param templateId The template id is visible from the template page in the application.
+     * @return <code>Template</code>
+     */
+    public Template getTemplateById(String templateId) throws NotificationClientException{
+        String url = baseUrl + "/v2/template/" + templateId;
+        HttpsURLConnection conn = createConnectionAndSetHeaders(url, "GET");
+        String response = performGetRequest(conn);
+        return new Template(response);
+    }
+
+    /**
+     * The getTemplateVersion returns a <code>Template</code> given the template id and version.
+     *
+     *
+     * @param templateId The template id is visible from the template page in the application.
+     * @param version The version of the template to return
+     * @return <code>Template</code>
+     * @throws NotificationClientException
+     */
+    public Template getTemplateVersion(String templateId, int version) throws NotificationClientException{
+        String url = baseUrl + "/v2/template/" + templateId + "/version/" + version;
+        HttpsURLConnection conn = createConnectionAndSetHeaders(url, "GET");
+        String response = performGetRequest(conn);
+        return new Template(response);
+    }
+
+    /**
+     * Returns all the templates for your service. Filtered by template type if not null.
+     *
+     * @param templateType If templateType is not empty or null templates will be filtered by type.
+     *          Possible template types are email|sms|letter
+     * @return <code>TemplateList</code>
+     * @throws NotificationClientException
+     */
+    public TemplateList getAllTemplates(String templateType) throws NotificationClientException{
+        try{
+            URIBuilder builder = new URIBuilder(baseUrl + "/v2/templates");
+            if (templateType != null && !templateType.isEmpty()) {
+                builder.addParameter("type", templateType);
+            }
+            HttpsURLConnection conn = createConnectionAndSetHeaders(builder.toString(), "GET");
+            String response = performGetRequest(conn);
+            return new TemplateList(response);
+        } catch (URISyntaxException e) {
+            LOGGER.log(Level.SEVERE, e.toString(), e);
+            throw new NotificationClientException(e);
+        }
+    }
+
+    /**
+     * The generateTemplatePreview returns a template with the placeholders replaced with the given personalisation.
+     *
+     * @param templateId The template id is visible from the template page in the application.
+     * @param personalisation Map representing the placeholders for the template if any. For example, key=name value=Bob
+     *                        Can be an empty map or null when the template does not require placeholders.
+     * @return <code>TemplatePreview</code>
+     * @throws NotificationClientException
+     */
+    public TemplatePreview generateTemplatePreview(String templateId, Map<String, String> personalisation) throws NotificationClientException {
+        JSONObject body = new JSONObject();
+        if (personalisation != null && !personalisation.isEmpty()) {
+            body.put("personalisation", new JSONObject(personalisation));
+        }
+        HttpsURLConnection conn = createConnectionAndSetHeaders(baseUrl + "/v2/template/" + templateId + "/preview", "POST");
+        String response = performPostRequest(conn, body, HttpsURLConnection.HTTP_OK);
+        return new TemplatePreview(response);
+    }
+
+    private String performPostRequest(HttpsURLConnection conn, JSONObject body, int expectedStatusCode) throws NotificationClientException {
         try{
             OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
             wr.write(body.toString());
             wr.flush();
 
             int httpResult = conn.getResponseCode();
-            if (httpResult == HttpsURLConnection.HTTP_CREATED) {
+            if (httpResult == expectedStatusCode) {
                 StringBuilder sb = readStream(new InputStreamReader(conn.getInputStream(), "utf-8"));
                 return sb.toString();
             } else {
@@ -237,7 +308,7 @@ public class NotificationClient implements NotificationClientApi {
             if (conn != null) {
                 conn.disconnect();
             }
-    }
+        }
     }
 
     private String performGetRequest(HttpsURLConnection conn) throws NotificationClientException {

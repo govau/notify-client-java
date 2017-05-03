@@ -1,3 +1,12 @@
+## 3.2.0-RELEASE
+* Template endpoints added to the NotificationsClient
+* `getTemplateById` - get the latest version of a template by id.
+* `getTemplateVersion` - get the template by id and version.
+* `getAllTemplates` - get all templates, can be filtered by template type.
+* `generateTemplatePreview` - get the contents of a template with the placeholders replaced with the given personalisation.
+* See the README for more information about the new template methods. 
+
+
 ## 3.1.3-RELEASE
 
 ### Changed
