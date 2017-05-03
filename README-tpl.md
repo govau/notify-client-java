@@ -123,7 +123,21 @@ Otherwise the client will raise a `NotificationClientException`:
 <tr>
 <td>
 <pre>
-Status code: 400 {
+Status code: 429 {
+"errors":
+[{
+    "error": "RateLimitError",
+    "message": "Exceeded rate limit for key type TEAM of 10 requests per 10 seconds"
+}]
+}
+</pre>
+</td>
+</tr>
+
+<tr>
+<td>
+<pre>
+Status code: 429 {
 "errors":
 [{
     "error": "TooManyRequestsError",
@@ -207,7 +221,21 @@ Otherwise the client will raise a `NotificationClientException`:
 <tr>
 <td>
 <pre>
-Status code: 400 {
+Status code: 429 {
+"errors":
+[{
+    "error": "RateLimitError",
+    "message": "Exceeded rate limit for key type TEAM of 10 requests per 10 seconds"
+}]
+}
+</pre>
+</td>
+</tr>
+
+<tr>
+<td>
+<pre>
+Status code: 429 {
 "errors":
 [{
     "error": "TooManyRequestsError",
@@ -563,7 +591,7 @@ Response
     List<Template> templates;
 ```
 If the response is successful, a TemplateList is returned.
-  
+
 If no templates exist for a template type or there no templates for a service, the templates list will be empty.
 
 Otherwise the client will raise a `NotificationClientException`.
@@ -641,4 +669,3 @@ The template id is visible on the template page in the application.
 
 #### `personalisation`
 If a template has placeholders, you need to provide their values. `personalisation` can be an empty or null in which case no placeholders are provided for the notification.
-
