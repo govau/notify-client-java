@@ -123,7 +123,21 @@ Otherwise the client will raise a `NotificationClientException`:
 <tr>
 <td>
 <pre>
-Status code: 400 {
+Status code: 429 {
+"errors":
+[{
+    "error": "RateLimitError",
+    "message": "Exceeded rate limit for key type TEAM of 10 requests per 10 seconds"
+}]
+}
+</pre>
+</td>
+</tr>
+
+<tr>
+<td>
+<pre>
+Status code: 429 {
 "errors":
 [{
     "error": "TooManyRequestsError",
