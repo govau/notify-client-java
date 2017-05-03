@@ -346,6 +346,7 @@ NotificationList notification = client.getNotifications(status, notificationType
 <summary>
 NotificationList
 </summary>
+
 If successful a `NotificationList` is returned. Below is a list of attributes in a`NotificationList`.
 ```java
     List<Notification> notifications;
@@ -430,6 +431,7 @@ Template template = client.getTemplateById(templateId);
 <summary>
 Response
 </summary>
+
 ```Java
     UUID id;
     String templateType;
@@ -491,6 +493,7 @@ Template template = client.getTemplateVersion(templateId, version);
 <summary>
 Response
 </summary>
+
 ```Java
     UUID id;
     String templateType;
@@ -555,6 +558,7 @@ TemplateList templates = client.getAllTemplates(templateType);
 <summary>
 Response
 </summary>
+
 ```java
     List<Template> templates;
 ```
@@ -588,6 +592,7 @@ TemplatePreview templatePreview = client.getTemplatePreview(templateId, personal
 <summary>
 Response
 </summary>
+
 ```java
     UUID id;
     String templateType;

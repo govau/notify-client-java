@@ -268,7 +268,7 @@ public class NotificationClient implements NotificationClientApi {
     }
 
     /**
-     * The getTemplatePreview returns a template with the placeholders replaced with the given personalisation.
+     * The generateTemplatePreview returns a template with the placeholders replaced with the given personalisation.
      *
      * @param templateId The template id is visible from the template page in the application.
      * @param personalisation Map representing the placeholders for the template if any. For example, key=name value=Bob
@@ -276,7 +276,7 @@ public class NotificationClient implements NotificationClientApi {
      * @return <code>TemplatePreview</code>
      * @throws NotificationClientException
      */
-    public TemplatePreview getTemplatePreview(String templateId, Map<String, String> personalisation) throws NotificationClientException {
+    public TemplatePreview generateTemplatePreview(String templateId, Map<String, String> personalisation) throws NotificationClientException {
         JSONObject body = new JSONObject();
         if (personalisation != null && !personalisation.isEmpty()) {
             body.put("personalisation", new JSONObject(personalisation));

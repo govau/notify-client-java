@@ -126,12 +126,13 @@ public class ClientIntegrationTestIT {
         HashMap<String, String> personalisation = new HashMap<>();
         String uniqueName = UUID.randomUUID().toString();
         personalisation.put("name", uniqueName);
-        TemplatePreview template = client.getTemplatePreview(System.getenv("EMAIL_TEMPLATE_ID"), personalisation);
+        TemplatePreview template = client.generateTemplatePreview(System.getenv("EMAIL_TEMPLATE_ID"), personalisation);
         assertEquals(System.getenv("EMAIL_TEMPLATE_ID"), template.getId().toString());
         assertNotNull(template.getVersion());
         assertNotNull(template.getTemplateType());
         assertNotNull(template.getBody());
         assertNotNull(template.getSubject());
+        assertTrue(template.getBody().contains(uniqueName));
     }
 
     @Test
@@ -141,7 +142,7 @@ public class ClientIntegrationTestIT {
         String uniqueName = UUID.randomUUID().toString();
         personalisation.put("name", uniqueName);
         try {
-            TemplatePreview template = client.getTemplatePreview(System.getenv("SMS_TEMPLATE_ID"), personalisation);
+            TemplatePreview template = client.generateTemplatePreview(System.getenv("SMS_TEMPLATE_ID"), personalisation);
         } catch (NotificationClientException e) {
             assert(e.getMessage().contains("Template missing personalisation: name"));
             assert e.getHttpResult() == 400;
