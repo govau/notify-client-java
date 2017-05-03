@@ -258,7 +258,7 @@ The email address the email notification is sent to.
 
 #### `templateId`
 
-Find by clicking **API info** for the template you want to send.
+The template id is visible on the template page in the application.
 
 #### `personalisation`
 If a template has placeholders, you need to provide their values. `personalisation` can be an empty or null in which case no placeholders are provided for the notification.
@@ -428,17 +428,18 @@ Template template = client.getTemplateById(templateId);
 
 <details>
 <summary>
-SendSmsResponse
+Response
 </summary>
-    private UUID id;
-    private String templateType;
-    private DateTime createdAt;
-    private DateTime updatedAt;
-    private String createdBy;
-    private int version;
-    private String body;
-    private String subject;
-</details>
+```Java
+    UUID id;
+    String templateType;
+    DateTime createdAt;
+    Optional<DateTime> updatedAt;
+    String createdBy;
+    int version;
+    String body;
+    Optional<String> subject;
+```
 
 Otherwise the client will raise a `NotificationClientException`.
 
@@ -488,17 +489,18 @@ Template template = client.getTemplateVersion(templateId, version);
 
 <details>
 <summary>
-SendSmsResponse
+Response
 </summary>
-    private UUID id;
-    private String templateType;
-    private DateTime createdAt;
-    private DateTime updatedAt;
-    private String createdBy;
-    private int version;
-    private String body;
-    private String subject;
-</details>
+```Java
+    UUID id;
+    String templateType;
+    DateTime createdAt;
+    Optional<DateTime> updatedAt;
+    String createdBy;
+    int version;
+    String body;
+    Optional<String> subject;
+```
 
 Otherwise the client will raise a `NotificationClientException`.
 
@@ -577,18 +579,21 @@ You can also pass in an empty string or null to ignore the filter.
 
 
 ## Generate a preview template
-If successful returns a template with the placeholders replaced with the given personalisation.
+This will return the contents of a template with the placeholders replaced with the given personalisation.
+```Java
+TemplatePreview templatePreview = client.getTemplatePreview(templateId, personalisation)
+```
 
 <details>
 <summary>
 Response
 </summary>
 ```java
-    private UUID id;
-    private String templateType;
-    private int version;
-    private String body;
-    private String subject;
+    UUID id;
+    String templateType;
+    int version;
+    String body;
+    Optional<String> subject;
 ```
 
 Otherwise a `NotificationClientException` is thrown.
@@ -623,3 +628,12 @@ Status code: 400 {
 </table>
 
 </details>
+
+### Arguments
+
+#### `templateId`
+The template id is visible on the template page in the application.
+
+#### `personalisation`
+If a template has placeholders, you need to provide their values. `personalisation` can be an empty or null in which case no placeholders are provided for the notification.
+

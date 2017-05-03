@@ -43,7 +43,7 @@ Then add the Maven dependency to your project.
     <dependency>
         <groupId>uk.gov.service.notify</groupId>
         <artifactId>notifications-java-client</artifactId>
-        <version>3.1.3-RELEASE</version>
+        <version>3.2.0-RELEASE</version>
     </dependency>
 
 ```
@@ -58,7 +58,7 @@ repositories {
 }
 
 dependencies {
-    compile('uk.gov.service.notify:notifications-java-client:3.1.3-RELEASE')
+    compile('uk.gov.service.notify:notifications-java-client:3.2.0-RELEASE')
 }
 ```
 
@@ -258,7 +258,7 @@ The email address the email notification is sent to.
 
 #### `templateId`
 
-Find by clicking **API info** for the template you want to send.
+The template id is visible on the template page in the application.
 
 #### `personalisation`
 If a template has placeholders, you need to provide their values. `personalisation` can be an empty or null in which case no placeholders are provided for the notification.
@@ -417,3 +417,223 @@ You can pass an empty string or null to ignore the filter.
 #### `olderThanId`
 You can get the notifications older than a given `Notification.notificationId`.
 You can pass an empty string or null to ignore the filter
+
+
+## Get a template by ID
+This will return the latest version of the template. Use [getTemplateVersion](#get-a-template-by-id-and-version) to retrieve a specific template version.
+
+```java
+Template template = client.getTemplateById(templateId);
+```
+
+<details>
+<summary>
+Response
+</summary>
+```Java
+    UUID id;
+    String templateType;
+    DateTime createdAt;
+    Optional<DateTime> updatedAt;
+    String createdBy;
+    int version;
+    String body;
+    Optional<String> subject;
+```
+
+Otherwise the client will raise a `NotificationClientException`.
+
+<table>
+<thead>
+<tr>
+<th>message</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<pre>
+Status code: 404 {
+"errors":
+[{
+    "error": "NoResultFound",
+    "message": "No result found"
+}]
+}
+</pre>
+<pre>
+Status code: 400 {
+"errors":
+[{
+    "error": "ValidationError",
+    "message": "id is not a valid UUID"
+}]
+}
+</pre>
+</tbody>
+</table>
+</details>
+
+### Arguments
+
+#### `templateId`
+The template id is visible on the template page in the application.
+
+
+## Get a template by ID and version
+This will return the template for the given id and version.
+
+```java
+Template template = client.getTemplateVersion(templateId, version);
+```
+
+<details>
+<summary>
+Response
+</summary>
+```Java
+    UUID id;
+    String templateType;
+    DateTime createdAt;
+    Optional<DateTime> updatedAt;
+    String createdBy;
+    int version;
+    String body;
+    Optional<String> subject;
+```
+
+Otherwise the client will raise a `NotificationClientException`.
+
+<table>
+<thead>
+<tr>
+<th>message</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<pre>
+Status code: 404 {
+"errors":
+[{
+    "error": "NoResultFound",
+    "message": "No result found"
+}]
+}
+</pre>
+<pre>
+Status code: 400 {
+"errors":
+[{
+    "error": "ValidationError",
+    "message": "id is not a valid UUID"
+}]
+}
+</pre>
+</tbody>
+</table>
+</details>
+
+### Arguments
+
+#### `templateId`
+The template id is visible on the template page in the application.
+
+#### `version`
+A history of the template is kept. There is a link to `See previous versions` on the template page in the application.
+
+
+## Get all templates
+This will return the latest version of each template for your service.
+
+```java
+TemplateList templates = client.getAllTemplates(templateType);
+```
+
+<details>
+<summary>
+Response
+</summary>
+```java
+    List<Template> templates;
+```
+If the response is successful, a TemplateList is returned.
+  
+If no templates exist for a template type or there no templates for a service, the templates list will be empty.
+
+Otherwise the client will raise a `NotificationClientException`.
+
+
+</details>
+
+### Arguments
+
+#### `templateType`
+You can filter the templates by the following options:
+
+* `email`
+* `sms`
+* `letter`
+You can also pass in an empty string or null to ignore the filter.
+
+
+## Generate a preview template
+This will return the contents of a template with the placeholders replaced with the given personalisation.
+```Java
+TemplatePreview templatePreview = client.getTemplatePreview(templateId, personalisation)
+```
+
+<details>
+<summary>
+Response
+</summary>
+```java
+    UUID id;
+    String templateType;
+    int version;
+    String body;
+    Optional<String> subject;
+```
+
+Otherwise a `NotificationClientException` is thrown.
+<table>
+<thead>
+<tr>
+<th>message</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<pre>
+Status code: 404 {
+"errors":
+[{
+    "error": "NoResultFound",
+    "message": "No result found"
+}]
+}
+</pre>
+<pre>
+Status code: 400 {
+"errors":
+[{
+    "error": "ValidationError",
+    "message": "id is not a valid UUID"
+}]
+}
+</pre>
+</tbody>
+</table>
+
+</details>
+
+### Arguments
+
+#### `templateId`
+The template id is visible on the template page in the application.
+
+#### `personalisation`
+If a template has placeholders, you need to provide their values. `personalisation` can be an empty or null in which case no placeholders are provided for the notification.
+
