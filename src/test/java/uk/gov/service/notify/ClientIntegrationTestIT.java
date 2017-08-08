@@ -32,6 +32,15 @@ public class ClientIntegrationTestIT {
     }
 
     @Test
+    public void testLetterNotificationIT() throws NotificationClientException, InterruptedException {
+        NotificationClient client = getClient();
+        SendLetterResponse letterResponse = sendLetterAndAssertResponse(client);
+        Notification notification = client.getNotificationById(letterResponse.getNotificationId().toString());
+        assertNotification(notification);
+    }
+
+
+    @Test
     public void testGetAllNotifications() throws NotificationClientException {
         NotificationClient client = getClient();
         NotificationList notificationList = client.getNotifications(null, null, null, null);
@@ -143,6 +152,7 @@ public class ClientIntegrationTestIT {
         personalisation.put("name", uniqueName);
         try {
             TemplatePreview template = client.generateTemplatePreview(System.getenv("SMS_TEMPLATE_ID"), personalisation);
+            fail("Expected NotificationClientException: Template missing personalisation: name");
         } catch (NotificationClientException e) {
             assert(e.getMessage().contains("Template missing personalisation: name"));
             assert e.getHttpResult() == 400;
@@ -175,6 +185,19 @@ public class ClientIntegrationTestIT {
         return response;
     }
 
+    private SendLetterResponse sendLetterAndAssertResponse(final NotificationClient client) throws NotificationClientException {
+        HashMap<String, String> personalisation = new HashMap<>();
+        String addressLine1 = UUID.randomUUID().toString();
+        String addressLine2 = UUID.randomUUID().toString();
+        String postcode = UUID.randomUUID().toString();
+        personalisation.put("address_line_1", addressLine1);
+        personalisation.put("address_line_2", addressLine2);
+        personalisation.put("postcode", postcode);
+        SendLetterResponse response = client.sendLetter(System.getenv("LETTER_TEMPLATE_ID"), personalisation, addressLine1);
+        assertNotificationLetterResponse(response, addressLine1);
+        return response;
+    }
+
     private void assertNotificationSmsResponse(final SendSmsResponse response, final String uniqueName){
         assertNotNull(response);
         assertTrue(response.getBody().contains(uniqueName));
@@ -197,6 +220,18 @@ public class ClientIntegrationTestIT {
         assertNotNull(response.getTemplateId());
         assertNotNull(response.getTemplateVersion());
     }
+
+    private void assertNotificationLetterResponse(final SendLetterResponse response, final String addressLine1){
+        assertNotNull(response);
+        assertTrue(response.getBody().contains(addressLine1));
+        assertEquals(Optional.of(addressLine1), response.getReference());
+        assertNotNull(response.getNotificationId());
+        assertNotNull(response.getTemplateVersion());
+        assertNotNull(response.getTemplateId());
+        assertNotNull(response.getTemplateUri());
+        assertNotNull(response.getTemplateVersion());
+    }
+
     private Notification assertNotification(Notification notification){
         assertNotNull(notification);
         assertNotNull(notification.getId());
@@ -223,6 +258,8 @@ public class ClientIntegrationTestIT {
 
     private void assertNotificationWhenLetter(Notification notification) {
         assertTrue(notification.getLine1().isPresent());
+        assertTrue(notification.getLine2().isPresent());
+        assertTrue(notification.getPostcode().isPresent());
         // the other address lines are optional.
         assertFalse(notification.getEmailAddress().isPresent());
         assertFalse(notification.getPhoneNumber().isPresent());
