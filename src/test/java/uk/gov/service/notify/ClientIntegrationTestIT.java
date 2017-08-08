@@ -144,22 +144,6 @@ public class ClientIntegrationTestIT {
         assertTrue(template.getBody().contains(uniqueName));
     }
 
-    @Test
-    public void testGetTemplatePreviewThrowsErrorIfMissingPersonalisation() throws NotificationClientException {
-        NotificationClient client = getClient();
-        HashMap<String, String> personalisation = new HashMap<>();
-        String uniqueName = UUID.randomUUID().toString();
-        personalisation.put("name", uniqueName);
-        try {
-            TemplatePreview template = client.generateTemplatePreview(System.getenv("SMS_TEMPLATE_ID"), personalisation);
-            fail("Expected NotificationClientException: Template missing personalisation: name");
-        } catch (NotificationClientException e) {
-            assert(e.getMessage().contains("Template missing personalisation: name"));
-            assert e.getHttpResult() == 400;
-            assert(e.getMessage().contains(" \"error\": \"BadRequestError\""));
-        }
-    }
-
     private NotificationClient getClient(){
         String apiKey = System.getenv("API_KEY");
         String baseUrl = System.getenv("NOTIFY_API_URL");
