@@ -20,3 +20,8 @@ Then run Java via the Maven exec command with the following arguments:
 ```
 
 You'll be prompted to select an option to submit the API call.
+
+
+## Readme updates
+Don't update README.md - when you run `./update_version.sh` you'll lose any changes you made there - instead make
+changes in README-tpl.md before you call `./update_version.sh`

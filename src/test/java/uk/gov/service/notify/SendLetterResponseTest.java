@@ -8,33 +8,33 @@ import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 
-public class SendSmsResponseTest {
+public class SendLetterResponseTest {
 
     @Test
-    public void testNotificationResponseForSmsResponse(){
-        JSONObject postSmsReponse = new JSONObject();
+    public void testNotificationResponseForLetterResponse(){
+        JSONObject postLetterResponse = new JSONObject();
         UUID id = UUID.randomUUID();
-        postSmsReponse.put("id", id);
-        postSmsReponse.put("reference", "clientReference");
+        postLetterResponse.put("id", id);
+        postLetterResponse.put("reference", "clientReference");
         JSONObject template = new JSONObject();
         UUID templateId = UUID.randomUUID();
         template.put("id", templateId);
         template.put("version", 1);
         template.put("uri", "https://api.notifications.service.gov.uk/templates/"+templateId);
-        postSmsReponse.put("template", template);
+        postLetterResponse.put("template", template);
         JSONObject content = new JSONObject();
         content.put("body", "hello Fred");
-        content.put("from_number", "senderId");
-        postSmsReponse.put("content", content);
+        content.put("subject", "Reminder for thing");
+        postLetterResponse.put("content", content);
 
 
-        SendSmsResponse response = new SendSmsResponse(postSmsReponse.toString());
+        SendLetterResponse response = new SendLetterResponse(postLetterResponse.toString());
         assertEquals(id, response.getNotificationId());
         assertEquals(Optional.of("clientReference"), response.getReference());
         assertEquals(templateId, response.getTemplateId());
         assertEquals("https://api.notifications.service.gov.uk/templates/"+templateId, response.getTemplateUri());
         assertEquals(1, response.getTemplateVersion());
         assertEquals("hello Fred", response.getBody());
-        assertEquals(Optional.of("senderId"), response.getFromNumber());
+        assertEquals("Reminder for thing", response.getSubject());
     }
 }

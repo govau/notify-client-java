@@ -64,9 +64,34 @@ public class NotificationListTest {
         sms.put("sent_at", "2016-03-01T08:30:03.000Z");
         sms.put("completed_at", "2016-03-01T08:30:43.000Z");
 
+        JSONObject letter = new JSONObject();
+        letter.put("id", id);
+        letter.put("reference", "client_reference");
+        letter.put("email_address", null);
+        letter.put("phone_number", null);
+        letter.put("line_1", "the queen");
+        letter.put("line_2", "buckingham palace");
+        letter.put("line_3", null);
+        letter.put("line_4", null);
+        letter.put("line_5", null);
+        letter.put("line_6", null);
+        letter.put("postcode", "sw1 1aa");
+        letter.put("type", "email");
+        letter.put("status", "delivered");
+        template.put("id", templateId);
+        template.put("version", 1);
+        template.put("uri", "https://api.notifications.service.gov.uk/templates/" + templateId);
+        letter.put("template", template);
+        letter.put("body", "Body of the message");
+        letter.put("subject", null);
+        letter.put("created_at", "2016-03-01T08:30:00.000Z");
+        letter.put("sent_at", "2016-03-01T08:30:03.000Z");
+        letter.put("completed_at", "2016-03-01T08:30:43.000Z");
+
         JSONArray listNotifications = new JSONArray();
         listNotifications.add(email);
         listNotifications.add(sms);
+        listNotifications.add(letter);
         JSONObject content = new JSONObject();
         content.put("notifications", listNotifications);
         JSONObject links = new JSONObject();
@@ -76,7 +101,7 @@ public class NotificationListTest {
 
 
         NotificationList result = new NotificationList(content.toString());
-        assertEquals(2, result.getNotifications().size());
+        assertEquals(3, result.getNotifications().size());
         assertEquals("https://api.notifications.service.gov.uk/notifications", result.getCurrentPageLink());
         assertEquals(Optional.<String>empty(), result.getNextPageLink());
 

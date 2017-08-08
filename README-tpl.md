@@ -277,6 +277,129 @@ Status code: 400 {
 </table>
 </details>
 
+### Letter:
+
+```java
+HashMap<String, String> personalisation = new HashMap<>();
+personalisation.put("address_line_1", "Her Majesty The Queen"); // required
+personalisation.put("address_line_2", "Buckingham Palace"); // required
+personalisation.put("address_line_3", "London");
+personalisation.put("postcode", "SW1 1AA"); // required
+// add any other personalisation found in your template
+SendLetterResponse response = client.sendLetter(templateId, personalisation, "yourReferenceString");
+```
+
+
+<details>
+<summary>
+SendLetterResponse
+</summary>
+
+If the request is successful, the SendLetterResponse is returned from the client. Attributes of the SendLetterResponse are listed below.
+
+```java
+	UUID notificationId;
+	Optional<String> reference;
+	UUID templateId;
+	int templateVersion;
+	String templateUri;
+	String body;
+	String subject;
+```
+
+Otherwise the client will raise a `NotificationClientException`:
+
+<table>
+<thead>
+<tr>
+<th>message</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<pre>
+Status code: 429 {
+"errors":
+[{
+    "error": "RateLimitError",
+    "message": "Exceeded rate limit for key type TEAM of 10 requests per 10 seconds"
+}]
+}
+</pre>
+</td>
+</tr>
+
+<tr>
+<td>
+<pre>
+Status code: 429 {
+"errors":
+[{
+    "error": "TooManyRequestsError",
+    "message": "Exceeded send limits (50) for today"
+}]
+}
+</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre>
+Status code 400: {
+"errors":
+[{
+    "error": "BadRequestError",
+    "message": "Can"t send to this recipient using a team-only API key"
+]}
+}
+</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre>
+Status code: 400 {
+"errors":
+[{
+    "error": "BadRequestError",
+    "message": "Can"t send to this recipient when service is in trial mode
+                - see https://www.notifications.service.gov.uk/trial-mode"
+}]
+}
+</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre>
+Status code: 400 {
+"errors":
+[{
+    "error": "ValidationError",
+    "message": "personalisation address_line_1 is a required property"
+}]
+}
+</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre>
+Status code: 400 {
+"errors":
+[{
+    "error": "BadRequestError",
+    "message": "Cannot send letters with a team api key"
+}]
+}
+</pre>
+</td>
+</tr>
+</tbody>
+</table>
+</details>
+
 ### Arguments
 #### `phoneNumber`
 The mobile number the SMS notification is sent to.
@@ -290,6 +413,11 @@ The template id is visible on the template page in the application.
 
 #### `personalisation`
 If a template has placeholders, you need to provide their values. `personalisation` can be an empty or null in which case no placeholders are provided for the notification.
+
+#### `personalisation` (for letters)
+
+If you are sending a letter, you will need to provide the address fields in the format `"address_line_#"`, numbered from 1 to 6, and also the `"postcode"` field
+The fields `"address_line_1"`, `"address_line_2"` and `"postcode"` are required.
 
 #### `reference`
 An optional unique identifier for the notification or an identifier for a batch of notifications. `reference` can be an empty string or null.
