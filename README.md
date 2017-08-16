@@ -495,7 +495,7 @@ Status code: 400 {
 ## Get the status of all messages
 
 ```java
-NotificationList notification = client.getNotifications(status, notificationType, reference, otherThanId);
+NotificationList notification = client.getNotifications(status, notificationType, reference, olderThanId);
 ```
 
 <details>
