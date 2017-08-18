@@ -25,3 +25,16 @@ You'll be prompted to select an option to submit the API call.
 ## Readme updates
 Don't update README.md - when you run `./update_version.sh` you'll lose any changes you made there - instead make
 changes in README-tpl.md before you call `./update_version.sh`
+
+
+## Deploying
+
+[For internal notify use only]
+Make sure your `~/.m2/settings.xml` file is up to date with the file found at `credentials/bintray/settings.xml`
+
+Then, from the notifications-java-client directory, run
+
+```shell
+./update_version.sh
+./deploy.sh
+```
