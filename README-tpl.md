@@ -1,5 +1,7 @@
 # GOV.UK Notify Java client
 
+This documentation is for developers interested in using this Java client to integrate their government service with GOV.UK Notify.
+
 ## Installation
 
 ### Maven
@@ -279,13 +281,24 @@ Status code: 400 {
 
 ### Letter:
 
+The letter must contain:
+
+- mandatory address fields
+- optional address fields if applicable
+- fields from template
+
 ```java
 HashMap<String, String> personalisation = new HashMap<>();
-personalisation.put("address_line_1", "Her Majesty The Queen"); // required
-personalisation.put("address_line_2", "Buckingham Palace"); // required
-personalisation.put("address_line_3", "London");
-personalisation.put("postcode", "SW1 1AA"); // required
-// add any other personalisation found in your template
+personalisation.put("address_line_1", "The Occupier"); // mandatory address field
+personalisation.put("address_line_2", "Flat 2"); // mandatory address field
+personalisation.put("address_line_3", "123 High Street"); // optional address field
+personalisation.put("address_line_4", "Richmond upon Thames"); // optional address field
+personalisation.put("address_line_5", "London"); // optional address field
+personalisation.put("address_line_6", "Middlesex"); // optional address field
+personalisation.put("postcode", "SW14 6BH"); // mandatory address field
+personalisation.put("application_id", "1234"); // field from template
+personalisation.put("application_date", "2017-01-01"); // field from template
+
 SendLetterResponse response = client.sendLetter(templateId, personalisation, "yourReferenceString");
 ```
 
@@ -412,7 +425,12 @@ The email address the email notification is sent to.
 The template id is visible on the template page in the application.
 
 #### `personalisation`
-If a template has placeholders, you need to provide their values. `personalisation` can be an empty or null in which case no placeholders are provided for the notification.
+
+The letter must contain:
+
+- mandatory address fields
+- optional address fields if applicable
+- fields from template
 
 #### `personalisation` (for letters)
 
@@ -543,7 +561,8 @@ Status code: 400 {
 </table>
 </details>
 
-### Arguments
+<details>
+<summary>Arguments</summary>
 
 #### `status`
 
@@ -575,6 +594,7 @@ You can pass an empty string or null to ignore the filter.
 You can get the notifications older than a given `Notification.notificationId`.
 You can pass an empty string or null to ignore the filter
 
+</details>
 
 ## Get a template by ID
 This will return the latest version of the template. Use [getTemplateVersion](#get-a-template-by-id-and-version) to retrieve a specific template version.
@@ -632,10 +652,13 @@ Status code: 400 {
 </table>
 </details>
 
-### Arguments
+<details>
+<summary>Arguments</summary>
 
 #### `templateId`
 The template id is visible on the template page in the application.
+
+</details>
 
 
 ## Get a template by ID and version
@@ -694,14 +717,16 @@ Status code: 400 {
 </table>
 </details>
 
-### Arguments
+<details>
+<summary>Arguments</summary>
 
-#### `templateId`
+### `templateId`
 The template id is visible on the template page in the application.
 
-#### `version`
+### `version`
 A history of the template is kept. There is a link to `See previous versions` on the template page in the application.
 
+</details>
 
 ## Get all templates
 This will return the latest version of each template for your service.
@@ -724,10 +749,11 @@ If no templates exist for a template type or there no templates for a service, t
 
 Otherwise the client will raise a `NotificationClientException`.
 
-
 </details>
 
-### Arguments
+
+<details>
+<summary>Arguments</summary>
 
 #### `templateType`
 You can filter the templates by the following options:
@@ -737,6 +763,7 @@ You can filter the templates by the following options:
 * `letter`
 You can also pass in an empty string or null to ignore the filter.
 
+</details>
 
 ## Generate a preview template
 This will return the contents of a template with the placeholders replaced with the given personalisation.
@@ -790,10 +817,14 @@ Status code: 400 {
 
 </details>
 
-### Arguments
+<details>
+
+<summary>Arguments</summary>
 
 #### `templateId`
 The template id is visible on the template page in the application.
 
 #### `personalisation`
 If a template has placeholders, you need to provide their values. `personalisation` can be an empty or null in which case no placeholders are provided for the notification.
+
+</details>
