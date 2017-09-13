@@ -58,7 +58,7 @@ public class SendLetterResponse {
 
     @Override
     public String toString() {
-        return "SendEmailResponse{" +
+        return "SendLetterResponse{" +
                 "notificationId=" + notificationId +
                 ", reference=" + reference +
                 ", templateId=" + templateId +

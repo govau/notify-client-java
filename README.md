@@ -45,7 +45,7 @@ Then add the Maven dependency to your project.
     <dependency>
         <groupId>uk.gov.service.notify</groupId>
         <artifactId>notifications-java-client</artifactId>
-        <version>3.3.0-RELEASE</version>
+        <version>3.3.1-RELEASE</version>
     </dependency>
 
 ```
@@ -60,7 +60,7 @@ repositories {
 }
 
 dependencies {
-    compile('uk.gov.service.notify:notifications-java-client:3.3.0-RELEASE')
+    compile('uk.gov.service.notify:notifications-java-client:3.3.1-RELEASE')
 }
 ```
 
@@ -181,22 +181,6 @@ Status code: 400 {
 </table>
 </details>
 
-<details>
-<summary>Arguments</summary>
-
-#### `phoneNumber`
-The mobile number the SMS notification is sent to.
-
-#### `templateId`
-The template id is visible on the template page in the application.
-
-#### `personalisation`
-If a template has placeholders, you need to provide their values. `personalisation` can be an empty or null in which case no placeholders are provided for the notification.
-
-#### `reference`
-An optional unique identifier for the notification or an identifier for a batch of notifications. `reference` can be an empty string or null.
-
-</details>
 
 ### Email:
 
@@ -293,24 +277,6 @@ Status code: 400 {
 <tr>
 </tbody>
 </table>
-</details>
-
-<details>
-<summary>Arguments</summary>
-
-#### `emailAddress`
-The email address the email notification is sent to.
-
-#### `templateId`
-
-The template id is visible on the template page in the application.
-
-#### `personalisation`
-If a template has placeholders, you need to provide their values. `personalisation` can be an empty or null in which case no placeholders are provided for the notification.
-
-#### `reference`
-An optional unique identifier for the notification or an identifier for a batch of notifications. `reference` can be an empty string or null.
-
 </details>
 
 ### Letter:
@@ -447,10 +413,15 @@ Status code: 400 {
 </table>
 </details>
 
-<details>
-<summary>Arguments</summary>
+### Arguments
+#### `phoneNumber`
+The mobile number the SMS notification is sent to.
+
+#### `emailAddress`
+The email address the email notification is sent to.
 
 #### `templateId`
+
 The template id is visible on the template page in the application.
 
 #### `personalisation`
@@ -461,13 +432,13 @@ The letter must contain:
 - optional address fields if applicable
 - fields from template
 
-The fields `"address_line_1"`, `"address_line_2"` and `"postcode"` are required. We support up to six address lines.
+#### `personalisation` (for letters)
+
+If you are sending a letter, you will need to provide the address fields in the format `"address_line_#"`, numbered from 1 to 6, and also the `"postcode"` field
+The fields `"address_line_1"`, `"address_line_2"` and `"postcode"` are required.
 
 #### `reference`
 An optional unique identifier for the notification or an identifier for a batch of notifications. `reference` can be an empty string or null.
-
-</details>
-
 
 ## Get the status of one message
 
@@ -595,39 +566,13 @@ Status code: 400 {
 
 #### `status`
 
-##### Text message
-
 You can filter the notifications by the following options:
 
 * `sending` - the message is queued to be sent by the provider.
 * `delivered` - the message was successfully delivered.
 * `failed` - this will return all failure statuses `permanent-failure`, `temporary-failure` and `technical-failure`.
-* `permanent-failure` - the provider was unable to deliver message, phone number does not exist; remove this recipient from your list.
-* `temporary-failure` - the provider was unable to deliver message, the phone was turned off; you can try to send the message again.
-* `technical-failure` - Notify had a technical failure; you can try to send the message again.
-
-You can pass an empty string or null to ignore the filter.
-
-##### Email
-
-You can filter the notifications by the following options:
-
-* `sending` - the message is queued to be sent by the provider.
-* `delivered` - the message was successfully delivered.
-* `failed` - this will return all failure statuses `permanent-failure`, `temporary-failure` and `technical-failure`.
-* `permanent-failure` - the provider was unable to deliver message, email does not exist; remove this recipient from your list.
-* `temporary-failure` - the provider was unable to deliver message, email box was full; you can try to send the message again.
-* `technical-failure` - Notify had a technical failure; you can try to send the message again.
-
-You can pass an empty string or null to ignore the filter.
-
-##### Letter
-
-You can filter the notifications by the following options:
-
-* `created` - the message has been created.
-* `sending` - the message is queued to be sent by the provider.
-* `failed` - this will return all failure statuses `permanent-failure`, `temporary-failure` and `technical-failure`.
+* `permanent-failure` - the provider was unable to deliver message, email or phone number does not exist; remove this recipient from your list.
+* `temporary-failure` - the provider was unable to deliver message, email box was full or the phone was turned off; you can try to send the message again.
 * `technical-failure` - Notify had a technical failure; you can try to send the message again.
 
 You can pass an empty string or null to ignore the filter.
@@ -873,7 +818,7 @@ Status code: 400 {
 </details>
 
 <details>
- 
+
 <summary>Arguments</summary>
 
 #### `templateId`
