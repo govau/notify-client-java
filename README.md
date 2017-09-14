@@ -129,7 +129,7 @@ Status code: 429 {
 "errors":
 [{
     "error": "RateLimitError",
-    "message": "Exceeded rate limit for key type TEAM of 10 requests per 10 seconds"
+    "message": "Exceeded rate limit for key type live of 10 requests per 10 seconds"
 }]
 }
 </pre>
@@ -370,7 +370,7 @@ Status code: 429 {
 "errors":
 [{
     "error": "RateLimitError",
-    "message": "Exceeded rate limit for key type TEAM of 10 requests per 10 seconds"
+    "message": "Exceeded rate limit for key type live of 10 requests per 20 seconds"
 }]
 }
 </pre>
@@ -397,7 +397,7 @@ Status code 400: {
 "errors":
 [{
     "error": "BadRequestError",
-    "message": "Can"t send to this recipient using a team-only API key"
+    "message": "Cannot send letters with a team api key"
 ]}
 }
 </pre>
@@ -410,8 +410,7 @@ Status code: 400 {
 "errors":
 [{
     "error": "BadRequestError",
-    "message": "Can"t send to this recipient when service is in trial mode
-                - see https://www.notifications.service.gov.uk/trial-mode"
+    "message": "Cannot send letters when service is in trial mode"
 }]
 }
 </pre>
