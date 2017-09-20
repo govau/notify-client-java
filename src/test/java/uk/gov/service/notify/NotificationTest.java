@@ -62,7 +62,7 @@ public class NotificationTest {
         assertEquals(new DateTime("2016-03-01T08:30:00.000Z"), notification.getCreatedAt());
         assertEquals(Optional.of(new DateTime("2016-03-01T08:30:03.000Z")), notification.getSentAt());
         assertEquals(Optional.of(new DateTime("2016-03-01T08:30:43.000Z")), notification.getCompletedAt());
-        assertEquals(Optional.of(new Datetime("2016-03-03T16:00:00.000Z")), notification.getEstimatedDelivery());
+        assertEquals(Optional.of(new DateTime("2016-03-03T16:00:00.000Z")), notification.getEstimatedDelivery());
 
     }
 
@@ -119,7 +119,7 @@ public class NotificationTest {
         assertEquals(new DateTime("2016-03-01T08:30:00.000Z"), notification.getCreatedAt());
         assertEquals(Optional.of(new DateTime("2016-03-01T08:30:03.000Z")), notification.getSentAt());
         assertEquals(Optional.of(new DateTime("2016-03-01T08:30:43.000Z")), notification.getCompletedAt());
-        assertEquals(Optional.of(new Datetime("2016-03-03T16:00:00.000Z")), notification.getEstimatedDelivery());
+        assertEquals(Optional.of(new DateTime("2016-03-03T16:00:00.000Z")), notification.getEstimatedDelivery());
 
     }
 
@@ -177,6 +177,6 @@ public class NotificationTest {
         assertEquals(new DateTime("2016-03-01T08:30:00.000Z"), notification.getCreatedAt());
         assertEquals(Optional.of(new DateTime("2016-03-01T08:30:03.000Z")), notification.getSentAt());
         assertEquals(Optional.of(new DateTime("2016-03-01T08:30:43.000Z")), notification.getCompletedAt());
-        assertEquals(Optional.of(new Datetime("2016-03-03T16:00:00.000Z")), notification.getEstimatedDelivery());
+        assertEquals(Optional.of(new DateTime("2016-03-03T16:00:00.000Z")), notification.getEstimatedDelivery());
     }
 }
