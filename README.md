@@ -473,7 +473,8 @@ If successful a `notification` is returned. Below is a list of attributes in a `
     Optional<String subject;
     DateTime createdAt;
     Optional<DateTime> sentAt;
-    Optional<DateTime> completedAt;
+		Optional<DateTime> completedAt;
+    Optional<DateTime> estimatedDelivery;
 ```
 
 Otherwise the client will raise a `NotificationClientException`.

@@ -39,7 +39,7 @@ public class NotificationTest {
         content.put("created_at", "2016-03-01T08:30:00.000Z");
         content.put("sent_at", "2016-03-01T08:30:03.000Z");
         content.put("completed_at", "2016-03-01T08:30:43.000Z");
-
+        content.put("estimated_delivery", "2016-03-03T16:00:00.000Z");
         Notification notification = new Notification(content.toString());
         assertEquals(UUID.fromString(id), notification.getId());
         assertEquals(Optional.of("client_reference"), notification.getReference());
@@ -62,6 +62,7 @@ public class NotificationTest {
         assertEquals(new DateTime("2016-03-01T08:30:00.000Z"), notification.getCreatedAt());
         assertEquals(Optional.of(new DateTime("2016-03-01T08:30:03.000Z")), notification.getSentAt());
         assertEquals(Optional.of(new DateTime("2016-03-01T08:30:43.000Z")), notification.getCompletedAt());
+        assertEquals(Optional.of(new Datetime("2016-03-03T16:00:00.000Z")), notification.getEstimatedDelivery());
 
     }
 
@@ -93,7 +94,7 @@ public class NotificationTest {
         content.put("created_at", "2016-03-01T08:30:00.000Z");
         content.put("sent_at", "2016-03-01T08:30:03.000Z");
         content.put("completed_at", "2016-03-01T08:30:43.000Z");
-
+        content.put("estimated_delivery", "2016-03-03T16:00:00.000Z");
 
         Notification notification = new Notification(content.toString());
         assertEquals(UUID.fromString(id), notification.getId());
@@ -118,6 +119,7 @@ public class NotificationTest {
         assertEquals(new DateTime("2016-03-01T08:30:00.000Z"), notification.getCreatedAt());
         assertEquals(Optional.of(new DateTime("2016-03-01T08:30:03.000Z")), notification.getSentAt());
         assertEquals(Optional.of(new DateTime("2016-03-01T08:30:43.000Z")), notification.getCompletedAt());
+        assertEquals(Optional.of(new Datetime("2016-03-03T16:00:00.000Z")), notification.getEstimatedDelivery());
 
     }
 
@@ -150,7 +152,7 @@ public class NotificationTest {
         content.put("created_at", "2016-03-01T08:30:00.000Z");
         content.put("sent_at", "2016-03-01T08:30:03.000Z");
         content.put("completed_at", "2016-03-01T08:30:43.000Z");
-
+        content.put("estimated_delivery", "2016-03-03T16:00:00.000Z");
 
         Notification notification = new Notification(content.toString());
         assertEquals(UUID.fromString(id), notification.getId());
@@ -175,6 +177,6 @@ public class NotificationTest {
         assertEquals(new DateTime("2016-03-01T08:30:00.000Z"), notification.getCreatedAt());
         assertEquals(Optional.of(new DateTime("2016-03-01T08:30:03.000Z")), notification.getSentAt());
         assertEquals(Optional.of(new DateTime("2016-03-01T08:30:43.000Z")), notification.getCompletedAt());
-
+        assertEquals(Optional.of(new Datetime("2016-03-03T16:00:00.000Z")), notification.getEstimatedDelivery());
     }
 }

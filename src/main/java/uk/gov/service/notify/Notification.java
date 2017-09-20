@@ -28,6 +28,7 @@ public class Notification {
     private DateTime createdAt;
     private DateTime sentAt;
     private DateTime completedAt;
+    private DateTime estimatedDelivery;
 
     public Notification(String content){
         JSONObject responseBodyAsJson = new JSONObject(content);
@@ -61,6 +62,7 @@ public class Notification {
         createdAt = new DateTime(data.getString("created_at"));
         sentAt =  data.isNull("sent_at") ? null : new DateTime(data.getString("sent_at"));
         completedAt = data.isNull("completed_at") ? null : new DateTime(data.getString("completed_at"));
+        estimatedDelivery = data.isNull("estimated_delivery") ? null : new DateTime(data.getString("estimated_delivery"));
     }
 
     public UUID getId() {
@@ -147,6 +149,13 @@ public class Notification {
         return Optional.ofNullable(completedAt);
     }
 
+    /**
+     * estimatedDelivery is only present on letters
+     */
+    public Optional<DateTime> getEstimatedDelivery() {
+        return Optional.ofNullable(estimatedDelivery);
+    }
+
     @Override
     public String toString() {
         return "Notification{" +
@@ -171,6 +180,7 @@ public class Notification {
                 ", createdAt=" + createdAt +
                 ", sentAt=" + sentAt +
                 ", completedAt=" + completedAt +
+                ", estimatedDelivery=" + estimatedDelivery +
                 '}';
     }
 }
