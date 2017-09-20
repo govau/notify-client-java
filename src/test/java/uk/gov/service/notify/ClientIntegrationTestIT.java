@@ -235,7 +235,11 @@ public class ClientIntegrationTestIT {
             assertNotificationWhenLetter(notification);
         }
 
-        assertTrue("expected status to be created, sending or delivered", Arrays.asList("created", "sending", "delivered").contains(notification.getStatus()));
+        if(notification.getNotificationType().equals("letter")){
+            assertEquals("accepted", notification.getStatus());
+        } else {
+            assertTrue("expected status to be created, sending or delivered", Arrays.asList("created", "sending", "delivered").contains(notification.getStatus()));
+        }
 
         return notification;
     }
