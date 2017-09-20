@@ -563,35 +563,56 @@ Status code: 400 {
 <details>
 <summary>Arguments</summary>
 
-#### `status`
+### `template_type`
 
-You can filter the notifications by the following options:
-
-* `sending` - the message is queued to be sent by the provider.
-* `delivered` - the message was successfully delivered.
-* `failed` - this will return all failure statuses `permanent-failure`, `temporary-failure` and `technical-failure`.
-* `permanent-failure` - the provider was unable to deliver message, email or phone number does not exist; remove this recipient from your list.
-* `temporary-failure` - the provider was unable to deliver message, email box was full or the phone was turned off; you can try to send the message again.
-* `technical-failure` - Notify had a technical failure; you can try to send the message again.
-
-You can pass an empty string or null to ignore the filter.
-
-#### `notificationType`
-
-You can filter the notifications by the following options:
+You can filter by:
 
 * `email`
 * `sms`
 * `letter`
-You can also pass in an empty string or null to ignore the filter.
 
-#### `reference`
+You can omit this argument to ignore this filter.
+
+### `status`
+
+#### email
+
+You can filter by:
+
+* `sending` - the message is queued to be sent by the provider.
+* `delivered` - the message was successfully delivered.
+* `failed` - this will return all failure statuses `permanent-failure`, `temporary-failure` and `technical-failure`.
+* `permanent-failure` - the provider was unable to deliver message, email does not exist; remove this recipient from your list.
+* `temporary-failure` - the provider was unable to deliver message, email box was full; you can try to send the message again.
+* `technical-failure` - Notify had a technical failure; you can try to send the message again.
+
+You can omit this argument to ignore this filter.
+
+#### text message
+
+You can filter by:
+
+* `sending` - the message is queued to be sent by the provider.
+* `delivered` - the message was successfully delivered.
+* `failed` - this will return all failure statuses `permanent-failure`, `temporary-failure` and `technical-failure`.
+* `permanent-failure` - the provider was unable to deliver message, phone number does not exist; remove this recipient from your list.
+* `temporary-failure` - the provider was unable to deliver message, the phone was turned off; you can try to send the message again.
+* `technical-failure` - Notify had a technical failure; you can try to send the message again.
+
+You can omit this argument to ignore this filter.
+
+##### letter
+
+You can filter by:
+
+* `accepted` - the letter has been generated.
+* `technical-failure` - Notify had an unexpected error while sending to our printing provider
+
+You can omit this argument to ignore this filter.
+
+### `reference`
+
 This is the `reference` you gave at the time of sending the notification. The `reference` can be a unique identifier for the notification or an identifier for a batch of notifications.
-You can pass an empty string or null to ignore the filter.
-
-#### `olderThanId`
-You can get the notifications older than a given `Notification.notificationId`.
-You can pass an empty string or null to ignore the filter
 
 </details>
 
