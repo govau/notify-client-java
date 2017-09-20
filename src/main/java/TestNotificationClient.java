@@ -16,12 +16,8 @@ public class TestNotificationClient {
     /**
      * A command line tool to test the integration of the NotificationClient
      * Run by using this command:
-     * mvn exec:java -Dexec.mainClass=TestNotificationClient -Dexec.args="api_key service_ID https://api.notifications.service.gov.uk"
-     * OR
-     * mvn exec:java -Dexec.mainClass=TestNotificationClient -Dexec.args="single_api_key https://api.notifications.service.gov.uk"
-     *    where single_api_key = api key name + service id + api key
-     * Args: either enter 3 arguments: api key, service id, baseUrl
-     *      or 2: api key, baseUrl (single api key that is the api key name + service id + api key)
+     * mvn exec:java -Dexec.mainClass=TestNotificationClient -Dexec.args="api_key https://api.notifications.service.gov.uk"
+     *    where baseUrl is optional
      *
      * @param args
      * @throws Exception
@@ -35,7 +31,7 @@ public class TestNotificationClient {
             client = new NotificationClient(args[0], args[1]);
         }
         else{
-            System.out.println("expected either 2 arguments  got: " + args.length);
+            System.out.println("expected either 2 arguments got: " + args.length);
             System.exit(1);
         }
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
