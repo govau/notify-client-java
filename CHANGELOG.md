@@ -1,10 +1,22 @@
+## 3.4.0-RELEASE
+* `Notification` now contains `estimatedDelivery`
+  - Shows when the letter is expected to be picked up by Royal Mail from our printing providers.
+  - `null` for sms and email.
+* `NotificationClientApi` interface updated to include `sendLetter`` functionality.
+
+## 3.3.0-RELEASE
+* `sendLetter` added to NotificationClient
+  - SendLetterResponse sendLetter(String templateId, Map<String, String> personalisation, String reference) throws NotificationClientException
+  - `personalisation` map is required, and must contain the recipient's address details.
+  - as with sms and email, `reference` is optional.
+
 ## 3.2.0-RELEASE
-* Template endpoints added to the NotificationsClient
+* Template endpoints added to the NotificationClient
 * `getTemplateById` - get the latest version of a template by id.
 * `getTemplateVersion` - get the template by id and version.
 * `getAllTemplates` - get all templates, can be filtered by template type.
 * `generateTemplatePreview` - get the contents of a template with the placeholders replaced with the given personalisation.
-* See the README for more information about the new template methods. 
+* See the README for more information about the new template methods.
 
 
 ## 3.1.3-RELEASE

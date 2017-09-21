@@ -35,6 +35,20 @@ public interface NotificationClientApi {
     SendSmsResponse sendSms(String templateId, String phoneNumber, Map<String, String> personalisation, String reference) throws NotificationClientException;
 
     /**
+     * The sendLetter method will create an HTTPS POST request. A JWT token will be created and added as an Authorization header to the request.
+     *
+     * @param templateId      Find templateId by clicking API info for the template you want to send
+     * @param personalisation Map representing the placeholders for the template if any. For example, key=name value=Bob.
+     *                        Must include the keys "address_line_1", "address_line_2" and "postcode".
+     * @param reference       A reference specified by the service for the notification. Get all notifications can be filtered by this reference.
+     *                        This reference can be unique or used used to refer to a batch of notifications.
+     *                        Can be an empty string or null, when you do not require a reference for the notifications.
+     * @return <code>SendLetterResponse</code>
+     * @throws NotificationClientException
+     */
+    SendLetterResponse sendLetter(String templateId, Map<String, String> personalisation, String reference) throws NotificationClientException;
+
+    /**
      * The getNotificationById method will return a <code>Notification</code> for a given notification id.
      * The id is can be retrieved from the <code>NotificationResponse</code> of a <code>sendEmail</code> or <code>sendSms</code> request.
      *

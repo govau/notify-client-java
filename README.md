@@ -45,7 +45,7 @@ Then add the Maven dependency to your project.
     <dependency>
         <groupId>uk.gov.service.notify</groupId>
         <artifactId>notifications-java-client</artifactId>
-        <version>3.3.1-RELEASE</version>
+        <version>3.4.0-RELEASE</version>
     </dependency>
 
 ```
@@ -60,7 +60,7 @@ repositories {
 }
 
 dependencies {
-    compile('uk.gov.service.notify:notifications-java-client:3.3.1-RELEASE')
+    compile('uk.gov.service.notify:notifications-java-client:3.4.0-RELEASE')
 }
 ```
 
@@ -473,7 +473,8 @@ If successful a `notification` is returned. Below is a list of attributes in a `
     Optional<String subject;
     DateTime createdAt;
     Optional<DateTime> sentAt;
-    Optional<DateTime> completedAt;
+		Optional<DateTime> completedAt;
+    Optional<DateTime> estimatedDelivery;
 ```
 
 Otherwise the client will raise a `NotificationClientException`.
