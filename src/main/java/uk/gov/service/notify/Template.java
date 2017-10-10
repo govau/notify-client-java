@@ -5,6 +5,7 @@ import org.json.JSONObject;
 
 import java.util.Optional;
 import java.util.UUID;
+import java.util.Map;
 
 public class Template {
     private UUID id;
@@ -15,6 +16,7 @@ public class Template {
     private int version;
     private String body;
     private String subject;
+    private Map<String, Object> personalisation;
 
 
     public Template(String content){
@@ -36,6 +38,8 @@ public class Template {
         version = data.getInt("version");
         body = data.getString("body");
         subject = data.isNull("subject") ? null : data.getString("subject");
+        personalisation = data.isNull("personalisation") ? null :
+                JsonUtils.jsonToMap(data.getJSONObject("personalisation"));
     }
 
     public UUID getId() {
@@ -102,6 +106,14 @@ public class Template {
         this.subject = subject;
     }
 
+    public Optional<Map<String, Object>> getPersonalisation() {
+        return Optional.ofNullable(personalisation);
+    }
+
+    public void setPersonalisation(Map<String, Object> personalisation) {
+        this.personalisation = personalisation;
+    }
+
     @Override
     public String toString() {
         return "Template{" +
@@ -113,6 +125,7 @@ public class Template {
                 ", version=" + version +
                 ", body='" + body + '\'' +
                 ", subject='" + subject + '\'' +
+                ", personalisation='" + personalisation + '\'' +
                 '}';
     }
 }
