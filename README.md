@@ -638,6 +638,7 @@ Response
     int version;
     String body;
     Optional<String> subject;
+    Optional<Map<String, Object>> personalisation;
 ```
 
 Otherwise the client will raise a `NotificationClientException`.
@@ -703,6 +704,7 @@ Response
     int version;
     String body;
     Optional<String> subject;
+    Optional<Map<String, Object>> personalisation;
 ```
 
 Otherwise the client will raise a `NotificationClientException`.

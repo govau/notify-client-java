@@ -6,7 +6,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -15,7 +14,7 @@ public class JsonUtils {
     public static Map<String, Object> jsonToMap(JSONObject json) throws JSONException {
         Map<String, Object> retMap = new HashMap<>();
 
-        if(json != JSONObject.NULL) {
+        if (json != null && json != JSONObject.NULL) {
             retMap = toMap(json);
         }
         return retMap;
@@ -24,27 +23,17 @@ public class JsonUtils {
     private static Map<String, Object> toMap(JSONObject object) throws JSONException {
         Map<String, Object> map = new HashMap<>();
 
-        Iterator<String> keysItr = object.keys();
-        while(keysItr.hasNext()) {
-            String key = keysItr.next();
-            Object value = object.get(key);
+        object.keySet().forEach(key -> {
+            map.put(key, parseValue(object.get(key)));
+        });
 
-            if(value instanceof JSONArray) {
-                value = toList((JSONArray) value);
-            }
-
-            else if(value instanceof JSONObject) {
-                value = toMap((JSONObject) value);
-            }
-            map.put(key, value);
-        }
         return map;
     }
 
     public static List<Object> jsonToList(JSONArray json) throws JSONException {
         List<Object> retList = new ArrayList<>();
 
-        if(json != JSONObject.NULL) {
+        if (json != null) {
             retList = toList(json);
         }
         return retList;
@@ -52,17 +41,19 @@ public class JsonUtils {
 
     private static List<Object> toList(JSONArray array) throws JSONException {
         List<Object> list = new ArrayList<>();
-        for(int i = 0; i < array.length(); i++) {
-            Object value = array.get(i);
-            if(value instanceof JSONArray) {
-                value = toList((JSONArray) value);
-            }
 
-            else if(value instanceof JSONObject) {
-                value = toMap((JSONObject) value);
-            }
-            list.add(value);
-        }
+        array.forEach(item -> {
+            list.add(parseValue(item));
+        });
+
         return list;
+    }
+
+    private static Object parseValue(Object value) {
+        if (value instanceof JSONArray) {
+            return toList((JSONArray) value);
+        } else if (value instanceof JSONObject) {
+            return toMap((JSONObject) value);
+        } else return value;
     }
 }
