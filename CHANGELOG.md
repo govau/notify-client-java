@@ -1,3 +1,6 @@
+## 3.5.0-RELEASE
+* `Template` now contains `personalisation`, a map of the template placeholder names.
+
 ## 3.4.0-RELEASE
 * `Notification` now contains `estimatedDelivery`
   - Shows when the letter is expected to be picked up by Royal Mail from our printing providers.
