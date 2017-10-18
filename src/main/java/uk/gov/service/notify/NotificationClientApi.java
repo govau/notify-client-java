@@ -19,6 +19,25 @@ public interface NotificationClientApi {
      */
     SendEmailResponse sendEmail(String templateId, String emailAddress, Map<String, String> personalisation, String reference) throws NotificationClientException;
 
+
+    /**
+     * The sendEmail method will create an HTTPS POST request. A JWT token will be created and added as an Authorization header to the request.
+     *
+     * @param templateId      The template id is visible on the template page in the application.
+     * @param emailAddress    The email address
+     * @param personalisation Map representing the placeholders for the template if any. For example, key=name value=Bob
+     *                        Can be an empty map or null when the template does not require placeholders.
+     * @param reference       A reference specified by the service for the notification. Get all notifications can be filtered by this reference.
+     *                        This reference can be unique or used used to refer to a batch of notifications.
+     *                        Can be an empty string or null, when you do not require a reference for the notifications.
+     * @param emailReplyToId  An optional identifier for a reply to email address for the notification, rather than use the service default.
+     *                        Service email_reply_to ids can be accessed via the service settings / manage email reply to addresses page.
+     *                        Omit this argument to use the default service email reply to address.
+     * @return <code>SendEmailResponse</code>
+     * @throws NotificationClientException
+     */
+    SendEmailResponse sendEmail(String templateId, String emailAddress, Map<String, String> personalisation, String reference, String emailReplyToId) throws NotificationClientException;
+
     /**
      * The sendSms method will create an HTTPS POST request. A JWT token will be created and added as an Authorization header to the request.
      *

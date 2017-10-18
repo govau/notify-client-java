@@ -1,3 +1,7 @@
+## 3.5.0-RELEASE
+* Update to `NotificationsAPIClient.send_email_notification()`
+    * added `email_reply_to_id`: an optional email_reply_to_id specified when adding Email reply to addresses under service settings, if this is not provided the reply to email will be the service default reply to email. `email_reply_to_id` can be omitted.
+
 ## 3.4.0-RELEASE
 * `Notification` now contains `estimatedDelivery`
   - Shows when the letter is expected to be picked up by Royal Mail from our printing providers.
