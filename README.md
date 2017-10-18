@@ -45,7 +45,7 @@ Then add the Maven dependency to your project.
     <dependency>
         <groupId>uk.gov.service.notify</groupId>
         <artifactId>notifications-java-client</artifactId>
-        <version>3.4.0-RELEASE</version>
+        <version>3.5.0-RELEASE</version>
     </dependency>
 
 ```
@@ -92,7 +92,7 @@ the **API integration** page.
 Map<String, String> personalisation = new HashMap<>();
 personalisation.put("name", "Jo");
 personalisation.put("reference_number", "13566");
-SendSmsResponse response = client.sendSms(templateId, mobileNumber, personalisation, "yourReferenceString");
+SendSmsResponse response = client.sendSms(templateId, mobileNumber, personalisation, "yourReferenceString", emailReplyToId);
 ```
 
 <details>
@@ -188,7 +188,7 @@ Status code: 400 {
 HashMap<String, String> personalisation = new HashMap<>();
 personalisation.put("name", "Jo");
 personalisation.put("reference_number", "13566");
-SendEmailResponse response = client.sendEmail(templateId, mobileNumber, personalisation, "yourReferenceString");
+SendEmailResponse response = client.sendEmail(templateId, mobileNumber, personalisation, "yourReferenceString", emailReplyToId);
 ```
 
 
@@ -614,6 +614,14 @@ You can omit this argument to ignore this filter.
 ### `reference`
 
 This is the `reference` you gave at the time of sending the notification. The `reference` can be a unique identifier for the notification or an identifier for a batch of notifications.
+
+
+### `email_reply_to_id`
+
+Optional. Specifies the identifier of the email reply-to address to set for the notification. The identifiers are found in your service Settings, when you 'Manage' your 'Email reply to addresses'.
+If you omit this argument your default email reply-to address will be set for the notification.
+
+
 
 </details>
 
