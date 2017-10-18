@@ -5,6 +5,8 @@ import org.joda.time.DateTime;
 import org.jose4j.json.internal.json_simple.JSONObject;
 import org.junit.Test;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -24,6 +26,15 @@ public class TemplateTest {
         content.put("body", "The body of the template. For ((name)) eyes only.");
         content.put("subject", "Private email");
 
+        JSONObject required = new JSONObject();
+        required.put("required", true);
+
+        JSONObject personalisation = new JSONObject();
+        personalisation.put("placeholder", required);
+        personalisation.put("conditional", required);
+
+        content.put("personalisation", personalisation);
+
         Template template = new Template(content.toString());
         assertEquals(UUID.fromString(id), template.getId());
         assertEquals("email", template.getTemplateType());
@@ -32,6 +43,14 @@ public class TemplateTest {
         assertEquals(3, template.getVersion());
         assertEquals("The body of the template. For ((name)) eyes only.", template.getBody());
         assertEquals(Optional.of("Private email"), template.getSubject());
+
+        Map<String, Object> expectedPersonalisation = new HashMap<>();
+        Map<String, Object> expectedPersonalisationProperty = new HashMap<>();
+        expectedPersonalisationProperty.put("required", true);
+        expectedPersonalisation.put("placeholder", expectedPersonalisationProperty);
+        expectedPersonalisation.put("conditional", expectedPersonalisationProperty);
+
+        assertEquals(Optional.of(expectedPersonalisation), template.getPersonalisation());
     }
 
 
@@ -47,6 +66,7 @@ public class TemplateTest {
         content.put("version", 3);
         content.put("body", "The body of the template. For ((name)) eyes only.");
         content.put("subject", null);
+        content.put("personalisation", null);
 
         Template template = new Template(content.toString());
         assertEquals(UUID.fromString(id), template.getId());
@@ -56,6 +76,7 @@ public class TemplateTest {
         assertEquals(3, template.getVersion());
         assertEquals("The body of the template. For ((name)) eyes only.", template.getBody());
         assertEquals(Optional.ofNullable(null), template.getSubject());
+        assertEquals(Optional.ofNullable(null), template.getPersonalisation());
     }
 
 }

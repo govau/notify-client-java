@@ -4,6 +4,7 @@ import uk.gov.service.notify.NotificationClientException;
 import uk.gov.service.notify.NotificationList;
 import uk.gov.service.notify.SendEmailResponse;
 import uk.gov.service.notify.SendSmsResponse;
+import uk.gov.service.notify.Template;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -19,7 +20,7 @@ public class TestNotificationClient {
      * mvn exec:java -Dexec.mainClass=TestNotificationClient -Dexec.args="api_key https://api.notifications.service.gov.uk"
      *    where baseUrl is optional
      *
-     * @param args
+     * @param args command line parameters
      * @throws Exception
      */
     public static void main(String[] args) throws Exception {
@@ -35,7 +36,8 @@ public class TestNotificationClient {
             System.exit(1);
         }
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        System.out.println("Select an option from the following options: \n 1 - create \n 2 - fetch \n 3 - fetch-all");
+        System.out.println("Select an option from the following options: \n 1 - create \n 2 - fetch \n 3 - fetch-all \n" +
+                " 4 - get-template");
         String requestType = reader.readLine();
         System.out.println("requestType:" + requestType);
         switch(requestType){
@@ -48,8 +50,11 @@ public class TestNotificationClient {
             case "3":
                 createFetchAllRequest(client);
                 break;
+            case "4":
+                getTemplate(client);
+                break;
             default:
-                System.out.println("Invalid selection, please enter 1, 2 or 3");
+                System.out.println("Invalid selection, please enter 1, 2, 3 or 4");
                 System.exit(1);
                 break;
         }
@@ -160,5 +165,19 @@ public class TestNotificationClient {
             SendEmailResponse response = client.sendEmail(templateId, to, properties, reference);
             System.out.println(response);
         }
+    }
+
+    private static void getTemplate(NotificationClient client) throws IOException, NotificationClientException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+
+        System.out.println("Enter the template id: ");
+        String templateId = reader.readLine();
+        if (templateId == null || templateId.isEmpty()) {
+            System.out.println("Template id must be the uuid of the template and can not be empty.");
+            System.exit(1);
+        }
+
+        Template template = client.getTemplateById(templateId);
+        System.out.println(template);
     }
 }
