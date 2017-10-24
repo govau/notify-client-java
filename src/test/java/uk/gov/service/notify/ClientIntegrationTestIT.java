@@ -68,7 +68,7 @@ public class ClientIntegrationTestIT {
             client.sendEmail(System.getenv("EMAIL_TEMPLATE_ID"), System.getenv("FUNCTIONAL_TEST_EMAIL"), null, null);
             fail("Expected NotificationClientException: Template missing personalisation: name");
         } catch (NotificationClientException e) {
-            assert(e.getMessage().contains("Template missing personalisation: name"));
+            assert(e.getMessage().contains("Missing personalisation: name"));
             assert e.getHttpResult() == 400;
             assert(e.getMessage().contains(" \"error\": \"BadRequestError\""));
         }
@@ -81,7 +81,7 @@ public class ClientIntegrationTestIT {
             client.sendSms(System.getenv("SMS_TEMPLATE_ID"), System.getenv("FUNCTIONAL_TEST_NUMBER"), null, null);
             fail("Expected NotificationClientException: Template missing personalisation: name");
         } catch (NotificationClientException e) {
-            assert(e.getMessage().contains("Template missing personalisation: name"));
+            assert(e.getMessage().contains("Missing personalisation: name"));
             assert(e.getMessage().contains("Status code: 400"));
         }
     }
