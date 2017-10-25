@@ -1,4 +1,7 @@
 ## 3.5.0-RELEASE
+* Attached source and javadoc artifacts to jar
+
+## 3.5.0-RELEASE
 * `Template` now contains `personalisation`, a map of the template placeholder names.
 
 ## 3.4.0-RELEASE
