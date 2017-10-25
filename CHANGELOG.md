@@ -1,4 +1,4 @@
-## 3.5.0-RELEASE
+## 3.5.1-RELEASE
 * Attached source and javadoc artifacts to jar
 
 ## 3.5.0-RELEASE
