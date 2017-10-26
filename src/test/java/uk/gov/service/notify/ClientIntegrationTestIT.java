@@ -279,5 +279,59 @@ public class ClientIntegrationTestIT {
         assertFalse(notification.getPostcode().isPresent());
     }
 
+    @Test
+    public void testEmailNotificationWithValidEmailReplyToIdIT() throws NotificationClientException, InterruptedException {
+        NotificationClient client = getClient();
+        SendEmailResponse emailResponse = sendEmailAndAssertResponse(client);
+
+        HashMap<String, String> personalisation = new HashMap<>();
+        String uniqueName = UUID.randomUUID().toString();
+        personalisation.put("name", uniqueName);
+
+        SendEmailResponse response = client.sendEmail(
+                System.getenv("EMAIL_TEMPLATE_ID"),
+                System.getenv("FUNCTIONAL_TEST_EMAIL"),
+                personalisation,
+                uniqueName,
+                System.getenv("EMAIL_REPLY_TO_ID"));
+
+        assertNotificationEmailResponse(response, uniqueName);
+
+        Notification notification = client.getNotificationById(emailResponse.getNotificationId().toString());
+        assertNotification(notification);
+    }
+
+    @Test
+    public void testEmailNotificationWithInValidEmailReplyToIdIT() throws NotificationClientException, InterruptedException {
+        NotificationClient client = getClient();
+        SendEmailResponse emailResponse = sendEmailAndAssertResponse(client);
+
+        HashMap<String, String> personalisation = new HashMap<>();
+        String uniqueName = UUID.randomUUID().toString();
+        personalisation.put("name", uniqueName);
+
+        UUID fake_uuid = UUID.randomUUID();
+
+        boolean exceptionThrown = false;
+
+        try
+        {
+            SendEmailResponse response = client.sendEmail(
+                    System.getenv("EMAIL_TEMPLATE_ID"),
+                    System.getenv("FUNCTIONAL_TEST_EMAIL"),
+                    personalisation,
+                    uniqueName,
+                    fake_uuid.toString());
+        }
+        catch (final NotificationClientException ex)
+        {
+            exceptionThrown = true;
+            assertTrue(ex.getMessage().toString().contains("does not exist in database for service id"));
+        }
+
+        assertTrue(exceptionThrown);
+
+    }
+
 
 }

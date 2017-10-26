@@ -136,8 +136,35 @@ public class NotificationClient implements NotificationClientApi {
      * @throws NotificationClientException
      */
     public SendEmailResponse sendEmail(String templateId, String emailAddress, Map<String, String> personalisation, String reference) throws NotificationClientException {
+        return sendEmail(templateId, emailAddress, personalisation, reference, "");
+    }
+
+    /**
+     * The sendEmail method will create an HTTPS POST request. A JWT token will be created and added as an Authorization header to the request.
+     *
+     * @param templateId      Find templateId by clicking API info for the template you want to send
+     * @param emailAddress    The email address
+     * @param personalisation Map representing the placeholders for the template if any. For example, key=name value=Bob
+     *                        Can be an empty map or null when the template does not require placeholders.
+     * @param reference       A reference specified by the service for the notification. Get all notifications can be filtered by this reference.
+     *                        This reference can be unique or used used to refer to a batch of notifications.
+     *                        Can be an empty string or null, when you do not require a reference for the notifications.
+     * @param emailReplyToId  An optional identifier for a reply to email address for the notification, rather than use the service default.
+     *                        Service email_reply_to ids can be accessed via the service settings / manage email reply to addresses page.
+     *                        Omit this argument to use the default service email reply to address.
+     * @return <code>SendEmailResponse</code>
+     * @throws NotificationClientException
+     */
+    @Override
+    public SendEmailResponse sendEmail(String templateId, String emailAddress, Map<String, String> personalisation, String reference, String emailReplyToId) throws NotificationClientException {
         JSONObject body = createBodyForPostRequest(templateId, null, emailAddress, personalisation, reference);
-        HttpsURLConnection conn = createConnectionAndSetHeaders(baseUrl + "/v2/notifications/email", "POST");
+
+        if(!emailReplyToId.isEmpty())
+        {
+            body.put("email_reply_to_id", emailReplyToId);
+        }
+
+        HttpURLConnection conn = createConnectionAndSetHeaders(baseUrl + "/v2/notifications/email", "POST");
         String response = performPostRequest(conn, body, HttpsURLConnection.HTTP_CREATED);
         return new SendEmailResponse(response);
     }
@@ -157,7 +184,7 @@ public class NotificationClient implements NotificationClientApi {
      */
     public SendSmsResponse sendSms(String templateId, String phoneNumber, Map<String, String> personalisation, String reference) throws NotificationClientException {
         JSONObject body = createBodyForPostRequest(templateId, phoneNumber, null, personalisation, reference);
-        HttpsURLConnection conn = createConnectionAndSetHeaders(baseUrl + "/v2/notifications/sms", "POST");
+        HttpURLConnection conn = createConnectionAndSetHeaders(baseUrl + "/v2/notifications/sms", "POST");
         String response = performPostRequest(conn, body, HttpsURLConnection.HTTP_CREATED);
         return new SendSmsResponse(response);
     }
@@ -177,7 +204,7 @@ public class NotificationClient implements NotificationClientApi {
      */
     public SendLetterResponse sendLetter(String templateId, Map<String, String> personalisation, String reference) throws NotificationClientException {
         JSONObject body = createBodyForPostRequest(templateId, null, null, personalisation, reference);
-        HttpsURLConnection conn = createConnectionAndSetHeaders(baseUrl + "/v2/notifications/letter", "POST");
+        HttpURLConnection conn = createConnectionAndSetHeaders(baseUrl + "/v2/notifications/letter", "POST");
         String response = performPostRequest(conn, body, HttpsURLConnection.HTTP_CREATED);
         return new SendLetterResponse(response);
     }
@@ -192,7 +219,7 @@ public class NotificationClient implements NotificationClientApi {
      */
     public Notification getNotificationById(String notificationId) throws NotificationClientException {
         String url = baseUrl + "/v2/notifications/" + notificationId;
-        HttpsURLConnection conn = createConnectionAndSetHeaders(url, "GET");
+        HttpURLConnection conn = createConnectionAndSetHeaders(url, "GET");
         String response = performGetRequest(conn);
         return new Notification(response);
 
@@ -226,7 +253,7 @@ public class NotificationClient implements NotificationClientApi {
                 builder.addParameter("older_than", olderThanId);
             }
 
-            HttpsURLConnection conn = createConnectionAndSetHeaders(builder.toString(), "GET");
+            HttpURLConnection conn = createConnectionAndSetHeaders(builder.toString(), "GET");
             String response = performGetRequest(conn);
             return new NotificationList(response);
         } catch (URISyntaxException e) {
@@ -243,7 +270,7 @@ public class NotificationClient implements NotificationClientApi {
      */
     public Template getTemplateById(String templateId) throws NotificationClientException{
         String url = baseUrl + "/v2/template/" + templateId;
-        HttpsURLConnection conn = createConnectionAndSetHeaders(url, "GET");
+        HttpURLConnection conn = createConnectionAndSetHeaders(url, "GET");
         String response = performGetRequest(conn);
         return new Template(response);
     }
@@ -259,7 +286,7 @@ public class NotificationClient implements NotificationClientApi {
      */
     public Template getTemplateVersion(String templateId, int version) throws NotificationClientException{
         String url = baseUrl + "/v2/template/" + templateId + "/version/" + version;
-        HttpsURLConnection conn = createConnectionAndSetHeaders(url, "GET");
+        HttpURLConnection conn = createConnectionAndSetHeaders(url, "GET");
         String response = performGetRequest(conn);
         return new Template(response);
     }
@@ -278,7 +305,7 @@ public class NotificationClient implements NotificationClientApi {
             if (templateType != null && !templateType.isEmpty()) {
                 builder.addParameter("type", templateType);
             }
-            HttpsURLConnection conn = createConnectionAndSetHeaders(builder.toString(), "GET");
+            HttpURLConnection conn = createConnectionAndSetHeaders(builder.toString(), "GET");
             String response = performGetRequest(conn);
             return new TemplateList(response);
         } catch (URISyntaxException e) {
@@ -301,12 +328,12 @@ public class NotificationClient implements NotificationClientApi {
         if (personalisation != null && !personalisation.isEmpty()) {
             body.put("personalisation", new JSONObject(personalisation));
         }
-        HttpsURLConnection conn = createConnectionAndSetHeaders(baseUrl + "/v2/template/" + templateId + "/preview", "POST");
+        HttpURLConnection conn = createConnectionAndSetHeaders(baseUrl + "/v2/template/" + templateId + "/preview", "POST");
         String response = performPostRequest(conn, body, HttpsURLConnection.HTTP_OK);
         return new TemplatePreview(response);
     }
 
-    private String performPostRequest(HttpsURLConnection conn, JSONObject body, int expectedStatusCode) throws NotificationClientException {
+    private String performPostRequest(HttpURLConnection conn, JSONObject body, int expectedStatusCode) throws NotificationClientException {
         try{
             OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
             wr.write(body.toString());
@@ -331,7 +358,7 @@ public class NotificationClient implements NotificationClientApi {
         }
     }
 
-    private String performGetRequest(HttpsURLConnection conn) throws NotificationClientException {
+    private String performGetRequest(HttpURLConnection conn) throws NotificationClientException {
         try{
             int httpResult = conn.getResponseCode();
             StringBuilder stringBuilder;
@@ -353,11 +380,11 @@ public class NotificationClient implements NotificationClientApi {
         }
     }
 
-    private HttpsURLConnection createConnectionAndSetHeaders(String urlString, String method) throws NotificationClientException {
+    private HttpURLConnection createConnectionAndSetHeaders(String urlString, String method) throws NotificationClientException {
         try
         {
             URL url = new URL(urlString);
-            HttpsURLConnection conn = getConnection(url);
+            HttpURLConnection conn = getConnection(url);
             conn.setRequestMethod(method);
             Authentication authentication = new Authentication();
             String token = authentication.create(serviceId, apiKey);
@@ -376,13 +403,13 @@ public class NotificationClient implements NotificationClientApi {
         }
     }
 
-    private HttpsURLConnection getConnection(URL url) throws IOException {
-        HttpsURLConnection conn;
+    private HttpURLConnection getConnection(URL url) throws IOException {
+        HttpURLConnection conn;
 
         if (null != proxy) {
-            conn = (HttpsURLConnection) url.openConnection(proxy);
+            conn = (HttpURLConnection) url.openConnection(proxy);
         } else {
-            conn = (HttpsURLConnection) url.openConnection();
+            conn = (HttpURLConnection) url.openConnection();
         }
         return conn;
     }
