@@ -2,11 +2,29 @@
 
 This documentation is for developers interested in using this Java client to integrate their government service with GOV.UK Notify.
 
+## Table of Contents
+
+* [Installation](#installation)
+* [Getting started](#getting-started)
+* [Send messages](#send-messages)
+* [Get the status of one message](#get-the-status-of-one-message)
+* [Get the status of all messages](#get-the-status-of-all-messages)
+* [Get a template by ID](#get-a-template-by-id)
+* [Get a template by ID and version](#get-a-template-by-id-and-version)
+* [Get all templates](#get-all-templates)
+* [Generate a preview template](#generate-a-preview-template)
+
 ## Installation
 
 ### Maven
 
 The notifications-java-client is deployed to [Bintray](https://bintray.com/gov-uk-notify/maven/notifications-java-client). Add this snippet to your Maven `settings.xml` file.
+
+<details>
+<summary>
+Click here to expand for more information.
+</summary>
+
 ```xml
 <?xml version='1.0' encoding='UTF-8'?>
 <settings xsi:schemaLocation='http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd' xmlns='http://maven.apache.org/SETTINGS/1.0.0' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>
@@ -49,8 +67,15 @@ Then add the Maven dependency to your project.
     </dependency>
 
 ```
+</details>
 
 ### Gradle
+
+<details>
+<summary>
+Click here to expand for more information.
+</summary>
+
 ```
 repositories {
     mavenCentral()
@@ -63,13 +88,13 @@ dependencies {
     compile('uk.gov.service.notify:notifications-java-client:3.6.0-RELEASE')
 }
 ```
+</details>
 
 ### Artifactory or Nexus
 
 Click 'set me up!' on https://bintray.com/gov-uk-notify/maven/notifications-java-client for instructions.
 
 ## Getting started
-
 
 ```java
 import uk.gov.service.notify.NotificationClient;
@@ -81,12 +106,18 @@ import uk.gov.service.notify.SendSmsResponse;
 NotificationClient client = new NotificationClient(apiKey);
 ```
 
-Generate an API key by signing in to
-[GOV.UK Notify](https://www.notifications.service.gov.uk) and going to
-the **API integration** page.
+Generate an API key by signing in to [GOV.UK Notify](https://www.notifications.service.gov.uk) and going to the **API integration** page.
 
 ## Send messages
+
 ### Text message
+
+#### Method 
+
+<details>
+<summary>
+Click here to expand for more information.
+</summary>
 
 ```java
 Map<String, String> personalisation = new HashMap<>();
@@ -95,12 +126,16 @@ personalisation.put("reference_number", "13566");
 SendSmsResponse response = client.sendSms(templateId, mobileNumber, personalisation, "yourReferenceString", emailReplyToId);
 ```
 
+</details>
+
+#### Response
+
+If the request is successful, the SendSmsResponse is returned from the client. Attributes of the SendSmsResponse are listed below. 
+
 <details>
 <summary>
-SendSmsResponse
+Click here to expand for more information.
 </summary>
-
-If the request is successful, the SendSmsResponse is returned from the client. Attributes of the SendSmsResponse are listed below.
 
 ```java
     UUID notificationId;
@@ -115,89 +150,71 @@ If the request is successful, the SendSmsResponse is returned from the client. A
 
 Otherwise the client will raise a `NotificationClientException`:
 
-<table>
-<thead>
-<tr>
-<th>message</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<pre>
-Status code: 429 {
-"errors":
-[{
-    "error": "RateLimitError",
-    "message": "Exceeded rate limit for key type live of 10 requests per 10 seconds"
-}]
-}
-</pre>
-</td>
-</tr>
+|status code|error message|
+|:---|:---|
+|`429`|`429 {`<br>`"errors":`<br>`[{`<br>`"error": "RateLimitError",`<br>`"message": "Exceeded rate limit for key type live of 10 requests per 10 seconds"`<br>`}]`<br>`}`|
+|`429`|`429 {`<br>`"errors":`<br>`[{`<br>`"error": "TooManyRequestsError",`<br>`"message": "Exceeded send limits (50) for today"`<br>`}]`<br>`}`|
+|`400`|`400 {`<br>`"errors":`<br>`[{`<br>`"error": "BadRequestError",`<br>`"message": "Can"t send to this recipient using a team-only API key"`<br>`}]`<br>`}`|
+|`400`|`400 {`<br>`"errors":`<br>`[{`<br>`"error": "BadRequestError",`<br>`"message": ""Can"t send to this recipient when service is in trial mode - see https://www.notifications.service.gov.uk/trial-mode""`<br>`}]`<br>`}`|
 
-<tr>
-<td>
-<pre>
-Status code: 429 {
-"errors":
-[{
-    "error": "TooManyRequestsError",
-    "message": "Exceeded send limits (50) for today"
-}]
-}
-</pre>
-</td>
-</tr>
-<tr>
-<td>
-<pre>
-Status code 400: {
-"errors":
-[{
-    "error": "BadRequestError",
-    "message": "Can"t send to this recipient using a team-only API key"
-]}
-}
-</pre>
-</td>
-</tr>
-<tr>
-<td>
-<pre>
-Status code: 400 {
-"errors":
-[{
-    "error": "BadRequestError",
-    "message": "Can"t send to this recipient when service is in trial mode
-                - see https://www.notifications.service.gov.uk/trial-mode"
-}]
-}
-</pre>
-</td>
-</tr>
-<tr>
-</tbody>
-</table>
 </details>
 
+#### Arguments
 
-### Email:
+<details>
+<summary>
+Click here to expand for more information.
+</summary>
+
+##### `mobileNumber`
+The mobile number the SMS notification is sent to.
+
+##### `templateId`
+
+The template id is visible on the template page in the application.
+
+##### `reference`
+An optional unique identifier for the notification or an identifier for a batch of notifications. `reference` can be an empty string or null.
+
+##### `personalisation`
+
+If a template has placeholders, you need to provide their values, for example:
+
+```java
+Map<String, String> personalisation = new HashMap<>();
+personalisation.put("name", "Jo");
+personalisation.put("reference_number", "13566");
+```
+
+</details>
+
+### Email
+
+#### Method
+
+<details>
+<summary>
+Click here to expand for more information.
+</summary>
 
 ```java
 HashMap<String, String> personalisation = new HashMap<>();
 personalisation.put("name", "Jo");
 personalisation.put("reference_number", "13566");
-SendEmailResponse response = client.sendEmail(templateId, mobileNumber, personalisation, "yourReferenceString", emailReplyToId);
+SendEmailResponse response = client.sendEmail(templateId, emailAddress, personalisation, reference, emailReplyToId);
 ```
 
+</details>
+
+#### Response
+
+If the request is successful, the SendEmailResponse is returned from the client. Attributes of the SendEmailResponse are listed below. 
 
 <details>
 <summary>
-SendEmailResponse
+Click here to expand for more information.
 </summary>
 
-If the request is successful, the SendEmailResponse is returned from the client. Attributes of the SendEmailResponse are listed below.
 
 ```java
 	UUID notificationId;
@@ -213,79 +230,62 @@ If the request is successful, the SendEmailResponse is returned from the client.
 
 Otherwise the client will raise a `NotificationClientException`:
 
-<table>
-<thead>
-<tr>
-<th>message</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<pre>
-Status code: 429 {
-"errors":
-[{
-    "error": "RateLimitError",
-    "message": "Exceeded rate limit for key type TEAM of 10 requests per 10 seconds"
-}]
-}
-</pre>
-</td>
-</tr>
+|`error.status_code`|`error.message`|
+|:---|:---|
+|`429`|`[{`<br>`"error": "RateLimitError",`<br>`"message": "Exceeded rate limit for key type TEAM of 10 requests per 10 seconds"`<br>`}]`|
+|`429`|`[{`<br>`"error": "TooManyRequestsError",`<br>`"message": "Exceeded send limits (50) for today"`<br>`}]`|
+|`400`|`[{`<br>`"error": "BadRequestError",`<br>`"message": "Can"t send to this recipient using a team-only API key"`<br>`]}`|
+|`400`|`[{`<br>`"error": "BadRequestError",`<br>`"message": "Can"t send to this recipient when service is in trial mode - see https://www.notifications.service.gov.uk/trial-mode"`<br>`}]`|
 
-<tr>
-<td>
-<pre>
-Status code: 429 {
-"errors":
-[{
-    "error": "TooManyRequestsError",
-    "message": "Exceeded send limits (50) for today"
-}]
-}
-</pre>
-</td>
-</tr>
-<tr>
-<td>
-<pre>
-Status code 400: {
-"errors":
-[{
-    "error": "BadRequestError",
-    "message": "Can"t send to this recipient using a team-only API key"
-]}
-}
-</pre>
-</td>
-</tr>
-<tr>
-<td>
-<pre>
-Status code: 400 {
-"errors":
-[{
-    "error": "BadRequestError",
-    "message": "Can"t send to this recipient when service is in trial mode
-                - see https://www.notifications.service.gov.uk/trial-mode"
-}]
-}
-</pre>
-</td>
-</tr>
-<tr>
-</tbody>
-</table>
 </details>
 
-### Letter:
+#### Arguments
+
+<details>
+<summary>Click here for more information</summary>
+
+#### `emailAddress`
+The email address the email notification is sent to.
+
+#### `templateId`
+
+The template id is visible on the template page in the application.
+
+#### `personalisation`
+
+If a template has placeholders, you need to provide their values, for example:
+
+```java
+Map<String, String> personalisation = new HashMap<>();
+personalisation.put("name", "Jo");
+personalisation.put("reference_number", "13566");
+```
+
+#### `reference`
+An optional identifier you generate. The reference can be used as a unique reference for the notification. Because Notify does not require this reference to be unique you could also use this reference to identify a batch or group of notifications.
+
+You can omit this argument if you do not require a reference for the notification.
+
+#### `email_reply_to_id`
+Optional. Specifies the identifier of the email reply-to address to set for the notification. The identifiers are found in your service Settings, when you 'Manage' your 'Email reply to addresses'.
+If you omit this argument your default email reply-to address will be set for the notification.
+
+</details>
+
+### Letter
+
+#### Method
 
 The letter must contain:
 
 - mandatory address fields
 - optional address fields if applicable
 - fields from template
+
+<details>
+<summary>
+Click here to expand for more information.
+</summary>
 
 ```java
 HashMap<String, String> personalisation = new HashMap<>();
@@ -301,14 +301,16 @@ personalisation.put("application_date", "2017-01-01"); // field from template
 
 SendLetterResponse response = client.sendLetter(templateId, personalisation, "yourReferenceString");
 ```
+</details>
 
+#### Response
+
+If the request is successful, the SendLetterResponse is returned from the client. Attributes of the SendLetterResponse are listed below.
 
 <details>
 <summary>
-SendLetterResponse
+Click here to expand for more information.
 </summary>
-
-If the request is successful, the SendLetterResponse is returned from the client. Attributes of the SendLetterResponse are listed below.
 
 ```java
 	UUID notificationId;
@@ -322,102 +324,20 @@ If the request is successful, the SendLetterResponse is returned from the client
 
 Otherwise the client will raise a `NotificationClientException`:
 
-<table>
-<thead>
-<tr>
-<th>message</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<pre>
-Status code: 429 {
-"errors":
-[{
-    "error": "RateLimitError",
-    "message": "Exceeded rate limit for key type live of 10 requests per 20 seconds"
-}]
-}
-</pre>
-</td>
-</tr>
+|`error.status_code`|`error.message`|
+|:---|:---|
+|`429`|`[{`<br>`"error": "RateLimitError",`<br>`"message": "Exceeded rate limit for key type live of 10 requests per 20 seconds"`<br>`}]`|
+|`429`|`[{`<br>`"error": "TooManyRequestsError",`<br>`"message": "Exceeded send limits (50) for today"`<br>`}]`|
+|`400`|`[{`<br>`"error": "BadRequestError",`<br>`"message": "Cannot send letters with a team api key"`<br>`]}`|
+|`400`|`[{`<br>`"error": "BadRequestError",`<br>`"message": "Cannot send letters when service is in trial mode - see https://www.notifications.service.gov.uk/trial-mode"`<br>`}]`|
+|`400`|`[{`<br>`"error": "ValidationError",`<br>`"message": "personalisation address_line_1 is a required property"`<br>`}]`|
 
-<tr>
-<td>
-<pre>
-Status code: 429 {
-"errors":
-[{
-    "error": "TooManyRequestsError",
-    "message": "Exceeded send limits (50) for today"
-}]
-}
-</pre>
-</td>
-</tr>
-<tr>
-<td>
-<pre>
-Status code 400: {
-"errors":
-[{
-    "error": "BadRequestError",
-    "message": "Cannot send letters with a team api key"
-]}
-}
-</pre>
-</td>
-</tr>
-<tr>
-<td>
-<pre>
-Status code: 400 {
-"errors":
-[{
-    "error": "BadRequestError",
-    "message": "Cannot send letters when service is in trial mode"
-}]
-}
-</pre>
-</td>
-</tr>
-<tr>
-<td>
-<pre>
-Status code: 400 {
-"errors":
-[{
-    "error": "ValidationError",
-    "message": "personalisation address_line_1 is a required property"
-}]
-}
-</pre>
-</td>
-</tr>
-<tr>
-<td>
-<pre>
-Status code: 400 {
-"errors":
-[{
-    "error": "BadRequestError",
-    "message": "Cannot send letters with a team api key"
-}]
-}
-</pre>
-</td>
-</tr>
-</tbody>
-</table>
 </details>
 
-### Arguments
-#### `phoneNumber`
-The mobile number the SMS notification is sent to.
+#### Arguments
 
-#### `emailAddress`
-The email address the email notification is sent to.
+<details>
+<summary>Click here to expand for more information.</summary>
 
 #### `templateId`
 
@@ -431,27 +351,39 @@ The letter must contain:
 - optional address fields if applicable
 - fields from template
 
-#### `personalisation` (for letters)
-
 If you are sending a letter, you will need to provide the address fields in the format `"address_line_#"`, numbered from 1 to 6, and also the `"postcode"` field
 The fields `"address_line_1"`, `"address_line_2"` and `"postcode"` are required.
 
 #### `reference`
 An optional unique identifier for the notification or an identifier for a batch of notifications. `reference` can be an empty string or null.
 
+</details>
+
+
 ## Get the status of one message
+
+#### Method
+
+<details>
+<summary>
+Click here to expand for more information.
+</summary>
 
 ```java
 Notification notification = client.getNotificationById(notificationId);
 ```
+</details>
 
+#### Response
+
+If successful a `notification` is returned. Below is a list of attributes in a `notification`. 
 
 <details>
 <summary>
-Notification
+Click here to expand for more information.
 </summary>
 
-If successful a `notification` is returned. Below is a list of attributes in a `notification`.
+
 ```java
     UUID id;
     Optional<String> reference;
@@ -479,104 +411,66 @@ If successful a `notification` is returned. Below is a list of attributes in a `
 
 Otherwise the client will raise a `NotificationClientException`.
 
-<table>
-<thead>
-<tr>
-<th>message</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<pre>
-Status code: 404 {
-"errors":
-[{
-    "error": "NoResultFound",
-    "message": "No result found"
-}]
-}
-</pre>
-<pre>
-Status code: 400 {
-"errors":
-[{
-    "error": "ValidationError",
-    "message": "id is not a valid UUID"
-}]
-}
-</pre>
-</tbody>
-</table>
+|`error.status_code`|`error.message`|
+|:---|:---|
+|`404`|`[{`<br>`"error": "NoResultFound",`<br>`"message": "No result found"`<br>`}]`|
+|`400`|`[{`<br>`"error": "ValidationError",`<br>`"message": "id is not a valid UUID"`<br>`}]`|
+
 </details>
 
 ## Get the status of all messages
+
+#### Method
+
+<details>
+
+<summary>
+Click here to expand for more information.
+</summary>
+
 
 ```java
 NotificationList notification = client.getNotifications(status, notificationType, reference, olderThanId);
 ```
 
+</details>
+
+#### Response
+
+If successful a `NotificationList` is returned. Below is a list of attributes in a`NotificationList`. 
+
 <details>
 <summary>
-NotificationList
+Click here to expand for more information.
 </summary>
 
-If successful a `NotificationList` is returned. Below is a list of attributes in a`NotificationList`.
+
+
 ```java
     List<Notification> notifications;
     String currentPageLink;
     Optional<String> nextPageLink;
 ```
 
-Otherwise the client will raise a NotificationClientException.
+Otherwise the client will raise a `NotificationClientException`.
 
-<table>
-<thead>
-<tr>
-<th>message</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<pre>
-Status code: 404 {
-"errors":
-[{
-	'error': 'ValidationError',
-    'message': 'bad status is not one of [created, sending, delivered, pending, failed, technical-failure, temporary-failure, permanent-failure]'
-}]
-}
-</pre>
-<pre>
-Status code: 400 {
-"errors":
-[{
-    "error": "ValidationError",
-    "message": "Apple is not one of [sms, email, letter]"
-}]
-}
-</pre>
-</tbody>
-</table>
+|`error.status_code`|`error.message`|
+|:---|:---|
+|`404`|`[{`<br>`"error": "ValidationError",`<br>`"message": "bad status is not one of [created, sending, delivered, pending, failed, technical-failure, temporary-failure, permanent-failure]"`<br>`}]`|
+|`400`|`[{`<br>`"error": "ValidationError",`<br>`"message": "Apple is not one of [sms, email, letter]"`<br>`}]`|
+
+
 </details>
 
+
+#### Arguments
+
 <details>
-<summary>Arguments</summary>
+<summary>Click here to expand for more information.</summary>
 
-### `template_type`
+##### `status`
 
-You can filter by:
-
-* `email`
-* `sms`
-* `letter`
-
-You can omit this argument to ignore this filter.
-
-### `status`
-
-#### email
+__email__
 
 You can filter by:
 
@@ -589,7 +483,7 @@ You can filter by:
 
 You can omit this argument to ignore this filter.
 
-#### text message
+__text message__
 
 You can filter by:
 
@@ -602,7 +496,7 @@ You can filter by:
 
 You can omit this argument to ignore this filter.
 
-##### letter
+__letter__
 
 You can filter by:
 
@@ -611,31 +505,46 @@ You can filter by:
 
 You can omit this argument to ignore this filter.
 
-### `reference`
+##### `reference`
 
 This is the `reference` you gave at the time of sending the notification. The `reference` can be a unique identifier for the notification or an identifier for a batch of notifications.
 
+##### `olderThanId`
 
-### `email_reply_to_id`
+You can get the notifications older than a given Notification.notificationId.
 
-Optional. Specifies the identifier of the email reply-to address to set for the notification. The identifiers are found in your service Settings, when you 'Manage' your 'Email reply to addresses'.
-If you omit this argument your default email reply-to address will be set for the notification.
+##### `notificationType`
 
-
+* sms
+* email
+* letter
 
 </details>
 
 ## Get a template by ID
+
+#### Method 
+
 This will return the latest version of the template. Use [getTemplateVersion](#get-a-template-by-id-and-version) to retrieve a specific template version.
+
+<details>
+<summary>
+Click here to expand for more information.
+</summary>
+
 
 ```java
 Template template = client.getTemplateById(templateId);
 ```
+</details>
+
+#### Response
 
 <details>
 <summary>
-Response
+Click here to expand for more information.
 </summary>
+
 
 ```Java
     UUID id;
@@ -651,56 +560,47 @@ Response
 
 Otherwise the client will raise a `NotificationClientException`.
 
-<table>
-<thead>
-<tr>
-<th>message</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<pre>
-Status code: 404 {
-"errors":
-[{
-    "error": "NoResultFound",
-    "message": "No result found"
-}]
-}
-</pre>
-<pre>
-Status code: 400 {
-"errors":
-[{
-    "error": "ValidationError",
-    "message": "id is not a valid UUID"
-}]
-}
-</pre>
-</tbody>
-</table>
+|`error.status_code`|`error.message`|
+|:---|:---|
+|`404`|`[{`<br>`"error": "NoResultFound",`<br>`"message": "No Result Found"`<br>`}]`|
+|`400`|`[{`<br>`"error": "ValidationError",`<br>`"message": "id is not a valid UUID"`<br>`}]`|
+
 </details>
 
-<details>
-<summary>Arguments</summary>
+#### Arguments
 
-#### `templateId`
+<details>
+<summary>Click here to expand for more information.</summary>
+
+##### `templateId`
+
 The template id is visible on the template page in the application.
 
 </details>
 
 
 ## Get a template by ID and version
+
+#### Method
+
 This will return the template for the given id and version.
+
+<details>
+<summary>
+Click here to expand for more information.
+</summary>
 
 ```java
 Template template = client.getTemplateVersion(templateId, version);
 ```
 
+</details>
+
+#### Response
+
 <details>
 <summary>
-Response
+Click here to expand for more information.
 </summary>
 
 ```Java
@@ -715,97 +615,108 @@ Response
     Optional<Map<String, Object>> personalisation;
 ```
 
-Otherwise the client will raise a `NotificationClientException`.
+Otherwise the client will raise a `NotificationClientException`:
 
-<table>
-<thead>
-<tr>
-<th>message</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<pre>
-Status code: 404 {
-"errors":
-[{
-    "error": "NoResultFound",
-    "message": "No result found"
-}]
-}
-</pre>
-<pre>
-Status code: 400 {
-"errors":
-[{
-    "error": "ValidationError",
-    "message": "id is not a valid UUID"
-}]
-}
-</pre>
-</tbody>
-</table>
+|`error.status_code`|`error.message`|
+|:---|:---|
+|`404`|`[{`<br>`"error": "NoResultFound",`<br>`"message": "No Result Found"`<br>`}]`|
+|`400`|`[{`<br>`"error": "ValidationError",`<br>`"message": "id is not a valid UUID"`<br>`}]`|
+
 </details>
 
-<details>
-<summary>Arguments</summary>
+#### Arguments
 
-### `templateId`
+<details>
+<summary>Click here to expand for more information.</summary>
+
+##### `templateId`
 The template id is visible on the template page in the application.
 
-### `version`
+##### `version`
 A history of the template is kept. There is a link to `See previous versions` on the template page in the application.
+
 
 </details>
 
 ## Get all templates
-This will return the latest version of each template for your service.
+
+#### Method
+
+This will return the latest version for each template for your service.
+
+<details>
+<summary>
+Click here to expand for more information.
+</summary>
+
 
 ```java
 TemplateList templates = client.getAllTemplates(templateType);
 ```
 
+[See available template types](#template_type)
+
+</details>
+
+#### Response
+
 <details>
 <summary>
-Response
+Click here to expand for more information.
 </summary>
 
 ```java
     List<Template> templates;
 ```
+
 If the response is successful, a TemplateList is returned.
 
 If no templates exist for a template type or there no templates for a service, the templates list will be empty.
 
-Otherwise the client will raise a `NotificationClientException`.
-
 </details>
 
+#### Arguments
 
 <details>
-<summary>Arguments</summary>
+<summary>Click here to expand for more information.</summary>
 
-#### `templateType`
+##### `templateType`
+
 You can filter the templates by the following options:
 
 * `email`
 * `sms`
 * `letter`
+
 You can also pass in an empty string or null to ignore the filter.
 
 </details>
 
 ## Generate a preview template
+
+#### Method
+
 This will return the contents of a template with the placeholders replaced with the given personalisation.
+
+<details>
+<summary>
+Click here to expand for more information.
+</summary>
+
+
 ```Java
 TemplatePreview templatePreview = client.getTemplatePreview(templateId, personalisation)
 ```
 
+</details>
+
+#### Response
+
 <details>
 <summary>
-Response
+Click here to expand for more information.
 </summary>
+
 
 ```java
     UUID id;
@@ -815,47 +726,31 @@ Response
     Optional<String> subject;
 ```
 
-Otherwise a `NotificationClientException` is thrown.
-<table>
-<thead>
-<tr>
-<th>message</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<pre>
-Status code: 404 {
-"errors":
-[{
-    "error": "NoResultFound",
-    "message": "No result found"
-}]
-}
-</pre>
-<pre>
-Status code: 400 {
-"errors":
-[{
-    "error": "ValidationError",
-    "message": "id is not a valid UUID"
-}]
-}
-</pre>
-</tbody>
-</table>
+Otherwise the client will raise a `NotificationClientException`:
+
+|`error.status_code`|`error.message`|
+|:---|:---|
+|`400`|`[{`<br>`"error": "NoResultFound",`<br>`"message": "No result found"`<br>`}]`|
+|`400`|`[{`<br>`"error": "ValidationError",`<br>`"message": "id is not a valid UUID"`<br>`}]`|
 
 </details>
 
+#### Arguments
+
 <details>
+<summary>Click here to expand for more information.</summary>
 
-<summary>Arguments</summary>
+##### `templateId`
 
-#### `templateId`
 The template id is visible on the template page in the application.
 
-#### `personalisation`
+##### `personalisation`
+
 If a template has placeholders, you need to provide their values. `personalisation` can be an empty or null in which case no placeholders are provided for the notification.
+```java
+Map<String, String> personalisation = new HashMap<>();
+personalisation.put("name", "Jo");
+personalisation.put("reference_number", "13566");
+```
 
 </details>
