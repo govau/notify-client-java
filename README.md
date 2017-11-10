@@ -181,10 +181,9 @@ An optional unique identifier for the notification or an identifier for a batch 
 If a template has placeholders, you need to provide their values, for example:
 
 ```java
-personalisation={
-    'first_name': 'Amala',
-    'reference_number': '300241',
-}
+Map<String, String> personalisation = new HashMap<>();
+personalisation.put("name", "Jo");
+personalisation.put("reference_number", "13566");
 ```
 
 </details>
@@ -257,10 +256,9 @@ The template id is visible on the template page in the application.
 If a template has placeholders, you need to provide their values, for example:
 
 ```java
-personalisation={
-    'first_name': 'Amala',
-    'reference_number': '300241',
-}
+Map<String, String> personalisation = new HashMap<>();
+personalisation.put("name", "Jo");
+personalisation.put("reference_number", "13566");
 ```
 
 #### `reference`
@@ -749,5 +747,10 @@ The template id is visible on the template page in the application.
 ##### `personalisation`
 
 If a template has placeholders, you need to provide their values. `personalisation` can be an empty or null in which case no placeholders are provided for the notification.
+```java
+Map<String, String> personalisation = new HashMap<>();
+personalisation.put("name", "Jo");
+personalisation.put("reference_number", "13566");
+```
 
 </details>
