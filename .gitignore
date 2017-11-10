@@ -4,6 +4,7 @@
 *.iml
 /target
 .m2
+.DS_Store
 
 environment.sh
 docker.env

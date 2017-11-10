@@ -131,6 +131,7 @@ SendSmsResponse response = client.sendSms(templateId, mobileNumber, personalisat
 #### Response
 
 If the request is successful, the SendSmsResponse is returned from the client. Attributes of the SendSmsResponse are listed below. 
+
 <details>
 <summary>
 Click here to expand for more information.
@@ -185,10 +186,6 @@ personalisation={
     'reference_number': '300241',
 }
 ```
-
-#### `email_reply_to_id`
-Optional. Specifies the identifier of the email reply-to address to set for the notification. The identifiers are found in your service Settings, when you 'Manage' your 'Email reply to addresses'.
-If you omit this argument your default email reply-to address will be set for the notification.
 
 </details>
 
@@ -311,6 +308,7 @@ SendLetterResponse response = client.sendLetter(templateId, personalisation, "yo
 #### Response
 
 If the request is successful, the SendLetterResponse is returned from the client. Attributes of the SendLetterResponse are listed below.
+
 <details>
 <summary>
 Click here to expand for more information.
@@ -381,6 +379,7 @@ Notification notification = client.getNotificationById(notificationId);
 #### Response
 
 If successful a `notification` is returned. Below is a list of attributes in a `notification`. 
+
 <details>
 <summary>
 Click here to expand for more information.
@@ -441,6 +440,7 @@ NotificationList notification = client.getNotifications(status, notificationType
 #### Response
 
 If successful a `NotificationList` is returned. Below is a list of attributes in a`NotificationList`. 
+
 <details>
 <summary>
 Click here to expand for more information.
@@ -517,7 +517,9 @@ You can get the notifications older than a given Notification.notificationId.
 
 ##### `notificationType`
 
-???
+* sms
+* email
+* letter
 
 </details>
 
