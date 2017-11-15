@@ -152,7 +152,7 @@ Otherwise the client will raise a `NotificationClientException`:
 
 |status code|error message|
 |:---|:---|
-|`429`|`429 {`<br>`"errors":`<br>`[{`<br>`"error": "RateLimitError",`<br>`"message": "Exceeded rate limit for key type live of 10 requests per 10 seconds"`<br>`}]`<br>`}`|
+|`429`|`429 {`<br>`"errors":`<br>`[{`<br>`"error": "RateLimitError",`<br>`"message": "Exceeded rate limit for key type live of 60 requests per second"`<br>`}]`<br>`}`|
 |`429`|`429 {`<br>`"errors":`<br>`[{`<br>`"error": "TooManyRequestsError",`<br>`"message": "Exceeded send limits (50) for today"`<br>`}]`<br>`}`|
 |`400`|`400 {`<br>`"errors":`<br>`[{`<br>`"error": "BadRequestError",`<br>`"message": "Can"t send to this recipient using a team-only API key"`<br>`}]`<br>`}`|
 |`400`|`400 {`<br>`"errors":`<br>`[{`<br>`"error": "BadRequestError",`<br>`"message": ""Can"t send to this recipient when service is in trial mode - see https://www.notifications.service.gov.uk/trial-mode""`<br>`}]`<br>`}`|
