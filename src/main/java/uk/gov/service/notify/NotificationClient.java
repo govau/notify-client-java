@@ -159,7 +159,7 @@ public class NotificationClient implements NotificationClientApi {
     public SendEmailResponse sendEmail(String templateId, String emailAddress, Map<String, String> personalisation, String reference, String emailReplyToId) throws NotificationClientException {
         JSONObject body = createBodyForPostRequest(templateId, null, emailAddress, personalisation, reference);
 
-        if(!emailReplyToId.isEmpty())
+        if(emailReplyToId != null && !emailReplyToId.isEmpty())
         {
             body.put("email_reply_to_id", emailReplyToId);
         }
@@ -208,7 +208,7 @@ public class NotificationClient implements NotificationClientApi {
      */
     public SendSmsResponse sendSms(String templateId, String phoneNumber, Map<String, String> personalisation, String reference, String smsSenderId) throws NotificationClientException {
         JSONObject body = createBodyForPostRequest(templateId, phoneNumber, null, personalisation, reference);
-        if( !smsSenderId.isEmpty()){
+        if( smsSenderId != null && !smsSenderId.isEmpty()){
             body.put("sms_sender_id", smsSenderId);
         }
         HttpURLConnection conn = createConnectionAndSetHeaders(baseUrl + "/v2/notifications/sms", "POST");
