@@ -122,39 +122,10 @@ public class NotificationClient implements NotificationClientApi {
         return proxy;
     }
 
-    /**
-     * The sendEmail method will create an HTTPS POST request. A JWT token will be created and added as an Authorization header to the request.
-     *
-     * @param templateId      Find templateId by clicking API info for the template you want to send
-     * @param emailAddress    The email address
-     * @param personalisation Map representing the placeholders for the template if any. For example, key=name value=Bob
-     *                        Can be an empty map or null when the template does not require placeholders.
-     * @param reference       A reference specified by the service for the notification. Get all notifications can be filtered by this reference.
-     *                        This reference can be unique or used used to refer to a batch of notifications.
-     *                        Can be an empty string or null, when you do not require a reference for the notifications.
-     * @return <code>SendEmailResponse</code>
-     * @throws NotificationClientException
-     */
     public SendEmailResponse sendEmail(String templateId, String emailAddress, Map<String, String> personalisation, String reference) throws NotificationClientException {
         return sendEmail(templateId, emailAddress, personalisation, reference, "");
     }
 
-    /**
-     * The sendEmail method will create an HTTPS POST request. A JWT token will be created and added as an Authorization header to the request.
-     *
-     * @param templateId      Find templateId by clicking API info for the template you want to send
-     * @param emailAddress    The email address
-     * @param personalisation Map representing the placeholders for the template if any. For example, key=name value=Bob
-     *                        Can be an empty map or null when the template does not require placeholders.
-     * @param reference       A reference specified by the service for the notification. Get all notifications can be filtered by this reference.
-     *                        This reference can be unique or used used to refer to a batch of notifications.
-     *                        Can be an empty string or null, when you do not require a reference for the notifications.
-     * @param emailReplyToId  An optional identifier for a reply to email address for the notification, rather than use the service default.
-     *                        Service email_reply_to ids can be accessed via the service settings / manage email reply to addresses page.
-     *                        Omit this argument to use the default service email reply to address.
-     * @return <code>SendEmailResponse</code>
-     * @throws NotificationClientException
-     */
     @Override
     public SendEmailResponse sendEmail(String templateId, String emailAddress, Map<String, String> personalisation, String reference, String emailReplyToId) throws NotificationClientException {
         JSONObject body = createBodyForPostRequest(templateId, null, emailAddress, personalisation, reference);
@@ -169,43 +140,10 @@ public class NotificationClient implements NotificationClientApi {
         return new SendEmailResponse(response);
     }
 
-    /**
-     * The sendSms method will create an HTTPS POST request. A JWT token will be created and added as an Authorization header to the request.
-     *
-     * @param templateId      Find templateId by clicking API info for the template you want to send
-     * @param phoneNumber              The mobile phone number
-     * @param personalisation Map representing the placeholders for the template if any. For example, key=name value=Bob
-     *                        Can be an empty map or null when the template does not require placeholders.
-     * @param reference       A reference specified by the service for the notification. Get all notifications can be filtered by this reference.
-     *                        This reference can be unique or used used to refer to a batch of notifications.
-     *                        Can be an empty string or null, when you do not require a reference for the notifications.
-     * @return <code>SendSmsResponse</code>
-     * @throws NotificationClientException
-     */
     public SendSmsResponse sendSms(String templateId, String phoneNumber, Map<String, String> personalisation, String reference) throws NotificationClientException {
-        JSONObject body = createBodyForPostRequest(templateId, phoneNumber, null, personalisation, reference);
-        HttpURLConnection conn = createConnectionAndSetHeaders(baseUrl + "/v2/notifications/sms", "POST");
-        String response = performPostRequest(conn, body, HttpsURLConnection.HTTP_CREATED);
-        return new SendSmsResponse(response);
+        return sendSms(templateId, phoneNumber, personalisation, reference, "");
     }
 
-
-    /**
-     * The sendSms method will create an HTTPS POST request. A JWT token will be created and added as an Authorization header to the request.
-     *
-     * @param templateId      The template id is visible from the template page in the application.
-     * @param phoneNumber              The mobile phone number
-     * @param personalisation Map representing the placeholders for the template if any. For example, key=name value=Bob
-     *                        Can be an empty map or null when the template does not require placeholders.
-     * @param reference       A reference specified by the service for the notification. Get all notifications can be filtered by this reference.
-     *                        This reference can be unique or used used to refer to a batch of notifications.
-     *                        Can be an empty string or null, when you do not require a reference for the notifications.
-     * @param smsSenderId     An optional identifier for the text message sender of the notification, rather than use the service default.
-     *                        Service smsSenderIds can be accessed via the service settings / manage text message senders page.
-     *                        Omit this argument to use the default service text message sender.
-     * @return <code>SendSmsResponse</code>
-     * @throws NotificationClientException
-     */
     public SendSmsResponse sendSms(String templateId, String phoneNumber, Map<String, String> personalisation, String reference, String smsSenderId) throws NotificationClientException {
         JSONObject body = createBodyForPostRequest(templateId, phoneNumber, null, personalisation, reference);
         if( smsSenderId != null && !smsSenderId.isEmpty()){
@@ -216,18 +154,6 @@ public class NotificationClient implements NotificationClientApi {
         return new SendSmsResponse(response);
     }
 
-    /**
-     * The sendLetter method will create an HTTPS POST request. A JWT token will be created and added as an Authorization header to the request.
-     *
-     * @param templateId      Find templateId by clicking API info for the template you want to send
-     * @param personalisation Map representing the placeholders for the template if any. For example, key=name value=Bob.
-     *                        Must include the keys "address_line_1", "address_line_2" and "postcode".
-     * @param reference       A reference specified by the service for the notification. Get all notifications can be filtered by this reference.
-     *                        This reference can be unique or used used to refer to a batch of notifications.
-     *                        Can be an empty string or null, when you do not require a reference for the notifications.
-     * @return <code>SendLetterResponse</code>
-     * @throws NotificationClientException
-     */
     public SendLetterResponse sendLetter(String templateId, Map<String, String> personalisation, String reference) throws NotificationClientException {
         JSONObject body = createBodyForPostRequest(templateId, null, null, personalisation, reference);
         HttpURLConnection conn = createConnectionAndSetHeaders(baseUrl + "/v2/notifications/letter", "POST");
@@ -235,14 +161,6 @@ public class NotificationClient implements NotificationClientApi {
         return new SendLetterResponse(response);
     }
 
-    /**
-     * The getNotificationById method will return a <code>Notification</code> for a given notification id.
-     * The id is can be retrieved from the <code>NotificationResponse</code> of a <code>sendEmail</code> or <code>sendSms</code> request.
-     *
-     * @param notificationId The id of the notification.
-     * @return <code>Notification</code>
-     * @throws NotificationClientException
-     */
     public Notification getNotificationById(String notificationId) throws NotificationClientException {
         String url = baseUrl + "/v2/notifications/" + notificationId;
         HttpURLConnection conn = createConnectionAndSetHeaders(url, "GET");
@@ -251,18 +169,6 @@ public class NotificationClient implements NotificationClientApi {
 
     }
 
-    /**
-     * The getNotifications method will create a GET HTTPS request to retrieve all the notifications.
-     *
-     * @param status If status is not empty or null notifications will only return notifications for the given status.
-     *               Possible statuses are created|sending|delivered|permanent-failure|temporary-failure|technical-failure
-     * @param notification_type If notification_type is not empty or null only notifications of the given status will be returned.
-     *                          Possible notificationTypes are sms|email
-     * @param reference If reference is not empty or null only the notifications with that reference are returned.
-     * @param olderThanId If olderThanId is not empty or null only the notifications older than that notification id are returned.
-     * @return <code>NotificationList</code>
-     * @throws NotificationClientException
-     */
     public NotificationList getNotifications(String status, String notification_type, String reference, String olderThanId) throws NotificationClientException {
         try {
             URIBuilder builder = new URIBuilder(baseUrl + "/v2/notifications");
@@ -288,12 +194,6 @@ public class NotificationClient implements NotificationClientApi {
         }
     }
 
-    /**
-     * The getTemplateById returns a <code>Template</code> given the template id.
-     *
-     * @param templateId The template id is visible from the template page in the application.
-     * @return <code>Template</code>
-     */
     public Template getTemplateById(String templateId) throws NotificationClientException{
         String url = baseUrl + "/v2/template/" + templateId;
         HttpURLConnection conn = createConnectionAndSetHeaders(url, "GET");
@@ -301,15 +201,6 @@ public class NotificationClient implements NotificationClientApi {
         return new Template(response);
     }
 
-    /**
-     * The getTemplateVersion returns a <code>Template</code> given the template id and version.
-     *
-     *
-     * @param templateId The template id is visible from the template page in the application.
-     * @param version The version of the template to return
-     * @return <code>Template</code>
-     * @throws NotificationClientException
-     */
     public Template getTemplateVersion(String templateId, int version) throws NotificationClientException{
         String url = baseUrl + "/v2/template/" + templateId + "/version/" + version;
         HttpURLConnection conn = createConnectionAndSetHeaders(url, "GET");
@@ -317,14 +208,6 @@ public class NotificationClient implements NotificationClientApi {
         return new Template(response);
     }
 
-    /**
-     * Returns all the templates for your service. Filtered by template type if not null.
-     *
-     * @param templateType If templateType is not empty or null templates will be filtered by type.
-     *          Possible template types are email|sms|letter
-     * @return <code>TemplateList</code>
-     * @throws NotificationClientException
-     */
     public TemplateList getAllTemplates(String templateType) throws NotificationClientException{
         try{
             URIBuilder builder = new URIBuilder(baseUrl + "/v2/templates");
@@ -340,15 +223,6 @@ public class NotificationClient implements NotificationClientApi {
         }
     }
 
-    /**
-     * The generateTemplatePreview returns a template with the placeholders replaced with the given personalisation.
-     *
-     * @param templateId The template id is visible from the template page in the application.
-     * @param personalisation Map representing the placeholders for the template if any. For example, key=name value=Bob
-     *                        Can be an empty map or null when the template does not require placeholders.
-     * @return <code>TemplatePreview</code>
-     * @throws NotificationClientException
-     */
     public TemplatePreview generateTemplatePreview(String templateId, Map<String, String> personalisation) throws NotificationClientException {
         JSONObject body = new JSONObject();
         if (personalisation != null && !personalisation.isEmpty()) {
