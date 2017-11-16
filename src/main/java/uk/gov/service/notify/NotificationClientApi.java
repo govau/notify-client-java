@@ -54,6 +54,24 @@ public interface NotificationClientApi {
     SendSmsResponse sendSms(String templateId, String phoneNumber, Map<String, String> personalisation, String reference) throws NotificationClientException;
 
     /**
+     * The sendSms method will create an HTTPS POST request. A JWT token will be created and added as an Authorization header to the request.
+     *
+     * @param templateId      The template id is visible from the template page in the application.
+     * @param phoneNumber              The mobile phone number
+     * @param personalisation Map representing the placeholders for the template if any. For example, key=name value=Bob
+     *                        Can be an empty map or null when the template does not require placeholders.
+     * @param reference       A reference specified by the service for the notification. Get all notifications can be filtered by this reference.
+     *                        This reference can be unique or used used to refer to a batch of notifications.
+     *                        Can be an empty string or null, when you do not require a reference for the notifications.
+     * @param smsSenderId     An optional identifier for the text message sender of the notification, rather than use the service default.
+     *                        Service smsSenderIds can be accessed via the service settings / manage text message senders page.
+     *                        Omit this argument to use the default service text message sender.
+     * @return <code>SendSmsResponse</code>
+     * @throws NotificationClientException
+     */
+    SendSmsResponse sendSms(String templateId, String phoneNumber, Map<String, String> personalisation, String reference, String smsSenderId) throws NotificationClientException;
+
+    /**
      * The sendLetter method will create an HTTPS POST request. A JWT token will be created and added as an Authorization header to the request.
      *
      * @param templateId      Find templateId by clicking API info for the template you want to send

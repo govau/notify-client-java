@@ -63,7 +63,7 @@ Then add the Maven dependency to your project.
     <dependency>
         <groupId>uk.gov.service.notify</groupId>
         <artifactId>notifications-java-client</artifactId>
-        <version>3.6.0-RELEASE</version>
+        <version>3.7.0-RELEASE</version>
     </dependency>
 
 ```
@@ -85,7 +85,7 @@ repositories {
 }
 
 dependencies {
-    compile('uk.gov.service.notify:notifications-java-client:3.6.0-RELEASE')
+    compile('uk.gov.service.notify:notifications-java-client:3.7.0-RELEASE')
 }
 ```
 </details>
@@ -186,6 +186,11 @@ personalisation.put("name", "Jo");
 personalisation.put("reference_number", "13566");
 ```
 
+#### `smsSenderId`
+Optional. Specifies the identifier of the text message sender to set for the notification. The identifiers are found in your service Settings, when you 'Manage' your 'Text message senders'.
+If you omit this argument your default text message sender will be for the notification.
+
+
 </details>
 
 ### Email
@@ -266,7 +271,7 @@ An optional identifier you generate. The reference can be used as a unique refer
 
 You can omit this argument if you do not require a reference for the notification.
 
-#### `email_reply_to_id`
+#### `emailReplyToId`
 Optional. Specifies the identifier of the email reply-to address to set for the notification. The identifiers are found in your service Settings, when you 'Manage' your 'Email reply to addresses'.
 If you omit this argument your default email reply-to address will be set for the notification.
 
