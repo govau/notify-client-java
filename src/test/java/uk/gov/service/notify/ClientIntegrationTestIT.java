@@ -75,6 +75,60 @@ public class ClientIntegrationTestIT {
     }
 
     @Test
+    public void testEmailNotificationWithValidEmailReplyToIdIT() throws NotificationClientException, InterruptedException {
+        NotificationClient client = getClient();
+        SendEmailResponse emailResponse = sendEmailAndAssertResponse(client);
+
+        HashMap<String, String> personalisation = new HashMap<>();
+        String uniqueName = UUID.randomUUID().toString();
+        personalisation.put("name", uniqueName);
+
+        SendEmailResponse response = client.sendEmail(
+                System.getenv("EMAIL_TEMPLATE_ID"),
+                System.getenv("FUNCTIONAL_TEST_EMAIL"),
+                personalisation,
+                uniqueName,
+                System.getenv("EMAIL_REPLY_TO_ID"));
+
+        assertNotificationEmailResponse(response, uniqueName);
+
+        Notification notification = client.getNotificationById(emailResponse.getNotificationId().toString());
+        assertNotification(notification);
+    }
+
+    @Test
+    public void testEmailNotificationWithInValidEmailReplyToIdIT() throws NotificationClientException, InterruptedException {
+        NotificationClient client = getClient();
+        SendEmailResponse emailResponse = sendEmailAndAssertResponse(client);
+
+        HashMap<String, String> personalisation = new HashMap<>();
+        String uniqueName = UUID.randomUUID().toString();
+        personalisation.put("name", uniqueName);
+
+        UUID fake_uuid = UUID.randomUUID();
+
+        boolean exceptionThrown = false;
+
+        try
+        {
+            SendEmailResponse response = client.sendEmail(
+                    System.getenv("EMAIL_TEMPLATE_ID"),
+                    System.getenv("FUNCTIONAL_TEST_EMAIL"),
+                    personalisation,
+                    uniqueName,
+                    fake_uuid.toString());
+        }
+        catch (final NotificationClientException ex)
+        {
+            exceptionThrown = true;
+            assertTrue(ex.getMessage().toString().contains("does not exist in database for service id"));
+        }
+
+        assertTrue(exceptionThrown);
+
+    }
+
+    @Test
     public void testSmsNotificationWithoutPersonalisationReturnsErrorMessageIT() {
         NotificationClient client = getClient();
         try {
@@ -84,6 +138,58 @@ public class ClientIntegrationTestIT {
             assert(e.getMessage().contains("Missing personalisation: name"));
             assert(e.getMessage().contains("Status code: 400"));
         }
+    }
+
+    @Test
+    public void testSmsNotificationWithValidSmsSenderIdIT() throws NotificationClientException, InterruptedException {
+        NotificationClient client = getClient();
+
+        HashMap<String, String> personalisation = new HashMap<>();
+        String uniqueName = UUID.randomUUID().toString();
+        personalisation.put("name", uniqueName);
+
+        SendSmsResponse response = client.sendSms(
+                System.getenv("SMS_TEMPLATE_ID"),
+                System.getenv("FUNCTIONAL_TEST_NUMBER"),
+                personalisation,
+                uniqueName,
+                System.getenv("SMS_SENDER_ID"));
+
+        assertNotificationSmsResponse(response, uniqueName);
+
+        Notification notification = client.getNotificationById(response.getNotificationId().toString());
+        assertNotification(notification);
+    }
+
+    @Test
+    public void testSmsNotificationWithInValidSmsSenderIdIT() throws NotificationClientException, InterruptedException {
+        NotificationClient client = getClient();
+
+        HashMap<String, String> personalisation = new HashMap<>();
+        String uniqueName = UUID.randomUUID().toString();
+        personalisation.put("name", uniqueName);
+
+        UUID fake_uuid = UUID.randomUUID();
+
+        boolean exceptionThrown = false;
+
+        try
+        {
+            SendSmsResponse response = client.sendSms(
+                    System.getenv("SMS_TEMPLATE_ID"),
+                    System.getenv("FUNCTIONAL_TEST_NUMBER"),
+                    personalisation,
+                    uniqueName,
+                    fake_uuid.toString());
+        }
+        catch (final NotificationClientException ex)
+        {
+            exceptionThrown = true;
+            assertTrue(ex.getMessage().toString().contains("does not exist in database for service id"));
+        }
+
+        assertTrue(exceptionThrown);
+
     }
 
     @Test
@@ -278,60 +384,5 @@ public class ClientIntegrationTestIT {
         assertFalse(notification.getLine6().isPresent());
         assertFalse(notification.getPostcode().isPresent());
     }
-
-    @Test
-    public void testEmailNotificationWithValidEmailReplyToIdIT() throws NotificationClientException, InterruptedException {
-        NotificationClient client = getClient();
-        SendEmailResponse emailResponse = sendEmailAndAssertResponse(client);
-
-        HashMap<String, String> personalisation = new HashMap<>();
-        String uniqueName = UUID.randomUUID().toString();
-        personalisation.put("name", uniqueName);
-
-        SendEmailResponse response = client.sendEmail(
-                System.getenv("EMAIL_TEMPLATE_ID"),
-                System.getenv("FUNCTIONAL_TEST_EMAIL"),
-                personalisation,
-                uniqueName,
-                System.getenv("EMAIL_REPLY_TO_ID"));
-
-        assertNotificationEmailResponse(response, uniqueName);
-
-        Notification notification = client.getNotificationById(emailResponse.getNotificationId().toString());
-        assertNotification(notification);
-    }
-
-    @Test
-    public void testEmailNotificationWithInValidEmailReplyToIdIT() throws NotificationClientException, InterruptedException {
-        NotificationClient client = getClient();
-        SendEmailResponse emailResponse = sendEmailAndAssertResponse(client);
-
-        HashMap<String, String> personalisation = new HashMap<>();
-        String uniqueName = UUID.randomUUID().toString();
-        personalisation.put("name", uniqueName);
-
-        UUID fake_uuid = UUID.randomUUID();
-
-        boolean exceptionThrown = false;
-
-        try
-        {
-            SendEmailResponse response = client.sendEmail(
-                    System.getenv("EMAIL_TEMPLATE_ID"),
-                    System.getenv("FUNCTIONAL_TEST_EMAIL"),
-                    personalisation,
-                    uniqueName,
-                    fake_uuid.toString());
-        }
-        catch (final NotificationClientException ex)
-        {
-            exceptionThrown = true;
-            assertTrue(ex.getMessage().toString().contains("does not exist in database for service id"));
-        }
-
-        assertTrue(exceptionThrown);
-
-    }
-
 
 }

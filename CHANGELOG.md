@@ -1,6 +1,10 @@
+## 3.7.0-RELEASE
+* Update to `NotificationsAPIClient.sendSms()`
+    * added `smsSenderId`: an optional smsSenderId specified when adding text message senders under service settings, if this is not provided the default text message sender for the service will be used. `smsSenderId` can be omitted.
+
 ## 3.6.0-RELEASE
-* Update to `NotificationsAPIClient.send_email_notification()`
-    * added `email_reply_to_id`: an optional email_reply_to_id specified when adding Email reply to addresses under service settings, if this is not provided the reply to email will be the service default reply to email. `email_reply_to_id` can be omitted.
+* Update to `NotificationsAPIClient.sendEmail()`
+    * added `emailReplyToId`: an optional email_reply_to_id specified when adding Email reply to addresses under service settings, if this is not provided the reply to email will be the service default reply to email. `emailReplyToId` can be omitted.
 
 ## 3.5.1-RELEASE
 * Attached source and javadoc artifacts to jar
