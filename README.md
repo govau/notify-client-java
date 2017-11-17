@@ -78,10 +78,7 @@ Click here to expand for more information.
 
 ```
 repositories {
-    mavenCentral()
-    maven {
-        url  "http://dl.bintray.com/gov-uk-notify/maven"
-    }
+    jcenter()
 }
 
 dependencies {
