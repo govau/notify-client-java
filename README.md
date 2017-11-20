@@ -458,7 +458,7 @@ Otherwise the client will raise a `NotificationClientException`.
 
 |`error.status_code`|`error.message`|
 |:---|:---|
-|`404`|`[{`<br>`"error": "ValidationError",`<br>`"message": "bad status is not one of [created, sending, delivered, pending, failed, technical-failure, temporary-failure, permanent-failure]"`<br>`}]`|
+|`404`|`[{`<br>`"error": "ValidationError",`<br>`"message": "bad status is not one of [created, sending, sent, delivered, pending, failed, technical-failure, temporary-failure, permanent-failure, accepted, received]"`<br>`}]`|
 |`400`|`[{`<br>`"error": "ValidationError",`<br>`"message": "Apple is not one of [sms, email, letter]"`<br>`}]`|
 
 
@@ -476,7 +476,8 @@ __email__
 
 You can filter by:
 
-* `sending` - the message is queued to be sent by the provider.
+* `created` - the message is queued to be sent to the provider. The notification typically only remains in this state for a few seconds.
+* `sending` - the message has been passed on to our providers to send to the recipient, and we are waiting for delivery information.
 * `delivered` - the message was successfully delivered.
 * `failed` - this will return all failure statuses `permanent-failure`, `temporary-failure` and `technical-failure`.
 * `permanent-failure` - the provider was unable to deliver message, email does not exist; remove this recipient from your list.
@@ -489,8 +490,10 @@ __text message__
 
 You can filter by:
 
-* `sending` - the message is queued to be sent by the provider.
+* `created` - the message is queued to be sent to our providers. The notification typically only remains in this state for a few seconds.
+* `sending` - the message has been passed on to our providers to send to the recipient, and we are waiting for delivery information.
 * `delivered` - the message was successfully delivered.
+* `sent` - the message was delivered internationally - we may not receive additional status updates depending on the recipient's country and telecoms provider.
 * `failed` - this will return all failure statuses `permanent-failure`, `temporary-failure` and `technical-failure`.
 * `permanent-failure` - the provider was unable to deliver message, phone number does not exist; remove this recipient from your list.
 * `temporary-failure` - the provider was unable to deliver message, the phone was turned off; you can try to send the message again.
