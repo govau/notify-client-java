@@ -148,4 +148,11 @@ public interface NotificationClientApi {
      * @throws NotificationClientException
      */
     TemplatePreview generateTemplatePreview(String templateId, Map<String, String> personalisation) throws NotificationClientException;
+
+    /**
+     * The getReceivedTextMessages returns a list of <code>ReceivedTextMessage</code>, the list is sorted by createdAt descending.
+     * @param olderThanId If olderThanId is not empty or null only the received text messages older than that id are returned.
+     * @return <code>ReceivedTextMessageList</code>
+     */
+    ReceivedTextMessageList getReceivedTextMessages(String olderThanId) throws NotificationClientException;
 }

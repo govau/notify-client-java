@@ -13,6 +13,7 @@ This documentation is for developers interested in using this Java client to int
 * [Get a template by ID and version](#get-a-template-by-id-and-version)
 * [Get all templates](#get-all-templates)
 * [Generate a preview template](#generate-a-preview-template)
+* [Get all received text messages](#get-all-received-text-messages)
 
 ## Installation
 
@@ -63,7 +64,7 @@ Then add the Maven dependency to your project.
     <dependency>
         <groupId>uk.gov.service.notify</groupId>
         <artifactId>notifications-java-client</artifactId>
-        <version>3.7.0-RELEASE</version>
+        <version>3.8.0-RELEASE</version>
     </dependency>
 
 ```
@@ -82,7 +83,7 @@ repositories {
 }
 
 dependencies {
-    compile('uk.gov.service.notify:notifications-java-client:3.7.0-RELEASE')
+    compile('uk.gov.service.notify:notifications-java-client:3.8.0-RELEASE')
 }
 ```
 </details>
@@ -757,5 +758,51 @@ Map<String, String> personalisation = new HashMap<>();
 personalisation.put("name", "Jo");
 personalisation.put("reference_number", "13566");
 ```
+
+</details>
+
+## Get all received text messages
+
+```java
+ReceivedTextMessageList response = client.getReceievedTextMessages(olderThanId);
+```
+
+#### Response
+
+<details>
+<summary>
+Click here to expand for more information.
+</summary>
+
+If the request is successful, `response` will be a `ReceivedTextMessageList`:
+
+```java
+private List<ReceivedTextMessage> receivedTextMessages;
+private String currentPageLink;
+private String nextPageLink;
+```
+
+A `ReceivedTextMessage` will have the following properties -
+
+```java
+private UUID id;
+private String notifyNumber;
+private String userNumber;
+private UUID serviceId;
+private String content;
+private DateTime createdAt;
+
+```
+</details>
+
+#### Arguments
+<details>
+<summary>
+Click here to expand for more information.
+</summary>
+	
+##### `olderThanId`
+
+A String parameter, if null or empty all messages are returned. Otherwise you can filter to fetch all received text messages older than the given id.
 
 </details>

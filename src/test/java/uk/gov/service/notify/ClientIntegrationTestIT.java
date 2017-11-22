@@ -250,6 +250,32 @@ public class ClientIntegrationTestIT {
         assertTrue(template.getBody().contains(uniqueName));
     }
 
+    @Test
+    public void testGetReceivedTextMessages() throws NotificationClientException {
+        String apiKey = System.getenv("INBOUND_SMS_QUERY_KEY");
+        String baseUrl = System.getenv("NOTIFY_API_URL");
+        NotificationClient client = new NotificationClient(apiKey, baseUrl);
+
+        ReceivedTextMessageList response = client.getReceivedTextMessages(null);
+        assertFalse(response.getReceivedTextMessages().isEmpty());
+        assertNotNull(response.getCurrentPageLink());
+        ReceivedTextMessage receivedTextMessage = response.getReceivedTextMessages().get(0);
+        assertNotNull(receivedTextMessage.getId());
+        assertNotNull(receivedTextMessage.getNotifyNumber());
+        assertNotNull(receivedTextMessage.getUserNumber());
+        assertNotNull(receivedTextMessage.getContent());
+        assertNotNull(receivedTextMessage.getCreatedAt());
+        assertNotNull(receivedTextMessage.getServiceId());
+
+        testGetReceivedTextMessagesWithOlderThanId(receivedTextMessage.getId(), client, response.getReceivedTextMessages().size());
+    }
+
+    private void testGetReceivedTextMessagesWithOlderThanId(UUID id, NotificationClient client, int expectedCount) throws NotificationClientException {
+        ReceivedTextMessageList response = client.getReceivedTextMessages(id.toString());
+        assertNotNull(response.getReceivedTextMessages());
+        assertEquals(expectedCount-1, response.getReceivedTextMessages().size());
+    }
+
     private NotificationClient getClient(){
         String apiKey = System.getenv("API_KEY");
         String baseUrl = System.getenv("NOTIFY_API_URL");
