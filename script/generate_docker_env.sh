@@ -19,6 +19,7 @@ env_vars=(
     SMS_TEMPLATE_ID
     LETTER_TEMPLATE_ID
     EMAIL_REPLY_TO_ID
+    INBOUND_SMS_QUERY_KEY
 )
 
 for env_var in "${env_vars[@]}"; do
