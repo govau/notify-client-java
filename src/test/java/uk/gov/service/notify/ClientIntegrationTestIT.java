@@ -142,7 +142,7 @@ public class ClientIntegrationTestIT {
 
     @Test
     public void testSmsNotificationWithValidSmsSenderIdIT() throws NotificationClientException, InterruptedException {
-        NotificationClient client = getClient();
+        NotificationClient client = getClient("API_SENDING_KEY");
 
         HashMap<String, String> personalisation = new HashMap<>();
         String uniqueName = UUID.randomUUID().toString();
@@ -252,9 +252,7 @@ public class ClientIntegrationTestIT {
 
     @Test
     public void testGetReceivedTextMessages() throws NotificationClientException {
-        String apiKey = System.getenv("INBOUND_SMS_QUERY_KEY");
-        String baseUrl = System.getenv("NOTIFY_API_URL");
-        NotificationClient client = new NotificationClient(apiKey, baseUrl);
+        NotificationClient client = getClient("INBOUND_SMS_QUERY_KEY");
 
         ReceivedTextMessageList response = client.getReceivedTextMessages(null);
         assertFalse(response.getReceivedTextMessages().isEmpty());
@@ -278,6 +276,12 @@ public class ClientIntegrationTestIT {
 
     private NotificationClient getClient(){
         String apiKey = System.getenv("API_KEY");
+        String baseUrl = System.getenv("NOTIFY_API_URL");
+        return new NotificationClient(apiKey, baseUrl);
+    }
+
+    private NotificationClient getClient(String api_key){
+        String apiKey = System.getenv(api_key);
         String baseUrl = System.getenv("NOTIFY_API_URL");
         return new NotificationClient(apiKey, baseUrl);
     }

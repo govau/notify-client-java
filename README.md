@@ -764,7 +764,7 @@ personalisation.put("reference_number", "13566");
 ## Get all received text messages
 
 ```java
-ReceivedTextMessageList response = client.getReceievedTextMessages(olderThanId);
+ReceivedTextMessageList response = client.getReceivedTextMessages(olderThanId);
 ```
 
 #### Response
@@ -803,6 +803,6 @@ Click here to expand for more information.
 	
 ##### `olderThanId`
 
-A String parameter, if null or empty all messages are returned. Otherwise you can filter to fetch all received text messages older than the given id.
+A String parameter, if null or empty all messages are returned. Otherwise you can filter to fetch the latest 250 received text messages older than the given id.
 
 </details>
