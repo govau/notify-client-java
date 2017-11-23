@@ -1,3 +1,7 @@
+## 3.8.0-RELEASE
+* Added `getTextMessages(String olderThan)` method to fetch received text messages.
+  
+
 ## 3.7.0-RELEASE
 * Update to `NotificationsAPIClient.sendSms()`
     * added `smsSenderId`: an optional smsSenderId specified when adding text message senders under service settings, if this is not provided the default text message sender for the service will be used. `smsSenderId` can be omitted.

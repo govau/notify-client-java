@@ -142,7 +142,7 @@ public class ClientIntegrationTestIT {
 
     @Test
     public void testSmsNotificationWithValidSmsSenderIdIT() throws NotificationClientException, InterruptedException {
-        NotificationClient client = getClient();
+        NotificationClient client = getClient("API_SENDING_KEY");
 
         HashMap<String, String> personalisation = new HashMap<>();
         String uniqueName = UUID.randomUUID().toString();
@@ -250,8 +250,42 @@ public class ClientIntegrationTestIT {
         assertTrue(template.getBody().contains(uniqueName));
     }
 
+    @Test
+    public void testGetReceivedTextMessages() throws NotificationClientException {
+        NotificationClient client = getClient("INBOUND_SMS_QUERY_KEY");
+
+        ReceivedTextMessageList response = client.getReceivedTextMessages(null);
+        ReceivedTextMessage receivedTextMessage = assertReceivedTextMessageList(response);
+
+        testGetReceivedTextMessagesWithOlderThanId(receivedTextMessage.getId(), client);
+    }
+
+    private ReceivedTextMessage assertReceivedTextMessageList(ReceivedTextMessageList response) {
+        assertFalse(response.getReceivedTextMessages().isEmpty());
+        assertNotNull(response.getCurrentPageLink());
+        ReceivedTextMessage receivedTextMessage = response.getReceivedTextMessages().get(0);
+        assertNotNull(receivedTextMessage.getId());
+        assertNotNull(receivedTextMessage.getNotifyNumber());
+        assertNotNull(receivedTextMessage.getUserNumber());
+        assertNotNull(receivedTextMessage.getContent());
+        assertNotNull(receivedTextMessage.getCreatedAt());
+        assertNotNull(receivedTextMessage.getServiceId());
+        return receivedTextMessage;
+    }
+
+    private void testGetReceivedTextMessagesWithOlderThanId(UUID id, NotificationClient client) throws NotificationClientException {
+        ReceivedTextMessageList response = client.getReceivedTextMessages(id.toString());
+        assertReceivedTextMessageList(response);
+    }
+
     private NotificationClient getClient(){
         String apiKey = System.getenv("API_KEY");
+        String baseUrl = System.getenv("NOTIFY_API_URL");
+        return new NotificationClient(apiKey, baseUrl);
+    }
+
+    private NotificationClient getClient(String api_key){
+        String apiKey = System.getenv(api_key);
         String baseUrl = System.getenv("NOTIFY_API_URL");
         return new NotificationClient(apiKey, baseUrl);
     }

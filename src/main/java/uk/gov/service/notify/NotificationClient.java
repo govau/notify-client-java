@@ -233,6 +233,21 @@ public class NotificationClient implements NotificationClientApi {
         return new TemplatePreview(response);
     }
 
+    public ReceivedTextMessageList getReceivedTextMessages(String olderThanId) throws NotificationClientException {
+        try {
+            URIBuilder builder = new URIBuilder(baseUrl + "/v2/received-text-messages");
+            if (olderThanId != null && !olderThanId.isEmpty()) {
+                builder.addParameter("older_than", olderThanId);
+            }
+            HttpURLConnection conn = createConnectionAndSetHeaders(builder.toString(), "GET");
+            String response = performGetRequest(conn);
+            return new ReceivedTextMessageList(response);
+        } catch (URISyntaxException e){
+            LOGGER.log(Level.SEVERE, e.toString(), e);
+            throw new NotificationClientException(e);
+        }
+    }
+
     private String performPostRequest(HttpURLConnection conn, JSONObject body, int expectedStatusCode) throws NotificationClientException {
         try{
             OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
