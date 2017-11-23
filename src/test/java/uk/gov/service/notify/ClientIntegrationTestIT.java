@@ -255,6 +255,12 @@ public class ClientIntegrationTestIT {
         NotificationClient client = getClient("INBOUND_SMS_QUERY_KEY");
 
         ReceivedTextMessageList response = client.getReceivedTextMessages(null);
+        ReceivedTextMessage receivedTextMessage = assertReceivedTextMessageList(response);
+
+        testGetReceivedTextMessagesWithOlderThanId(receivedTextMessage.getId(), client);
+    }
+
+    private ReceivedTextMessage assertReceivedTextMessageList(ReceivedTextMessageList response) {
         assertFalse(response.getReceivedTextMessages().isEmpty());
         assertNotNull(response.getCurrentPageLink());
         ReceivedTextMessage receivedTextMessage = response.getReceivedTextMessages().get(0);
@@ -264,14 +270,12 @@ public class ClientIntegrationTestIT {
         assertNotNull(receivedTextMessage.getContent());
         assertNotNull(receivedTextMessage.getCreatedAt());
         assertNotNull(receivedTextMessage.getServiceId());
-
-        testGetReceivedTextMessagesWithOlderThanId(receivedTextMessage.getId(), client, response.getReceivedTextMessages().size());
+        return receivedTextMessage;
     }
 
-    private void testGetReceivedTextMessagesWithOlderThanId(UUID id, NotificationClient client, int expectedCount) throws NotificationClientException {
+    private void testGetReceivedTextMessagesWithOlderThanId(UUID id, NotificationClient client) throws NotificationClientException {
         ReceivedTextMessageList response = client.getReceivedTextMessages(id.toString());
-        assertNotNull(response.getReceivedTextMessages());
-        assertEquals(expectedCount-1, response.getReceivedTextMessages().size());
+        assertReceivedTextMessageList(response);
     }
 
     private NotificationClient getClient(){

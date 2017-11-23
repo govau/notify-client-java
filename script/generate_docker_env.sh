@@ -11,7 +11,6 @@ echo -n "" > docker.env
 
 env_vars=(
     NOTIFY_API_URL
-    SERVICE_ID
     API_KEY
     FUNCTIONAL_TEST_EMAIL
     FUNCTIONAL_TEST_NUMBER
@@ -21,6 +20,7 @@ env_vars=(
     EMAIL_REPLY_TO_ID
     INBOUND_SMS_QUERY_KEY
     API_SENDING_KEY
+    SMS_SENDER_ID
 )
 
 for env_var in "${env_vars[@]}"; do

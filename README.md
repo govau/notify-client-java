@@ -803,6 +803,6 @@ Click here to expand for more information.
 	
 ##### `olderThanId`
 
-A String parameter, if null or empty all messages are returned. Otherwise you can filter to fetch the latest 250 received text messages older than the given id.
+A String parameter, if null or empty 250 of the most recent messages are returned. Otherwise you can filter to fetch the latest 250 received text messages older than the given id.
 
 </details>
