@@ -45,22 +45,22 @@ public class SendLetterResponseTest {
                 "    \"body\": null, \n" +
                 "    \"subject\": \"Pre-compiled PDF\"\n" +
                 "  }, \n" +
-                "  \"id\": \"08c286fc-891b-46e3-8aad-727be53ba5d8\", \n" +
-                "  \"reference\": \"b294078f-0905-443c-820d-49721d76346c\", \n" +
+                "  \"id\": \"5f88e576-c97a-4262-a74b-f558882ca1c8\", \n" +
+                "  \"reference\": \"reference\", \n" +
                 "  \"scheduled_for\": null, \n" +
                 "  \"template\": {\n" +
-                "    \"id\": \"47621d11-56cc-4767-a785-31abfda4e12b\", \n" +
-                "    \"uri\": \"https://api.notify.works/services/70eac486-bf44-469c-8943-c2a13d670572/templates/47621d11-56cc-4767-a785-31abfda4e12b\", \n" +
+                "    \"id\": \"1d7b2fac-bb0d-46c6-96e7-d4afa6e22a92\", \n" +
+                "    \"uri\": \"https://api.notify.works/services/service_id/templates/template_id\", \n" +
                 "    \"version\": 1\n" +
                 "  }, \n" +
-                "  \"uri\": \"https://api.notify.works/v2/notifications/08c286fc-891b-46e3-8aad-727be53ba5d8\"\n" +
+                "  \"uri\": \"https://api.notify.works/v2/notifications/notification_id\"\n" +
                 "}";
 
         SendLetterResponse response = new SendLetterResponse(precompiledPdfResponse);
-        assertEquals("08c286fc-891b-46e3-8aad-727be53ba5d8", response.getNotificationId().toString());
-        assertEquals(Optional.of("b294078f-0905-443c-820d-49721d76346c"), response.getReference());
-        assertEquals("47621d11-56cc-4767-a785-31abfda4e12b", response.getTemplateId().toString());
-        assertEquals("https://api.notify.works/services/70eac486-bf44-469c-8943-c2a13d670572/templates/47621d11-56cc-4767-a785-31abfda4e12b", response.getTemplateUri());
+        assertEquals("5f88e576-c97a-4262-a74b-f558882ca1c8", response.getNotificationId().toString());
+        assertEquals(Optional.of("reference"), response.getReference());
+        assertEquals("1d7b2fac-bb0d-46c6-96e7-d4afa6e22a92", response.getTemplateId().toString());
+        assertEquals("https://api.notify.works/services/service_id/templates/template_id", response.getTemplateUri());
         assertEquals(1, response.getTemplateVersion());
         assertEquals(null, response.getBody());
         assertEquals("Pre-compiled PDF", response.getSubject());
