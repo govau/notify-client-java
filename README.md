@@ -64,7 +64,7 @@ Then add the Maven dependency to your project.
     <dependency>
         <groupId>uk.gov.service.notify</groupId>
         <artifactId>notifications-java-client</artifactId>
-        <version>3.8.0-RELEASE</version>
+        <version>3.9.0-RELEASE</version>
     </dependency>
 
 ```
@@ -83,7 +83,7 @@ repositories {
 }
 
 dependencies {
-    compile('uk.gov.service.notify:notifications-java-client:3.8.0-RELEASE')
+    compile('uk.gov.service.notify:notifications-java-client:3.9.0-RELEASE')
 }
 ```
 </details>
@@ -359,6 +359,86 @@ The fields `"address_line_1"`, `"address_line_2"` and `"postcode"` are required.
 
 #### `reference`
 An optional unique identifier for the notification or an identifier for a batch of notifications. `reference` can be an empty string or null.
+
+</details>
+
+
+### Precompiled Letter
+
+#### Method
+
+The letter must contain:
+
+- A reference for the letter, used to identify the letter (this MUST NOT contain personal data)
+- The file content - a base64 encoded string 
+
+A pre-compiled letter can be sent in two ways: as a Java File object or a base64 string.
+If a File object is provided it is converted to a base64 string by the client.
+
+<details>
+<summary>
+Java File Object - Click here to expand for more information.
+</summary>
+
+```java
+File precompiledPDF = new File("<path to your file>");
+SendLetterResponse response = client.sendPrecompiledLetter("Your reference", precompiledPDF)
+
+```
+</details>
+
+<details>
+<summary>
+Base64 Ecoded String - Click here to expand for more information.
+</summary>
+
+```java
+String base64EncodedPDFFile = "<base64 encoded string of a file>";
+SendLetterResponse response = client.SendLetterResponse sendPrecompiledLetter("Your reference", base64EncodedPDFFile);
+```
+</details>
+
+#### Response
+
+If the request is successful, the SendLetterResponse is returned from the client. Attributes of the SendLetterResponse are listed below.
+
+<details>
+<summary>
+Click here to expand for more information.
+</summary>
+
+```java
+	UUID notificationId;
+	Optional<String> reference;
+	UUID templateId;
+	int templateVersion;
+	String templateUri;
+	String body (for recompiled letters this is always null);
+	String subject;
+```
+
+Otherwise the client will raise a `NotificationClientException`:
+
+|`error.status_code`|`error.message`|
+|:---|:---|
+|`429`|`[{`<br>`"error": "RateLimitError",`<br>`"message": "Exceeded rate limit for key type live of 10 requests per 20 seconds"`<br>`}]`|
+|`429`|`[{`<br>`"error": "TooManyRequestsError",`<br>`"message": "Exceeded send limits (50) for today"`<br>`}]`|
+|`400`|`[{`<br>`"error": "BadRequestError",`<br>`"message": "Cannot send letters with a team api key"`<br>`]}`|
+|`400`|`[{`<br>`"error": "BadRequestError",`<br>`"message": "Cannot send letters when service is in trial mode - see https://www.notifications.service.gov.uk/trial-mode"`<br>`}]`|
+|`400`|`[{`<br>`"error": "ValidationError",`<br>`"message": "personalisation address_line_1 is a required property"`<br>`}]`|
+
+</details>
+
+#### Arguments
+
+<details>
+<summary>Click here to expand for more information.</summary>
+
+#### `reference`
+A unique identifier for the notification or an identifier for a batch of notifications. `reference` should not contain any personal information.
+
+#### `content`
+A base64 encoded string containing the file to be sent as a letter.
 
 </details>
 

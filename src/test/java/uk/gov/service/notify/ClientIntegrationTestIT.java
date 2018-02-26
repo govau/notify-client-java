@@ -1,7 +1,13 @@
 package uk.gov.service.notify;
 
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.FileUtils;
 import org.junit.Test;
+import org.mockito.internal.matchers.Equals;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Optional;
@@ -417,6 +423,59 @@ public class ClientIntegrationTestIT {
         assertFalse(notification.getLine5().isPresent());
         assertFalse(notification.getLine6().isPresent());
         assertFalse(notification.getPostcode().isPresent());
+    }
+
+    @Test
+    public void testSendPrecompiledLetterValidPDFFileIT() throws Exception {
+        String reference = UUID.randomUUID().toString();
+
+        ClassLoader classLoader = getClass().getClassLoader();
+        File file = new File(classLoader.getResource("one_page_pdf.pdf").getFile());
+        NotificationClient client = getClient();
+        SendLetterResponse response =  client.sendPrecompiledLetter(reference, file);
+
+        assertPrecompiledLetterResponse(reference, response);
+
+    }
+
+    @Test
+    public void testSendPrecompiledLetterValidPDFFileBase64StringIT() throws Exception {
+
+        String reference = UUID.randomUUID().toString();
+
+        ClassLoader classLoader = getClass().getClassLoader();
+        File file = new File(classLoader.getResource("one_page_pdf.pdf").getFile());
+
+        byte[] encoded = Base64.encodeBase64(FileUtils.readFileToByteArray(file));
+        String base64encodedString = new String(encoded, StandardCharsets.US_ASCII);
+
+        NotificationClient client = getClient();
+        SendLetterResponse response = client.sendPrecompiledLetter(
+                reference,
+                base64encodedString
+        );
+
+        assertPrecompiledLetterResponse(reference, response);
+    }
+
+    @Test(expected=NotificationClientException.class)
+    public void testSendPrecompiledLetterValidPDFBase64StringNotPDFDFileIT() throws Exception {
+        String reference = UUID.randomUUID().toString();
+
+        NotificationClient client = getClient();
+        SendLetterResponse response =  client.sendPrecompiledLetter(reference,
+                "qwertyuiopqwertyuiopqwertyuiopqwertyuiop");
+    }
+
+    private void assertPrecompiledLetterResponse(String reference, SendLetterResponse response) {
+        assertNotNull(response);
+        assertNotNull(response.getNotificationId());
+        assertNotNull(response.getTemplateVersion());
+        assertNotNull(response.getTemplateId());
+        assertNotNull(response.getTemplateUri());
+        assertNotNull(response.getTemplateVersion());
+        assertNotNull(response.getReference().get());
+        assertEquals(response.getReference().get(), reference);
     }
 
 }

@@ -2,17 +2,17 @@ package uk.gov.service.notify;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.net.*;
+import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.FileUtils;
 import org.apache.http.client.utils.URIBuilder;
 
 import org.json.JSONObject;
@@ -87,7 +87,11 @@ public class NotificationClient implements NotificationClientApi {
         }
     }
 
-    public NotificationClient(final String apiKey, final String baseUrl, final Proxy proxy, final SSLContext sslContext){
+    public NotificationClient(final String apiKey,
+                              final String baseUrl,
+                              final Proxy proxy,
+                              final SSLContext sslContext){
+
         this.apiKey = extractApiKey(apiKey);
         this.serviceId = extractServiceId(apiKey);
         this.baseUrl = baseUrl;
@@ -122,13 +126,26 @@ public class NotificationClient implements NotificationClientApi {
         return proxy;
     }
 
-    public SendEmailResponse sendEmail(String templateId, String emailAddress, Map<String, String> personalisation, String reference) throws NotificationClientException {
+    public SendEmailResponse sendEmail(String templateId,
+                                       String emailAddress,
+                                       Map<String, String> personalisation,
+                                       String reference) throws NotificationClientException {
         return sendEmail(templateId, emailAddress, personalisation, reference, "");
     }
 
     @Override
-    public SendEmailResponse sendEmail(String templateId, String emailAddress, Map<String, String> personalisation, String reference, String emailReplyToId) throws NotificationClientException {
-        JSONObject body = createBodyForPostRequest(templateId, null, emailAddress, personalisation, reference);
+    public SendEmailResponse sendEmail(String templateId,
+                                       String emailAddress,
+                                       Map<String, String> personalisation,
+                                       String reference,
+                                       String emailReplyToId) throws NotificationClientException {
+
+        JSONObject body = createBodyForPostRequest(templateId,
+                null,
+                emailAddress,
+                personalisation,
+                reference,
+                null);
 
         if(emailReplyToId != null && !emailReplyToId.isEmpty())
         {
@@ -144,8 +161,19 @@ public class NotificationClient implements NotificationClientApi {
         return sendSms(templateId, phoneNumber, personalisation, reference, "");
     }
 
-    public SendSmsResponse sendSms(String templateId, String phoneNumber, Map<String, String> personalisation, String reference, String smsSenderId) throws NotificationClientException {
-        JSONObject body = createBodyForPostRequest(templateId, phoneNumber, null, personalisation, reference);
+    public SendSmsResponse sendSms(String templateId,
+                                   String phoneNumber,
+                                   Map<String, String> personalisation,
+                                   String reference,
+                                   String smsSenderId) throws NotificationClientException {
+
+        JSONObject body = createBodyForPostRequest(templateId,
+                phoneNumber,
+                null,
+                personalisation,
+                reference,
+                null);
+
         if( smsSenderId != null && !smsSenderId.isEmpty()){
             body.put("sms_sender_id", smsSenderId);
         }
@@ -155,7 +183,7 @@ public class NotificationClient implements NotificationClientApi {
     }
 
     public SendLetterResponse sendLetter(String templateId, Map<String, String> personalisation, String reference) throws NotificationClientException {
-        JSONObject body = createBodyForPostRequest(templateId, null, null, personalisation, reference);
+        JSONObject body = createBodyForPostRequest(templateId, null, null, personalisation, reference, null);
         HttpURLConnection conn = createConnectionAndSetHeaders(baseUrl + "/v2/notifications/letter", "POST");
         String response = performPostRequest(conn, body, HttpsURLConnection.HTTP_CREATED);
         return new SendLetterResponse(response);
@@ -329,21 +357,38 @@ public class NotificationClient implements NotificationClientApi {
         return conn;
     }
 
-    private JSONObject createBodyForPostRequest(final String templateId, final String phoneNumber, final String emailAddress, final Map<String, String> personalisation, final String reference) {
+    private JSONObject createBodyForPostRequest(final String templateId,
+                                                final String phoneNumber,
+                                                final String emailAddress,
+                                                final Map<String, String> personalisation,
+                                                final String reference,
+                                                final String encodedFileData) {
         JSONObject body = new JSONObject();
+
         if(phoneNumber != null && !phoneNumber.isEmpty()) {
             body.put("phone_number", phoneNumber);
         }
+
         if(emailAddress != null && !emailAddress.isEmpty()) {
             body.put("email_address", emailAddress);
         }
-        body.put("template_id", templateId);
+
+        if(templateId != null && !templateId.isEmpty()) {
+            body.put("template_id", templateId);
+        }
+
         if (personalisation != null && !personalisation.isEmpty()) {
             body.put("personalisation", new JSONObject(personalisation));
         }
+
         if(reference != null && !reference.isEmpty()){
             body.put("reference", reference);
         }
+
+        if(encodedFileData != null && !encodedFileData.isEmpty()) {
+            body.put("content", encodedFileData);
+        }
+
         return body;
     }
 
@@ -389,22 +434,96 @@ public class NotificationClient implements NotificationClientApi {
     private String getVersion(){
         InputStream input = null;
         Properties prop = new Properties();
-        try {
+        try
+        {
             input = getClass().getClassLoader().getResourceAsStream("application.properties");
 
             prop.load(input);
 
-        } catch (IOException ex) {
+        }
+        catch (IOException ex)
+        {
             ex.printStackTrace();
-        } finally {
-            if (input != null) {
-                try {
+        }
+        finally
+        {
+            if (input != null)
+            {
+                try
+                {
                     input.close();
-                } catch (IOException e) {
+                }
+                catch (IOException e)
+                {
                     e.printStackTrace();
                 }
             }
         }
         return prop.getProperty("project.version");
+    }
+
+    @Override
+    public SendLetterResponse sendPrecompiledLetter(String reference, String base64EncodedPDFFile) throws NotificationClientException
+    {
+        if(reference == null || reference.trim().isEmpty() )
+        {
+            throw new NotificationClientException("reference cannot be null or empty");
+        }
+
+        if (base64EncodedPDFFile == null || base64EncodedPDFFile.trim().isEmpty() )
+        {
+            throw new NotificationClientException("precompiledPDF cannot be null or empty");
+        }
+
+        if(!PdfUtils.isBase64StringPDF(base64EncodedPDFFile))
+        {
+            throw new NotificationClientException("base64EncodedPDFFile is not a PDF");
+        }
+
+        JSONObject body = createBodyForPostRequest(null,
+                null,
+                null,
+                null,
+                reference,
+                base64EncodedPDFFile);
+
+        HttpURLConnection conn = createConnectionAndSetHeaders(
+                baseUrl + "/v2/notifications/letter",
+                "POST"
+        );
+
+        String response = performPostRequest(conn, body, HttpsURLConnection.HTTP_CREATED);
+        return new SendLetterResponse(response);
+
+    }
+
+    @Override
+    public SendLetterResponse sendPrecompiledLetter(String reference, File precompiledPDF) throws NotificationClientException
+    {
+
+        if (precompiledPDF == null)
+        {
+            throw new NotificationClientException("precompiledPDF cannot be null");
+        }
+
+        if(!PdfUtils.isFilePDF(precompiledPDF))
+        {
+            throw new NotificationClientException("precompiledPDF must be a valid PDF file");
+        }
+
+        byte[] encoded;
+
+        try
+        {
+            encoded = Base64.encodeBase64(FileUtils.readFileToByteArray(precompiledPDF));
+        }
+        catch (IOException e)
+        {
+            throw new NotificationClientException("Error opening precompiledPDF file for base64 encoding", e);
+        }
+
+        String base64encodedString = new String(encoded, StandardCharsets.US_ASCII);
+
+        return this.sendPrecompiledLetter(reference, base64encodedString);
     }
 }

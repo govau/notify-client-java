@@ -20,8 +20,8 @@ public class SendLetterResponse {
         notificationId = UUID.fromString(data.getString("id"));
         reference = data.isNull("reference") ? null : data.getString("reference");
         JSONObject content = data.getJSONObject("content");
-        body = content.getString("body");
-        subject = content.getString("subject");
+        body = tryToGetString(content, "body");
+        subject = tryToGetString(content, "subject");
         JSONObject template = data.getJSONObject("template");
         templateId = UUID.fromString(template.getString("id"));
         templateVersion = template.getInt("version");
@@ -67,5 +67,22 @@ public class SendLetterResponse {
                 ", body='" + body + '\'' +
                 ", subject='" + subject +
                 '}';
+    }
+
+    private String tryToGetString(JSONObject jsonObj, String key)
+    {
+        if (jsonObj.has(key))
+        {
+            if(jsonObj.opt(key).toString() == "null")
+            {
+                return null;
+            }
+            else
+            {
+                return jsonObj.opt(key).toString();
+            }
+        }
+
+        return null;
     }
 }

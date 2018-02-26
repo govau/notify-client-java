@@ -1,6 +1,11 @@
+## 3.9.0-RELEASE
+* `sendPrecompiledLetter` added to NotificationClient
+  - The client can now send PDF files which conform to the Notify printing template
+  - Send a Java File object or a base64 encoded string
+  - 'reference' must be provided to identify the document
+
 ## 3.8.0-RELEASE
 * Added `getTextMessages(String olderThan)` method to fetch received text messages.
-  
 
 ## 3.7.0-RELEASE
 * Update to `NotificationsAPIClient.sendSms()`

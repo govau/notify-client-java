@@ -37,4 +37,32 @@ public class SendLetterResponseTest {
         assertEquals("hello Fred", response.getBody());
         assertEquals("Reminder for thing", response.getSubject());
     }
+
+    @Test
+    public void testNotificationResponseForPrecompiledLetterResponse(){
+        String precompiledPdfResponse = "{\n" +
+                "  \"content\": {\n" +
+                "    \"body\": null, \n" +
+                "    \"subject\": \"Pre-compiled PDF\"\n" +
+                "  }, \n" +
+                "  \"id\": \"08c286fc-891b-46e3-8aad-727be53ba5d8\", \n" +
+                "  \"reference\": \"b294078f-0905-443c-820d-49721d76346c\", \n" +
+                "  \"scheduled_for\": null, \n" +
+                "  \"template\": {\n" +
+                "    \"id\": \"47621d11-56cc-4767-a785-31abfda4e12b\", \n" +
+                "    \"uri\": \"https://api.notify.works/services/70eac486-bf44-469c-8943-c2a13d670572/templates/47621d11-56cc-4767-a785-31abfda4e12b\", \n" +
+                "    \"version\": 1\n" +
+                "  }, \n" +
+                "  \"uri\": \"https://api.notify.works/v2/notifications/08c286fc-891b-46e3-8aad-727be53ba5d8\"\n" +
+                "}";
+
+        SendLetterResponse response = new SendLetterResponse(precompiledPdfResponse);
+        assertEquals("08c286fc-891b-46e3-8aad-727be53ba5d8", response.getNotificationId().toString());
+        assertEquals(Optional.of("b294078f-0905-443c-820d-49721d76346c"), response.getReference());
+        assertEquals("47621d11-56cc-4767-a785-31abfda4e12b", response.getTemplateId().toString());
+        assertEquals("https://api.notify.works/services/70eac486-bf44-469c-8943-c2a13d670572/templates/47621d11-56cc-4767-a785-31abfda4e12b", response.getTemplateUri());
+        assertEquals(1, response.getTemplateVersion());
+        assertEquals(null, response.getBody());
+        assertEquals("Pre-compiled PDF", response.getSubject());
+    }
 }
