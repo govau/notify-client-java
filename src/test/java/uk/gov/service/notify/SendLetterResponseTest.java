@@ -37,4 +37,32 @@ public class SendLetterResponseTest {
         assertEquals("hello Fred", response.getBody());
         assertEquals("Reminder for thing", response.getSubject());
     }
+
+    @Test
+    public void testNotificationResponseForPrecompiledLetterResponse(){
+        String precompiledPdfResponse = "{\n" +
+                "  \"content\": {\n" +
+                "    \"body\": null, \n" +
+                "    \"subject\": \"Pre-compiled PDF\"\n" +
+                "  }, \n" +
+                "  \"id\": \"5f88e576-c97a-4262-a74b-f558882ca1c8\", \n" +
+                "  \"reference\": \"reference\", \n" +
+                "  \"scheduled_for\": null, \n" +
+                "  \"template\": {\n" +
+                "    \"id\": \"1d7b2fac-bb0d-46c6-96e7-d4afa6e22a92\", \n" +
+                "    \"uri\": \"https://api.notify.works/services/service_id/templates/template_id\", \n" +
+                "    \"version\": 1\n" +
+                "  }, \n" +
+                "  \"uri\": \"https://api.notify.works/v2/notifications/notification_id\"\n" +
+                "}";
+
+        SendLetterResponse response = new SendLetterResponse(precompiledPdfResponse);
+        assertEquals("5f88e576-c97a-4262-a74b-f558882ca1c8", response.getNotificationId().toString());
+        assertEquals(Optional.of("reference"), response.getReference());
+        assertEquals("1d7b2fac-bb0d-46c6-96e7-d4afa6e22a92", response.getTemplateId().toString());
+        assertEquals("https://api.notify.works/services/service_id/templates/template_id", response.getTemplateUri());
+        assertEquals(1, response.getTemplateVersion());
+        assertEquals(null, response.getBody());
+        assertEquals("Pre-compiled PDF", response.getSubject());
+    }
 }

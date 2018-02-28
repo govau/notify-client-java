@@ -1,10 +1,14 @@
 package uk.gov.service.notify;
 
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.FileUtils;
 import org.junit.Test;
 
 import javax.net.ssl.SSLContext;
+import java.io.File;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
+import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
 
@@ -12,6 +16,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 public class NotificationClientTest {
+
     private final String serviceId = UUID.randomUUID().toString();
 
     private final String apiKey = UUID.randomUUID().toString();
@@ -43,7 +48,7 @@ public class NotificationClientTest {
     @Test
     public void testCreateNotificationClientSetsUserAgent() {
         NotificationClient client = new NotificationClient(combinedApiKey, baseUrl);
-        assertEquals(client.getUserAgent(), "NOTIFY-API-JAVA-CLIENT/3.8.0-RELEASE");
+        assertEquals(client.getUserAgent(), "NOTIFY-API-JAVA-CLIENT/3.9.0-RELEASE");
     }
 
     @Test
@@ -66,5 +71,53 @@ public class NotificationClientTest {
         assertEquals(client.getServiceId(), serviceId);
         assertEquals(client.getBaseUrl(), baseUrl);
         assertNull(client.getProxy());
+    }
+
+    @Test(expected = NotificationClientException.class)
+    public void sendPrecompiledLetterReferenceIsNull() throws Exception {
+        NotificationClient client = new NotificationClient(combinedApiKey, baseUrl);
+        client.sendPrecompiledLetter(null, "this is a string");
+    }
+
+    @Test(expected = NotificationClientException.class)
+    public void sendPrecompiledLetterReferenceIsEmpty() throws Exception {
+        NotificationClient client = new NotificationClient(combinedApiKey, baseUrl);
+        client.sendPrecompiledLetter(" ", "this is a string");
+    }
+
+    @Test(expected = NotificationClientException.class)
+    public void sendPrecompiledLetterBase64EncodedPDFFileIsNull() throws Exception {
+        NotificationClient client = new NotificationClient(combinedApiKey, baseUrl);
+        client.sendPrecompiledLetter("reference", (File)null);
+    }
+
+    @Test(expected = NotificationClientException.class)
+    public void sendPrecompiledLetterBase64EncodedPDFFileIsStringNull() throws Exception {
+        NotificationClient client = new NotificationClient(combinedApiKey, baseUrl);
+        client.sendPrecompiledLetter("reference", (String)null);
+    }
+
+    @Test(expected = NotificationClientException.class)
+    public void sendPrecompiledLetterBase64EncodedPDFFileIsEmpty() throws Exception {
+        NotificationClient client = new NotificationClient(combinedApiKey, baseUrl);
+        client.sendPrecompiledLetter("reference", " ");
+    }
+
+    @Test(expected = NotificationClientException.class)
+    public void sendPrecompiledLetterNotPDF() throws Exception {
+        ClassLoader classLoader = getClass().getClassLoader();
+        File file = new File(classLoader.getResource("not_a_pdf.txt").getFile());
+        NotificationClient client = new NotificationClient(combinedApiKey, baseUrl);
+        client.sendPrecompiledLetter("reference", file);
+    }
+
+    @Test(expected = NotificationClientException.class)
+    public void sendPrecompiledLetterBase64StringNotPDF() throws Exception {
+        ClassLoader classLoader = getClass().getClassLoader();
+        File file = new File(classLoader.getResource("not_a_pdf.txt").getFile());
+        byte[] encoded = Base64.encodeBase64(FileUtils.readFileToByteArray(file));
+        String base64encodedString = new String(encoded, StandardCharsets.US_ASCII);
+        NotificationClient client = new NotificationClient(combinedApiKey, baseUrl);
+        client.sendPrecompiledLetter("reference", base64encodedString);
     }
 }
