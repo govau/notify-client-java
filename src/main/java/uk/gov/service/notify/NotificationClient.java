@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.utils.URIBuilder;
 
 import org.json.JSONObject;
@@ -465,12 +466,12 @@ public class NotificationClient implements NotificationClientApi {
     @Override
     public SendLetterResponse sendPrecompiledLetter(String reference, String base64EncodedPDFFile) throws NotificationClientException
     {
-        if(reference == null || reference.trim().isEmpty() )
+        if( StringUtils.isBlank(reference) )
         {
             throw new NotificationClientException("reference cannot be null or empty");
         }
 
-        if (base64EncodedPDFFile == null || base64EncodedPDFFile.trim().isEmpty() )
+        if ( StringUtils.isBlank(base64EncodedPDFFile) )
         {
             throw new NotificationClientException("precompiledPDF cannot be null or empty");
         }
