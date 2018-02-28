@@ -31,7 +31,7 @@ public class PdfUtilsTest
     public void testIsFilePDFThrowException() throws Exception
     {
         File file = new File("this is a path");
-        assertFalse(PdfUtils.isFilePDF(file));
+        PdfUtils.isFilePDF(file);
     }
 
     @Test
