@@ -92,27 +92,13 @@ public interface NotificationClientApi {
      * @param reference                 A reference specified by the service for the notification. Get all notifications can be filtered by this reference.
      *                                  This reference can be unique or used used to refer to a batch of notifications.
      *                                  Cannot be an empty string or null for precompiled PDF files.
-     * @param base64EncodedPDFFile      A string containing a base64 encoded string containing a PDF conforming to the Notify standards for printing.
-     *                                  The String cannot be null or empty.
-     * @return <code>SendLetterResponse</code>
-     *
-     * @throws NotificationClientException
-     */
-    SendLetterResponse sendPrecompiledLetter(String reference, String base64EncodedPDFFile) throws NotificationClientException;
-
-    /**
-     * The sendPrecompiledLetter method will create an HTTPS POST request. A JWT token will be created and added as an Authorization header to the request.
-     *
-     * @param reference                 A reference specified by the service for the notification. Get all notifications can be filtered by this reference.
-     *                                  This reference can be unique or used used to refer to a batch of notifications.
-     *                                  Cannot be an empty string or null for precompiled PDF files.
      * @param precompiledPDF            A file containing a PDF conforming to the Notify standards for printing.
      *                                  The file must be a PDF and cannot be null.
      * @return <code>SendLetterResponse</code>
      *
      * @throws NotificationClientException
      */
-    SendLetterResponse sendPrecompiledLetter(String reference, File precompiledPDF) throws NotificationClientException;
+    LetterResponse sendPrecompiledLetter(String reference, File precompiledPDF) throws NotificationClientException;
 
     /**
      * The getNotificationById method will return a <code>Notification</code> for a given notification id.

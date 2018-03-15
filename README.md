@@ -365,6 +365,8 @@ An optional unique identifier for the notification or an identifier for a batch 
 
 ### Precompiled Letter
 
+This is an invitation only feature, for more information contact us via[https://www.notifications.service.gov.uk/support](https://www.notifications.service.gov.uk/support).
+
 #### Method
 
 The letter must contain:
@@ -387,17 +389,6 @@ SendLetterResponse response = client.sendPrecompiledLetter("Your reference", pre
 ```
 </details>
 
-<details>
-<summary>
-Base64 Ecoded String - Click here to expand for more information.
-</summary>
-
-```java
-String base64EncodedPDFFile = "<base64 encoded string of a file>";
-SendLetterResponse response = client.SendLetterResponse sendPrecompiledLetter("Your reference", base64EncodedPDFFile);
-```
-</details>
-
 #### Response
 
 If the request is successful, the SendLetterResponse is returned from the client. Attributes of the SendLetterResponse are listed below.
@@ -409,12 +400,7 @@ Click here to expand for more information.
 
 ```java
 	UUID notificationId;
-	Optional<String> reference;
-	UUID templateId;
-	int templateVersion;
-	String templateUri;
-	String body (for recompiled letters this is always null);
-	String subject;
+	<String> reference;
 ```
 
 Otherwise the client will raise a `NotificationClientException`:
