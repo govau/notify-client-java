@@ -384,14 +384,14 @@ Java File Object - Click here to expand for more information.
 
 ```java
 File precompiledPDF = new File("<path to your file>");
-SendLetterResponse response = client.sendPrecompiledLetter("Your reference", precompiledPDF)
+LetterResponse response = client.sendPrecompiledLetter("Your reference", precompiledPDF)
 
 ```
 </details>
 
 #### Response
 
-If the request is successful, the SendLetterResponse is returned from the client. Attributes of the SendLetterResponse are listed below.
+If the request is successful, the LetterResponse is returned from the client. Attributes of the LetterResponse are listed below.
 
 <details>
 <summary>

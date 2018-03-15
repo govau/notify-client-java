@@ -94,7 +94,7 @@ public interface NotificationClientApi {
      *                                  Cannot be an empty string or null for precompiled PDF files.
      * @param precompiledPDF            A file containing a PDF conforming to the Notify standards for printing.
      *                                  The file must be a PDF and cannot be null.
-     * @return <code>SendLetterResponse</code>
+     * @return <code>LetterResponse</code>
      *
      * @throws NotificationClientException
      */

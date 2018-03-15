@@ -463,7 +463,7 @@ public class NotificationClient implements NotificationClientApi {
         return prop.getProperty("project.version");
     }
 
-    private SendLetterResponse sendPrecompiledLetter(String reference, String base64EncodedPDFFile) throws NotificationClientException
+    private LetterResponse sendPrecompiledLetter(String reference, String base64EncodedPDFFile) throws NotificationClientException
     {
         if( StringUtils.isBlank(reference) )
         {
@@ -493,7 +493,7 @@ public class NotificationClient implements NotificationClientApi {
         );
 
         String response = performPostRequest(conn, body, HttpsURLConnection.HTTP_CREATED);
-        return new SendLetterResponse(response);
+        return new LetterResponse(response);
 
     }
 
