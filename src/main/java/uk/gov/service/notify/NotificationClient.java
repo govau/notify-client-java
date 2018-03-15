@@ -498,7 +498,7 @@ public class NotificationClient implements NotificationClientApi {
     }
 
     @Override
-    public SendLetterResponse sendPrecompiledLetter(String reference, File precompiledPDF) throws NotificationClientException
+    public LetterResponse sendPrecompiledLetter(String reference, File precompiledPDF) throws NotificationClientException
     {
 
         if (precompiledPDF == null)

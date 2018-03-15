@@ -430,13 +430,13 @@ public class ClientIntegrationTestIT {
         ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(classLoader.getResource("one_page_pdf.pdf").getFile());
         NotificationClient client = getClient();
-        SendLetterResponse response =  client.sendPrecompiledLetter(reference, file);
+        LetterResponse response =  client.sendPrecompiledLetter(reference, file);
 
         assertPrecompiledLetterResponse(reference, response);
 
     }
 
-    private void assertPrecompiledLetterResponse(String reference, SendLetterResponse response) {
+    private void assertPrecompiledLetterResponse(String reference, LetterResponse response) {
         assertNotNull(response);
         assertNotNull(response.getNotificationId());
         assertEquals(response.getReference().get(), reference);
