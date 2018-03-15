@@ -1,3 +1,7 @@
+## 3.9.1-RELEASE
+* Response to `sendPrecompiledLetter` updated
+  - The response now only includes the notification id and the client reference
+
 ## 3.9.0-RELEASE
 * `sendPrecompiledLetter` added to NotificationClient
   - The client can now send PDF files which conform to the Notify printing template
