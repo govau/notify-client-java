@@ -48,7 +48,7 @@ public class NotificationClientTest {
     @Test
     public void testCreateNotificationClientSetsUserAgent() {
         NotificationClient client = new NotificationClient(combinedApiKey, baseUrl);
-        assertEquals(client.getUserAgent(), "NOTIFY-API-JAVA-CLIENT/3.9.0-RELEASE");
+        assertEquals(client.getUserAgent(), "NOTIFY-API-JAVA-CLIENT/3.9.1-RELEASE");
     }
 
     @Test
@@ -74,33 +74,9 @@ public class NotificationClientTest {
     }
 
     @Test(expected = NotificationClientException.class)
-    public void sendPrecompiledLetterReferenceIsNull() throws Exception {
-        NotificationClient client = new NotificationClient(combinedApiKey, baseUrl);
-        client.sendPrecompiledLetter(null, "this is a string");
-    }
-
-    @Test(expected = NotificationClientException.class)
-    public void sendPrecompiledLetterReferenceIsEmpty() throws Exception {
-        NotificationClient client = new NotificationClient(combinedApiKey, baseUrl);
-        client.sendPrecompiledLetter(" ", "this is a string");
-    }
-
-    @Test(expected = NotificationClientException.class)
     public void sendPrecompiledLetterBase64EncodedPDFFileIsNull() throws Exception {
         NotificationClient client = new NotificationClient(combinedApiKey, baseUrl);
-        client.sendPrecompiledLetter("reference", (File)null);
-    }
-
-    @Test(expected = NotificationClientException.class)
-    public void sendPrecompiledLetterBase64EncodedPDFFileIsStringNull() throws Exception {
-        NotificationClient client = new NotificationClient(combinedApiKey, baseUrl);
-        client.sendPrecompiledLetter("reference", (String)null);
-    }
-
-    @Test(expected = NotificationClientException.class)
-    public void sendPrecompiledLetterBase64EncodedPDFFileIsEmpty() throws Exception {
-        NotificationClient client = new NotificationClient(combinedApiKey, baseUrl);
-        client.sendPrecompiledLetter("reference", " ");
+        client.sendPrecompiledLetter("reference", null);
     }
 
     @Test(expected = NotificationClientException.class)
@@ -109,15 +85,5 @@ public class NotificationClientTest {
         File file = new File(classLoader.getResource("not_a_pdf.txt").getFile());
         NotificationClient client = new NotificationClient(combinedApiKey, baseUrl);
         client.sendPrecompiledLetter("reference", file);
-    }
-
-    @Test(expected = NotificationClientException.class)
-    public void sendPrecompiledLetterBase64StringNotPDF() throws Exception {
-        ClassLoader classLoader = getClass().getClassLoader();
-        File file = new File(classLoader.getResource("not_a_pdf.txt").getFile());
-        byte[] encoded = Base64.encodeBase64(FileUtils.readFileToByteArray(file));
-        String base64encodedString = new String(encoded, StandardCharsets.US_ASCII);
-        NotificationClient client = new NotificationClient(combinedApiKey, baseUrl);
-        client.sendPrecompiledLetter("reference", base64encodedString);
     }
 }

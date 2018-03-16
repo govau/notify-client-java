@@ -21,7 +21,7 @@ import org.json.JSONObject;
 public class NotificationClient implements NotificationClientApi {
 
     private static final Logger LOGGER = Logger.getLogger(NotificationClient.class.toString());
-    public static final String LIVE_BASE_URL = "https://api.notifications.service.gov.uk";
+    private static final String LIVE_BASE_URL = "https://api.notifications.service.gov.uk";
 
     private final String apiKey;
     private final String serviceId;
@@ -57,7 +57,7 @@ public class NotificationClient implements NotificationClientApi {
     /**
      * This client constructor is used for testing on other environments, used by the GOV.UK Notify team.
      * @param apiKey Generate an API key by signing in to GOV.UK Notify, https://www.notifications.service.gov.uk, and going to the **API integration** page
-     * @param baseUrl
+     * @param baseUrl base URL, defaults to https://api.notifications.service.gov.uk
      */
     public NotificationClient(final String apiKey, final String baseUrl) {
         this(
@@ -72,7 +72,7 @@ public class NotificationClient implements NotificationClientApi {
      *
      * @param apiKey Generate an API key by signing in to GOV.UK Notify, https://www.notifications.service.gov.uk, and going to the **API integration** page
      * @param baseUrl base URL, defaults to https://api.notifications.service.gov.uk
-     * @param proxy
+     * @param proxy Proxy used on the http requests
      */
     public NotificationClient(final String apiKey, final String baseUrl, final Proxy proxy) {
         this(
@@ -463,8 +463,7 @@ public class NotificationClient implements NotificationClientApi {
         return prop.getProperty("project.version");
     }
 
-    @Override
-    public SendLetterResponse sendPrecompiledLetter(String reference, String base64EncodedPDFFile) throws NotificationClientException
+    private LetterResponse sendPrecompiledLetter(String reference, String base64EncodedPDFFile) throws NotificationClientException
     {
         if( StringUtils.isBlank(reference) )
         {
@@ -494,12 +493,12 @@ public class NotificationClient implements NotificationClientApi {
         );
 
         String response = performPostRequest(conn, body, HttpsURLConnection.HTTP_CREATED);
-        return new SendLetterResponse(response);
+        return new LetterResponse(response);
 
     }
 
     @Override
-    public SendLetterResponse sendPrecompiledLetter(String reference, File precompiledPDF) throws NotificationClientException
+    public LetterResponse sendPrecompiledLetter(String reference, File precompiledPDF) throws NotificationClientException
     {
 
         if (precompiledPDF == null)

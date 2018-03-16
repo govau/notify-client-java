@@ -125,7 +125,7 @@ public class ClientIntegrationTestIT {
         catch (final NotificationClientException ex)
         {
             exceptionThrown = true;
-            assertTrue(ex.getMessage().toString().contains("does not exist in database for service id"));
+            assertTrue(ex.getMessage().contains("does not exist in database for service id"));
         }
 
         assertTrue(exceptionThrown);
@@ -189,7 +189,7 @@ public class ClientIntegrationTestIT {
         catch (final NotificationClientException ex)
         {
             exceptionThrown = true;
-            assertTrue(ex.getMessage().toString().contains("does not exist in database for service id"));
+            assertTrue(ex.getMessage().contains("does not exist in database for service id"));
         }
 
         assertTrue(exceptionThrown);
@@ -430,49 +430,15 @@ public class ClientIntegrationTestIT {
         ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(classLoader.getResource("one_page_pdf.pdf").getFile());
         NotificationClient client = getClient();
-        SendLetterResponse response =  client.sendPrecompiledLetter(reference, file);
+        LetterResponse response =  client.sendPrecompiledLetter(reference, file);
 
         assertPrecompiledLetterResponse(reference, response);
 
     }
 
-    @Test
-    public void testSendPrecompiledLetterValidPDFFileBase64StringIT() throws Exception {
-
-        String reference = UUID.randomUUID().toString();
-
-        ClassLoader classLoader = getClass().getClassLoader();
-        File file = new File(classLoader.getResource("one_page_pdf.pdf").getFile());
-
-        byte[] encoded = Base64.encodeBase64(FileUtils.readFileToByteArray(file));
-        String base64encodedString = new String(encoded, StandardCharsets.US_ASCII);
-
-        NotificationClient client = getClient();
-        SendLetterResponse response = client.sendPrecompiledLetter(
-                reference,
-                base64encodedString
-        );
-
-        assertPrecompiledLetterResponse(reference, response);
-    }
-
-    @Test(expected=NotificationClientException.class)
-    public void testSendPrecompiledLetterValidPDFBase64StringNotPDFDFileIT() throws Exception {
-        String reference = UUID.randomUUID().toString();
-
-        NotificationClient client = getClient();
-        SendLetterResponse response =  client.sendPrecompiledLetter(reference,
-                "qwertyuiopqwertyuiopqwertyuiopqwertyuiop");
-    }
-
-    private void assertPrecompiledLetterResponse(String reference, SendLetterResponse response) {
+    private void assertPrecompiledLetterResponse(String reference, LetterResponse response) {
         assertNotNull(response);
         assertNotNull(response.getNotificationId());
-        assertNotNull(response.getTemplateVersion());
-        assertNotNull(response.getTemplateId());
-        assertNotNull(response.getTemplateUri());
-        assertNotNull(response.getTemplateVersion());
-        assertNotNull(response.getReference().get());
         assertEquals(response.getReference().get(), reference);
     }
 
