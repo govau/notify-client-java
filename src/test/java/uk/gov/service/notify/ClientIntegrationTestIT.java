@@ -380,7 +380,7 @@ public class ClientIntegrationTestIT {
         }
 
         if(notification.getNotificationType().equals("letter")){
-            assertEquals("received", notification.getStatus());
+            assertTrue("expected status to be accepted or received", Arrays.asList("accepted", "received").contains(notification.getStatus()));
         } else {
             assertTrue("expected status to be created, sending or delivered", Arrays.asList("created", "sending", "delivered").contains(notification.getStatus()));
         }
