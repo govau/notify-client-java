@@ -1,12 +1,12 @@
 # Java client documentation
 
-This documentation is for developers interested in using this Java client to integrate their government service with GOV.UK Notify.
+This documentation is for developers interested in using GOV.UK Notify to send emails, text messages or letters.
 
 # Set up the client
 
 ## Install the client
 
-The notifications-java-client deploys to Bintray.
+The `notifications-java-client` deploys to Bintray.
 
 Go to the [GOV.UK Notify Java client page on Bintray](https://bintray.com/gov-uk-notify/maven/notifications-java-client):
 
@@ -55,7 +55,7 @@ String mobileNumber="+447900900123";
 
 #### templateId (required)
 
-The ID of the template. You can find this by logging into [GOV.UK Notify](https://www.notifications.service.gov.uk/) and going to the __Templates__ page.
+The ID of the template. You can find this by signing into [GOV.UK Notify](https://www.notifications.service.gov.uk/) and going to the __Templates__ page.
 
 ```
 String templateId="f33517ff-2a88-4f6e-b855-c550268ce08a";
@@ -84,7 +84,7 @@ String reference='STRING';
 
 A unique identifier of the sender of the text message notification. To set this up:
 
-1. Log into your GOV.UK Notify account.
+1. Sign into your GOV.UK Notify account.
 1. Go to __Settings__.
 1. Check that you are in the correct service. If you are not, select __Switch service__ in the top right corner of the screen and select the correct one.
 1. Go to the __Text Messages__ section and select __Manage__ on the "Text Message sender" row.
@@ -129,7 +129,7 @@ If the request is not successful, the client will raise an `HTTPError`:
 |`403`|`[{`<br>`"error": "AuthError",`<br>`"message": "Invalid token: signature, api token not found"`<br>`}]`|Use the correct API key. Refer to [API keys](/#api-keys) for more information|
 |`429`|`[{`<br>`"error": "RateLimitError",`<br>`"message": "Exceeded rate limit for key type TEAM/TEST/LIVE of 3000 requests per 60 seconds"`<br>`}]`|Refer to [API rate limits](/#api-rate-limits) for more information|
 |`429`|`[{`<br>`"error": "TooManyRequestsError",`<br>`"message": "Exceeded send limits (LIMIT NUMBER) for today"`<br>`}]`|Refer to [service limits](/#service-limits) for the limit number|
-|`500`|`[{`<br>`"error": "Exception",`<br>`"message": "Internal server error"`<br>`}]`|Notify was unable to process the request, resend your notification.|
+|`500`|`[{`<br>`"error": "Exception",`<br>`"message": "Internal server error"`<br>`}]`|Notify was unable to process the request, resend your notification|
 
 ## Send an email
 
@@ -151,7 +151,7 @@ String emailAddress='sender@something.com';
 
 #### templateId (required)
 
-The ID of the template. You can find this by logging into GOV.UK Notify and going to the __Templates__ page.
+The ID of the template. You can find this by signing into GOV.UK Notify and going to the __Templates__ page.
 
 ```
 String templateId="f33517ff-2a88-4f6e-b855-c550268ce08a";
@@ -178,9 +178,9 @@ String reference='STRING';
 
 #### emailReplyToId (optional)
 
-This is an email reply-to address specified by you to receive replies from your users. Your service cannot go live until at least one email address has been set up for this. To set up:
+This is an email reply-to address specified by you to receive replies from your users. Your service cannot go live until you set up at least one of these email addresses. To set up:
 
-1. Log into your GOV.UK Notify account.
+1. Sign into your GOV.UK Notify account.
 1. Go to __Settings__.
 1. Check that you are in the correct service. If you are not, select __Switch service__ in the top right corner of the screen and select the correct one.
 1. Go to the Email section and select __Manage__ on the "Email reply to addresses" row.
@@ -219,7 +219,7 @@ If the request is not successful, the client will raise an `HTTPError`:
 |`403`|`[{`<br>`"error": "AuthError",`<br>`"message": "Invalid token: signature, api token not found"`<br>`}]`|Use the correct API key. Refer to [API keys](/#api-keys) for more information|
 |`429`|`[{`<br>`"error": "RateLimitError",`<br>`"message": "Exceeded rate limit for key type TEAM/TEST/LIVE of 3000 requests per 60 seconds"`<br>`}]`|Refer to [API rate limits](/#api-rate-limits) for more information|
 |`429`|`[{`<br>`"error": "TooManyRequestsError",`<br>`"message": "Exceeded send limits (LIMIT NUMBER) for today"`<br>`}]`|Refer to [service limits](/#service-limits) for the limit number|
-|`500`|`[{`<br>`"error": "Exception",`<br>`"message": "Internal server error"`<br>`}]`|Notify was unable to process the request, resend your notification.|
+|`500`|`[{`<br>`"error": "Exception",`<br>`"message": "Internal server error"`<br>`}]`|Notify was unable to process the request, resend your notification|
 
 ## Send a letter
 
@@ -235,7 +235,7 @@ SendLetterResponse response = client.sendLetter(templateId, personalisation, ref
 
 #### templateId (required)
 
-The ID of the template. You can find this by logging into GOV.UK Notify and going to the __Templates__ page.
+The ID of the template. You can find this by signing into GOV.UK Notify and going to the __Templates__ page.
 
 ```
 String templateId="f33517ff-2a88-4f6e-b855-c550268ce08a";
@@ -303,17 +303,17 @@ If the request is not successful, the client will raise an `HTTPError`:
 |:---|:---|:---|
 |`400`|`[{`<br>`"error": "BadRequestError",`<br>`"message": "Cannot send letters with a team api key"`<br>`]}`|Use the correct type of API key. Refer to [API keys](/#api-keys) for more information|
 |`400`|`[{`<br>`"error": "BadRequestError",`<br>`"message": "Cannot send letters when service is in trial mode - see https://www.notifications.service.gov.uk/trial-mode"`<br>`}]`|Refer to [trial mode](https://www.notifications.service.gov.uk/features/using-notify#trial-mode) for more information|
-|`400`|`[{`<br>`"error": "ValidationError",`<br>`"message": "personalisation address_line_1 is a required property"`<br>`}]`|Ensure that your template has a field for the first line of the address, check [personlisation](/#send-a-letter-required-arguments-personalisation) for more information.|
+|`400`|`[{`<br>`"error": "ValidationError",`<br>`"message": "personalisation address_line_1 is a required property"`<br>`}]`|Ensure that your template has a field for the first line of the address, refer to [personalisation](/#send-a-letter-arguments-personalisation-required) for more information|
 |`403`|`[{`<br>`"error": "AuthError",`<br>`"message": "Error: Your system clock must be accurate to within 30 seconds"`<br>`}]`|Check your system clock|
 |`403`|`[{`<br>`"error": "AuthError",`<br>`"message": "Invalid token: signature, api token not found"`<br>`}]`|Use the correct API key. Refer to [API keys](/#api-keys) for more information|
 |`429`|`[{`<br>`"error": "RateLimitError",`<br>`"message": "Exceeded rate limit for key type TEAM/TEST/LIVE of 3000 requests per 60 seconds"`<br>`}]`|Refer to [API rate limits](/#api-rate-limits) for more information|
 |`429`|`[{`<br>`"error": "TooManyRequestsError",`<br>`"message": "Exceeded send limits (LIMIT NUMBER) for today"`<br>`}]`|Refer to [service limits](/#service-limits) for the limit number|
-|`500`|`[{`<br>`"error": "Exception",`<br>`"message": "Internal server error"`<br>`}]`|Notify was unable to process the request, resend your notification.|
+|`500`|`[{`<br>`"error": "Exception",`<br>`"message": "Internal server error"`<br>`}]`|Notify was unable to process the request, resend your notification|
 
 
 ## Send a precompiled letter
 
-This is an invitation only feature. Contact the GOV.UK Notify team on the [support page](https://www.notifications.service.gov.uk/support) or through the [slack channel](https://govuk.slack.com/messages/C0AC2LX7E) for more information.
+This is an invitation-only feature. Contact the GOV.UK Notify team on the [support page](https://www.notifications.service.gov.uk/support) or through the [Slack channel](https://govuk.slack.com/messages/C0AC2LX7E) for more information.
 
 ### Method
 
@@ -377,7 +377,7 @@ The message is queued to be sent to the provider. The notification usually remai
 
 ### Sending
 
-The message is queued to be sent by the provider to the recipient, and we are waiting for delivery information.
+The message is queued to be sent by the provider to the recipient, and GOV.UK Notify are waiting for delivery information.
 
 ### Delivered
 
@@ -385,7 +385,7 @@ The message was successfully delivered.
 
 ### Sent (text message only)
 
-The text message was delivered internationally. We may not receive additional status updates depending on the recipient's country and telecoms provider.
+The text message was delivered internationally. GOV.UK Notify may not receive additional status updates depending on the recipient's country and telecoms provider.
 
 ### Failed
 
@@ -556,7 +556,7 @@ Template template = client.getTemplateById(templateId);
 
 #### templateId (required)
 
-The ID of the template. You can find this by logging into GOV.UK Notify and going to the __Templates__ page.
+The ID of the template. You can find this by signing into GOV.UK Notify and going to the __Templates__ page.
 
 ```
 String templateId='f33517ff-2a88-4f6e-b855-c550268ce08a';
@@ -603,7 +603,7 @@ Template template = client.getTemplateVersion(templateId, version);
 
 #### templateId (required)
 
-The ID of the template. You can find this by logging into GOV.UK Notify and going to the __Templates__ page.
+The ID of the template. You can find this by signing into GOV.UK Notify and going to the __Templates__ page.
 
 ```
 String templateId='f33517ff-2a88-4f6e-b855-c550268ce08a';
@@ -686,7 +686,7 @@ The parameters in the personalisation argument must match the placeholder fields
 
 #### templateId (required)
 
-The ID of the template. You can find this by logging into GOV.UK Notify and going to the __Templates__ page.
+The ID of the template. You can find this by signing into GOV.UK Notify and going to the __Templates__ page.
 
 ```
 String templateId='f33517ff-2a88-4f6e-b855-c550268ce08a';
