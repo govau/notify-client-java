@@ -6,7 +6,7 @@ This documentation is for developers interested in using GOV.UK Notify to send e
 
 ## Install the client
 
-The `notifications-java-client` deploys to Bintray.
+The `notifications-java-client` is deployed to Bintray.
 
 Go to the [GOV.UK Notify Java client page on Bintray](https://bintray.com/gov-uk-notify/maven/notifications-java-client):
 
@@ -74,7 +74,7 @@ If a template does not have any placeholder fields for personalised information,
 
 #### reference (optional)
 
-A unique identifier. This reference can identify a single unique notification or a batch of multiple notifications. If you do not have a reference, you must pass in an empty string or `null`.
+A unique identifier. This reference can identify a single unique notification or a batch of notifications. If you do not have a reference, you must pass in an empty string or `null`.
 
 ```
 String reference='STRING';
@@ -100,7 +100,7 @@ If you do not have have an `smsSenderId`, you must pass in an empty string or `n
 
 ### Response
 
-If the request to the client is successful, you will receive the following `SendSmsResponse`:
+If the request to the client is successful, you will receive a `SendSmsResponse` with the following attributes:
 
 
 ```java
@@ -119,7 +119,7 @@ All successfully delivered messages will appear on your dashboard.
 
 ### Error codes
 
-If the request is not successful, the client will raise an `HTTPError`:
+If the request is not successful, the client will raise a `NotificationClientException`:
 
 |`httpResult`|`message`|How to fix|
 |:---|:---|:---|
@@ -170,7 +170,7 @@ If a template does not have any placeholder fields for personalised information,
 
 #### reference (optional)
 
-A unique identifier. This reference can identify a single unique notification or a batch of multiple notifications. If you do not have a reference, you must pass in an empty string or `null`.
+A unique identifier. This reference can identify a single unique notification or a batch of notifications. If you do not have a reference, you must pass in an empty string or `null`.
 
 ```
 String reference='STRING';
@@ -194,7 +194,7 @@ If you do not have have an `emailReplyToId`, you must pass in an empty string or
 
 ### Response
 
-If the request to the client is successful, you will receive the following `SendEmailResponse`:
+If the request to the client is successful, you will receive a `SendEmailResponse` with the following attributes:
 
 ```java
 UUID notificationId;
@@ -209,7 +209,7 @@ Optional<String> fromEmail;
 
 ### Error codes
 
-If the request is not successful, the client will raise an `HTTPError`:
+If the request is not successful, the client will raise a `NotificationClientException`:
 
 |`httpResult`|`message`|How to fix|
 |:---|:---|:---|
@@ -275,7 +275,7 @@ personalisation.put("address_line_6", "Middlesex"); // optional address field
 
 #### reference (optional)
 
-A unique identifier. This reference can identify a single unique notification or a batch of multiple notifications. If you do not have a reference, you must pass in an empty string or `null`.
+A unique identifier. This reference can identify a single unique notification or a batch of notifications. If you do not have a reference, you must pass in an empty string or `null`.
 
 ```
 String reference='STRING';
@@ -283,7 +283,7 @@ String reference='STRING';
 
 ### Response
 
-If the request to the client is successful, you will receive a `SendLetterResponse`:
+If the request to the client is successful, you will receive a `SendLetterResponse` with the following attributes:
 
 ```java
 UUID notificationId;
@@ -297,7 +297,7 @@ String subject;
 
 ### Error codes
 
-If the request is not successful, the client will raise an `HTTPError`:
+If the request is not successful, the client will raise a `NotificationClientException`:
 
 |`httpResult`|`message`|How to fix|
 |:---|:---|:---|
@@ -325,7 +325,7 @@ LetterResponse response = client.sendPrecompiledLetter(reference, precompiledPDF
 
 #### reference (required)
 
-You create this unique identifier. This reference can identify a single unique notification or a batch of multiple notifications. It must not contain any personal information.
+You create this unique identifier. This reference can identify a single unique notification or a batch of notifications. It must not contain any personal information.
 
 ```
 String reference="STRING";
@@ -404,6 +404,10 @@ The only failure status that applies to letters is `technical-failure` - Notify 
 ### Accepted
 
 Notify is printing and posting the letter.
+
+### Received
+
+The provider has received the letter to deliver.
 
 ## Get the status of one message
 
@@ -491,6 +495,7 @@ You can pass in empty arguments or `null` to ignore these filters.
 |`temporary-failure`|The provider was unable to deliver message, email inbox was full or phone was turned off; you can try to send the message again|Yes|Yes||
 |`technical-failure`|Email / Text: Notify had a technical failure; you can try to send the message again. <br><br>Letter: Notify had an unexpected error while sending to our printing provider. <br><br>You can omit this argument to ignore this filter.|Yes|Yes||
 |`accepted`|Notify is printing and posting the letter|||Yes|
+|`received`|The provider has received the letter to deliver|||Yes|
 
 #### notificationType (optional)
 
@@ -502,7 +507,7 @@ You can filter by:
 
 #### reference (optional)
 
-A unique identifier. This reference can identify a single unique notification or a batch of multiple notifications.
+A unique identifier. This reference can identify a single unique notification or a batch of notifications.
 
 ```
 String reference='STRING';
@@ -729,7 +734,7 @@ If the request is not successful, the client will raise an `NotificationClientEx
 
 # Get received text messages
 
-This API call will return one page of up to 250 received text messages. You can get either the most recent messages, or get older messages by specifying a particular notification ID in the [`older_than`](/#older-than) argument.
+This API call will return one page of up to 250 received text messages. You can get either the most recent messages, or get older messages by specifying a particular notification ID in the [`olderThanId`](/#olderThanId) argument.
 
 ### Method
 
