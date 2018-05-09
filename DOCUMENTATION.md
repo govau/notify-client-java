@@ -86,7 +86,7 @@ A unique identifier of the sender of the text message notification. To set this 
 
 1. Sign into your GOV.UK Notify account.
 1. Go to __Settings__.
-1. Check that you are in the correct service. If you are not, select __Switch service__ in the top right corner of the screen and select the correct one.
+1. If you are not in the correct service, select __Switch service__ in the top right corner of the screen and select the correct one.
 1. Go to the __Text Messages__ section and select __Manage__ on the "Text Message sender" row.
 1. You can do one of the following:
   - copy the ID of the sender you want to use and paste it into the method
@@ -182,7 +182,7 @@ This is an email reply-to address specified by you to receive replies from your 
 
 1. Sign into your GOV.UK Notify account.
 1. Go to __Settings__.
-1. Check that you are in the correct service. If you are not, select __Switch service__ in the top right corner of the screen and select the correct one.
+1. If you are not in the correct service, select __Switch service__ in the top right corner of the screen and select the correct one.
 1. Go to the Email section and select __Manage__ on the "Email reply to addresses" row.
 1. Select __Change__ to specify the email address to receive replies, and select __Save__.
 
