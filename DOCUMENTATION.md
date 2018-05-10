@@ -21,11 +21,6 @@ Add this code to your application:
 
 ```java
 import uk.gov.service.notify.NotificationClient;
-import uk.gov.service.notify.Notification;
-import uk.gov.service.notify.NotificationList;
-import uk.gov.service.notify.SendEmailResponse;
-import uk.gov.service.notify.SendSmsResponse;
-
 NotificationClient client = new NotificationClient(apiKey);
 ```
 
@@ -61,7 +56,7 @@ The ID of the template. You can find this by signing into [GOV.UK Notify](https:
 String templateId="f33517ff-2a88-4f6e-b855-c550268ce08a";
 ```
 
-#### personalisation (optional)
+#### personalisation (required)
 
 If a template has placeholder fields for personalised information such as name or reference number, you must provide their values in a map. For example:
 
@@ -72,7 +67,7 @@ personalisation.put("application_date", "2018-01-01");
 ```
 If a template does not have any placeholder fields for personalised information, you must pass in an empty map or `null`.
 
-#### reference (optional)
+#### reference (required)
 
 A unique identifier. This reference can identify a single unique notification or a batch of notifications. If you do not have a reference, you must pass in an empty string or `null`.
 
@@ -96,7 +91,7 @@ A unique identifier of the sender of the text message notification. To set this 
 String smsSenderId='8e222534-7f05-4972-86e3-17c5d9f894e2'
 ```
 
-If you do not have have an `smsSenderId`, you must pass in an empty string or `null`.
+If you do not have have an `smsSenderId`, you can omit this argument.
 
 ### Response
 
@@ -115,7 +110,7 @@ Optional<String> fromNumber;
 
 If you are using the [test API key](/#test), all your messages will come back as delivered.
 
-All successfully delivered messages will appear on your dashboard.
+All messages sent using the [team and whitelist](#team-and-whitelist) or [live](#live) keys will appear on your dashboard.
 
 ### Error codes
 
@@ -157,7 +152,7 @@ The ID of the template. You can find this by signing into GOV.UK Notify and goin
 String templateId="f33517ff-2a88-4f6e-b855-c550268ce08a";
 ```
 
-#### personalisation (optional)
+#### personalisation (required)
 
 If a template has placeholder fields for personalised information such as name or application date, you need to provide their values in a map. For example:
 
@@ -168,7 +163,7 @@ personalisation.put("application_date", "2018-01-01");
 ```
 If a template does not have any placeholder fields for personalised information, you must pass in an empty map or `null`.
 
-#### reference (optional)
+#### reference (required)
 
 A unique identifier. This reference can identify a single unique notification or a batch of notifications. If you do not have a reference, you must pass in an empty string or `null`.
 
@@ -190,7 +185,7 @@ This is an email reply-to address specified by you to receive replies from your 
 String emailReplyToId='8e222534-7f05-4972-86e3-17c5d9f894e2'
 ```
 
-If you do not have have an `emailReplyToId`, you must pass in an empty string or `null`.
+If you do not have have an `emailReplyToId`, you can omit this argument.
 
 ### Response
 
@@ -262,7 +257,7 @@ personalisation.put("application_date", "2018-01-01"); // field from template
 
 If a template does not have any placeholder fields for personalised information, you must pass in an empty map or `null`.
 
-#### personalisation (optional)
+#### personalisation (required)
 
 The following parameters in the letter recipient's address are optional:
 
@@ -273,7 +268,7 @@ personalisation.put("address_line_5", "London"); // optional address field
 personalisation.put("address_line_6", "Middlesex"); // optional address field
 ```
 
-#### reference (optional)
+#### reference (required)
 
 A unique identifier. This reference can identify a single unique notification or a batch of notifications. If you do not have a reference, you must pass in an empty string or `null`.
 
