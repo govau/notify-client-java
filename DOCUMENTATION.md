@@ -308,7 +308,7 @@ If the request is not successful, the client will raise a `NotificationClientExc
 
 ## Send a precompiled letter
 
-This is an invitation-only feature. Contact the GOV.UK Notify team on the [support page](https://www.notifications.service.gov.uk/support) or through the [Slack channel](https://govuk.slack.com/messages/C0AC2LX7E) for more information.
+This is an invitation-only feature. Contact the GOV.UK Notify team on the [support page](https://www.notifications.service.gov.uk/support) or through the [Slack channel](https://ukgovernmentdigital.slack.com/messages/govuk-notify) for more information.
 
 ### Method
 
