@@ -1,12 +1,12 @@
 # Java client documentation
 
-This documentation is for developers interested in using GOV.UK Notify to send emails, text messages or letters.
+This documentation is for developers interested in using the GOV.UK Notify Java client to send emails, text messages or letters.
 
 # Set up the client
 
 ## Install the client
 
-The `notifications-java-client` is deployed to Bintray.
+The `notifications-java-client` deploys to Bintray.
 
 Go to the [GOV.UK Notify Java client page on Bintray](https://bintray.com/gov-uk-notify/maven/notifications-java-client):
 
@@ -24,7 +24,7 @@ import uk.gov.service.notify.NotificationClient;
 NotificationClient client = new NotificationClient(apiKey);
 ```
 
-To get an API key, [sign in to GOV.UK Notify](https://www.notifications.service.gov.uk/) and go to the __API integration__ page. You can find more information in the [API keys](/#api-keys) section.
+To get an API key, [sign in to GOV.UK Notify](https://www.notifications.service.gov.uk/) and go to the __API integration__ page. You can find more information in the [API keys](/#api-keys) section of the documentation.
 
 # Send a message
 
@@ -42,7 +42,7 @@ SendSmsResponse response = client.sendSms(mobileNumber, templateId, personalisat
 
 #### mobileNumber (required)
 
-The phone number of the recipient of the text message. This number can be UK or international.
+The phone number of the recipient of the text message. This number can be a UK or international number.
 
 ```
 String mobileNumber="+447900900123";
@@ -50,7 +50,7 @@ String mobileNumber="+447900900123";
 
 #### templateId (required)
 
-The ID of the template. You can find this by signing into [GOV.UK Notify](https://www.notifications.service.gov.uk/) and going to the __Templates__ page.
+You can find this by signing into [GOV.UK Notify](https://www.notifications.service.gov.uk/) and going to the __Templates__ page.
 
 ```
 String templateId="f33517ff-2a88-4f6e-b855-c550268ce08a";
@@ -65,11 +65,12 @@ Map<String, String> personalisation = new HashMap<>();
 personalisation.put("first_name", "Amala");
 personalisation.put("application_date", "2018-01-01");
 ```
+
 If a template does not have any placeholder fields for personalised information, you must pass in an empty map or `null`.
 
 #### reference (required)
 
-A unique identifier. This reference can identify a single unique notification or a batch of notifications. If you do not have a reference, you must pass in an empty string or `null`.
+A unique identifier. This reference identifies a single unique notification or a batch of notifications. If you do not have a reference, you must pass in an empty string or `null`.
 
 ```
 String reference='STRING';
@@ -77,25 +78,28 @@ String reference='STRING';
 
 #### smsSenderId (optional)
 
-A unique identifier of the sender of the text message notification. To set this up:
+A unique identifier of the sender of the text message notification. To find this information, go to the __Text Message sender__ settings screen:
 
-1. Sign into your GOV.UK Notify account.
+1. Sign in to your GOV.UK Notify account.
 1. Go to __Settings__.
-1. If you are not in the correct service, select __Switch service__ in the top right corner of the screen and select the correct one.
+1. If you need to change to another service, select __Switch service__ in the top right corner of the screen and select the correct one.
 1. Go to the __Text Messages__ section and select __Manage__ on the "Text Message sender" row.
-1. You can do one of the following:
-  - copy the ID of the sender you want to use and paste it into the method
+
+In this screen, you can then either:
+
+  - copy the sender ID that you want to use and paste it into the method
   - select __Change__ to change the default sender that the service will use, and select __Save__
 
 ```
 String smsSenderId='8e222534-7f05-4972-86e3-17c5d9f894e2'
 ```
 
-If you do not have have an `smsSenderId`, you can omit this argument.
+
+If you do not have have an `smsSenderId`, you can leave out this argument.
 
 ### Response
 
-If the request to the client is successful, you will receive a `SendSmsResponse` with the following attributes:
+If the request to the client is successful, the client will return a `SendSmsResponse`:
 
 
 ```java
@@ -114,7 +118,7 @@ All messages sent using the [team and whitelist](#team-and-whitelist) or [live](
 
 ### Error codes
 
-If the request is not successful, the client will raise a `NotificationClientException`:
+If the request is not successful, the client will return a `NotificationClientException` containing the relevant error code:
 
 |`httpResult`|`message`|How to fix|
 |:---|:---|:---|
@@ -146,7 +150,7 @@ String emailAddress='sender@something.com';
 
 #### templateId (required)
 
-The ID of the template. You can find this by signing into GOV.UK Notify and going to the __Templates__ page.
+You can find this by signing into GOV.UK Notify and going to the __Templates__ page.
 
 ```
 String templateId="f33517ff-2a88-4f6e-b855-c550268ce08a";
@@ -154,7 +158,7 @@ String templateId="f33517ff-2a88-4f6e-b855-c550268ce08a";
 
 #### personalisation (required)
 
-If a template has placeholder fields for personalised information such as name or application date, you need to provide their values in a map. For example:
+If a template has placeholder fields for personalised information such as name or application date, you must provide their values in a map. For example:
 
 ```java
 Map<String, String> personalisation = new HashMap<>();
@@ -165,7 +169,7 @@ If a template does not have any placeholder fields for personalised information,
 
 #### reference (required)
 
-A unique identifier. This reference can identify a single unique notification or a batch of notifications. If you do not have a reference, you must pass in an empty string or `null`.
+A unique identifier. This reference identifies a single unique notification or a batch of notifications. If you do not have a reference, you must pass in an empty string or `null`.
 
 ```
 String reference='STRING';
@@ -177,7 +181,7 @@ This is an email reply-to address specified by you to receive replies from your 
 
 1. Sign into your GOV.UK Notify account.
 1. Go to __Settings__.
-1. If you are not in the correct service, select __Switch service__ in the top right corner of the screen and select the correct one.
+1. If you need to change to another service, select __Switch service__ in the top right corner of the screen and select the correct one.
 1. Go to the Email section and select __Manage__ on the "Email reply to addresses" row.
 1. Select __Change__ to specify the email address to receive replies, and select __Save__.
 
@@ -185,11 +189,11 @@ This is an email reply-to address specified by you to receive replies from your 
 String emailReplyToId='8e222534-7f05-4972-86e3-17c5d9f894e2'
 ```
 
-If you do not have have an `emailReplyToId`, you can omit this argument.
+If you do not have have an `emailReplyToId`, you can leave out this argument.
 
 ### Response
 
-If the request to the client is successful, you will receive a `SendEmailResponse` with the following attributes:
+If the request to the client is successful, the client will return a `SendEmailResponse`:
 
 ```java
 UUID notificationId;
@@ -204,7 +208,7 @@ Optional<String> fromEmail;
 
 ### Error codes
 
-If the request is not successful, the client will raise a `NotificationClientException`:
+If the request is not successful, the client will return a `NotificationClientException` containing the relevant error code:
 
 |`httpResult`|`message`|How to fix|
 |:---|:---|:---|
@@ -230,7 +234,7 @@ SendLetterResponse response = client.sendLetter(templateId, personalisation, ref
 
 #### templateId (required)
 
-The ID of the template. You can find this by signing into GOV.UK Notify and going to the __Templates__ page.
+You can find this by signing into GOV.UK Notify and going to the __Templates__ page.
 
 ```
 String templateId="f33517ff-2a88-4f6e-b855-c550268ce08a";
@@ -244,7 +248,7 @@ The personalisation argument always contains the following parameters for the le
 - `address_line_2`
 - `postcode`
 
-Any other placeholder fields included in the letter template also count as required parameters. You need to provide their values in a map. For example:
+Any other placeholder fields included in the letter template also count as required parameters. You must provide their values in a map. For example:
 
 ```java
 HashMap<String, String> personalisation = new HashMap<>();
@@ -270,7 +274,7 @@ personalisation.put("address_line_6", "Middlesex"); // optional address field
 
 #### reference (required)
 
-A unique identifier. This reference can identify a single unique notification or a batch of notifications. If you do not have a reference, you must pass in an empty string or `null`.
+A unique identifier. This reference identifies a single unique notification or a batch of notifications. If you do not have a reference, you must pass in an empty string or `null`.
 
 ```
 String reference='STRING';
@@ -278,7 +282,7 @@ String reference='STRING';
 
 ### Response
 
-If the request to the client is successful, you will receive a `SendLetterResponse` with the following attributes:
+If the request to the client is successful, the client will return a `SendLetterResponse`:
 
 ```java
 UUID notificationId;
@@ -292,7 +296,7 @@ String subject;
 
 ### Error codes
 
-If the request is not successful, the client will raise a `NotificationClientException`:
+If the request is not successful, the client will return a `NotificationClientException` containing the relevant error code:
 
 |`httpResult`|`message`|How to fix|
 |:---|:---|:---|
@@ -320,7 +324,7 @@ LetterResponse response = client.sendPrecompiledLetter(reference, precompiledPDF
 
 #### reference (required)
 
-You create this unique identifier. This reference can identify a single unique notification or a batch of notifications. It must not contain any personal information.
+You must create this unique identifier. This reference identifies a single unique notification or a batch of notifications. It must not contain any personal information such as name or postal address.
 
 ```
 String reference="STRING";
@@ -336,7 +340,7 @@ File precompiledPDF = new File("<PDF file path>");
 
 ### Response
 
-If the request to the client is successful, you will receive a `LetterResponse` from the client:
+If the request to the client is successful, the client will return a `LetterResponse`:
 
 ```java
 UUID notificationId;
@@ -345,7 +349,7 @@ UUID notificationId;
 
 ### Error codes
 
-If the request is not successful, the client will raise a `NotificationClientException`.
+If the request is not successful, the client will return a `NotificationClientException` containing the relevant error code:
 
 |`httpResult`|`message`|How to fix|
 |:---|:---|:---|
@@ -362,7 +366,7 @@ If the request is not successful, the client will raise a `NotificationClientExc
 
 # Get message status
 
-The possible status of a message depends on the message type.
+Message status depends on message type.
 
 ## Status - text and email
 
@@ -394,7 +398,7 @@ This covers all failure statuses:
 
 ### Failed
 
-The only failure status that applies to letters is `technical-failure` - Notify had an unexpected error while sending to our printing provider.
+The only failure status that applies to letters is `technical-failure`. Notify had an unexpected error while sending to our printing provider.
 
 ### Accepted
 
@@ -420,7 +424,7 @@ The ID of the notification.
 
 ### Response
 
-If the request to the client is successful, you will receive the following `notification` response:
+If the request to the client is successful, the client will return a `notification`:
 
 ```java
 UUID id;
@@ -449,7 +453,7 @@ Optional<DateTime> estimatedDelivery;
 
 ### Error codes
 
-If the request is not successful, the client will raise a `NotificationClientException`:
+If the request is not successful, the client will return a `NotificationClientException` containing the relevant error code:
 
 |`httpResult`|`message`|How to fix|
 |:---|:---|:---|
@@ -488,7 +492,7 @@ You can pass in empty arguments or `null` to ignore these filters.
 |`failed`|This will return all failure statuses:<br>- `permanent-failure`<br>- `temporary-failure`<br>- `technical-failure`|Yes|Yes||
 |`permanent-failure`|The provider was unable to deliver message, email or phone number does not exist; remove this recipient from your list|Yes|Yes||
 |`temporary-failure`|The provider was unable to deliver message, email inbox was full or phone was turned off; you can try to send the message again|Yes|Yes||
-|`technical-failure`|Email / Text: Notify had a technical failure; you can try to send the message again. <br><br>Letter: Notify had an unexpected error while sending to our printing provider. <br><br>You can omit this argument to ignore this filter.|Yes|Yes||
+|`technical-failure`|Email / Text: Notify had a technical failure; you can try to send the message again. <br><br>Letter: Notify had an unexpected error while sending to our printing provider. <br><br>You can leave out this argument to ignore this filter.|Yes|Yes||
 |`accepted`|Notify is printing and posting the letter|||Yes|
 |`received`|The provider has received the letter to deliver|||Yes|
 
@@ -502,7 +506,7 @@ You can filter by:
 
 #### reference (optional)
 
-A unique identifier. This reference can identify a single unique notification or a batch of notifications.
+A unique identifier. This reference identifies a single unique notification or a batch of notifications.
 
 ```
 String reference='STRING';
@@ -510,17 +514,17 @@ String reference='STRING';
 
 #### olderThanId (optional)
 
-Input the ID of a notification into this argument. If you use this argument, the next 250 received notifications older than the given ID are returned.
+Input the ID of a notification into this argument. If you use this argument, the client returns the next 250 received notifications older than the given ID.
 
 ```
 String olderThanId='8e222534-7f05-4972-86e3-17c5d9f894e2'
 ```
 
-If you pass in an empty argument or `null`, the most recent 250 notifications are returned.
+If you pass in an empty argument or `null`, the client returns the most recent 250 notifications.
 
 ### Response
 
-If the request to the client is successful, you will receive a `NotificationList` response.
+If the request to the client is successful, the client will return a `NotificationList`:
 
 ```java
 List<Notification> notifications;
@@ -530,12 +534,12 @@ Optional<String> nextPageLink;
 
 ### Error codes
 
-If the request is not successful, the client will raise a `NotificationClientException`:
+If the request is not successful, the client will return a `NotificationClientException` containing the relevant error code:
 
 |`httpResult`|`message`||
 |:---|:---|:---|
 |`400`|`[{`<br>`"error": "ValidationError",`<br>`"message": "bad status is not one of [created, sending, sent, delivered, pending, failed, technical-failure, temporary-failure, permanent-failure, accepted, received]"`<br>`}]`|
-|`400`|`[{`<br>`"error": "ValidationError",`<br>`"message": "Apple is not one of [sms, email, letter]"`<br>`}]`|
+|`400`|`[{`<br>`"error": "ValidationError",`<br>`"message": "Applet is not one of [sms, email, letter]"`<br>`}]`|
 |`403`|`[{`<br>`"error": "AuthError",`<br>`"message": "Error: Your system clock must be accurate to within 30 seconds"`<br>`}]`|Check your system clock|
 |`403`|`[{`<br>`"error": "AuthError",`<br>`"message": "Invalid token: signature, api token not found"`<br>`}]`|Use the correct API key. Refer to [API keys](/#api-keys) for more information|
 
@@ -564,7 +568,7 @@ String templateId='f33517ff-2a88-4f6e-b855-c550268ce08a';
 
 ### Response
 
-If the request to the client is successful, you will receive a `Template` response.
+If the request to the client is successful, the client will return a `Template`:
 
 ```java
 UUID id;
@@ -580,7 +584,7 @@ Optional<Map<String, Object>> personalisation;
 
 ### Error codes
 
-If the request is not successful, the client will raise a `NotificationClientException`:
+If the request is not successful, the client will return a `NotificationClientException` containing the relevant error code:
 
 |`httpResult`|`message`|How to fix|
 |:---|:---|:---|
@@ -615,7 +619,7 @@ The version number of the template.
 
 ### Response
 
-If the request to the client is successful, you will receive a `Template` response.
+If the request to the client is successful, the client will return a `Template`:
 
 ```Java
 UUID id;
@@ -631,7 +635,7 @@ Optional<Map<String, Object>> personalisation;
 
 ### Error codes
 
-If the request is not successful, the client will raise an `NotificationClientException`:
+If the request is not successful, the client will return a `NotificationClientException` containing the relevant error code:
 
 |`httpResult`|`message`|How to fix|
 |:---|:---|:---|
@@ -654,7 +658,7 @@ TemplateList templates = client.getAllTemplates(templateType);
 
 #### templateType (optional)
 
-If omitted all templates are returned. Otherwise you can filter by:
+If you donot use `templateType`, the client returns all templates. Otherwise you can filter by:
 
 - `email`
 - `sms`
@@ -662,7 +666,7 @@ If omitted all templates are returned. Otherwise you can filter by:
 
 ### Response
 
-If the request to the client is successful, you will receive a `TemplateList` response.
+If the request to the client is successful, the client will return a `TemplateList`:
 
 ```java
 List<Template> templates;
@@ -694,7 +698,7 @@ String templateId='f33517ff-2a88-4f6e-b855-c550268ce08a';
 
 #### personalisation (required)
 
-If a template has placeholder fields for personalised information such as name or application date, you need to provide their values in a map. For example:
+If a template has placeholder fields for personalised information such as name or application date, you must provide their values in a map. For example:
 
 ```java
 Map<String, String> personalisation = new HashMap<>();
@@ -705,7 +709,7 @@ If a template does not have any placeholder fields for personalised information,
 
 ### Response
 
-If the request to the client is successful, you will receive a `TemplatePreview` response.
+If the request to the client is successful, the client will return a `TemplatePreview`:
 
 ```java
 UUID id;
@@ -717,7 +721,7 @@ Optional<String> subject;
 
 ### Error codes
 
-If the request is not successful, the client will raise an `NotificationClientException`:
+If the request is not successful, the client will return a `NotificationClientException` containing the relevant error code:
 
 |`httpResult`|`message`|How to fix|
 |:---|:---|:---|
@@ -745,17 +749,17 @@ To get older messages, pass the ID of an older notification into the `olderThanI
 
 #### olderThanId (optional)
 
-Input the ID of a received text message into this argument. If you use this argument, the next 250 received text messages older than the given ID are returned.
+Input the ID of a received text message into this argument. If you use this argument, the client returns the next 250 received text messages older than the given ID.
 
 ```
 String emailReplyToId='8e222534-7f05-4972-86e3-17c5d9f894e2'
 ```
 
-If you pass in an empty argument or `null`, the most recent 250 text messages are returned.
+If you pass in an empty argument or `null`, the client returns the most recent 250 text messages.
 
 ### Response
 
-If the request to the client is successful, you will receive a `ReceivedTextMessageList` response that returns all received texts.
+If the request to the client is successful, the client will return a `ReceivedTextMessageList` that returns all received texts.
 
 ```java
 private List<ReceivedTextMessage> receivedTextMessages;
