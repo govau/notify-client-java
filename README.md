@@ -64,7 +64,7 @@ Then add the Maven dependency to your project.
     <dependency>
         <groupId>uk.gov.service.notify</groupId>
         <artifactId>notifications-java-client</artifactId>
-        <version>3.9.1-RELEASE</version>
+        <version>3.9.2-RELEASE</version>
     </dependency>
 
 ```
@@ -83,7 +83,7 @@ repositories {
 }
 
 dependencies {
-    compile('uk.gov.service.notify:notifications-java-client:3.9.1-RELEASE')
+    compile('uk.gov.service.notify:notifications-java-client:3.9.2-RELEASE')
 }
 ```
 </details>
