@@ -74,7 +74,7 @@ public class ClientIntegrationTestIT {
         } catch (NotificationClientException e) {
             assert(e.getMessage().contains("Missing personalisation: name"));
             assert e.getHttpResult() == 400;
-            assert(e.getMessage().contains(" \"error\": \"BadRequestError\""));
+            assert(e.getMessage().contains("BadRequestError"));
         }
     }
 

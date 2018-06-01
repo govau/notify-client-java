@@ -1,3 +1,6 @@
+## 3.9.2-RELEASE
+* Updated testEmailNotificationWithoutPersonalisationReturnsErrorMessageIT to only look for the BadRequestError rather than the json "error": BadRequestError
+
 ## 3.9.1-RELEASE
 * Response to `sendPrecompiledLetter` updated
   - The response now only includes the notification id and the client reference
