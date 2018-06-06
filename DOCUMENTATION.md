@@ -13,7 +13,7 @@ Go to the [GOV.UK Notify Java client page on Bintray](https://bintray.com/gov-uk
 1. Select __Set me up!__ and use the appropriate download instructions.
 1. Go to the Maven build settings section of the page and copy the appropriate dependency code snippet.
 
-Refer to the [client change log](https://github.com/alphagov/notifications-java-client/blob/master/CHANGELOG.md) for the version number and the latest updates.
+Refer to the [client changelog](https://github.com/alphagov/notifications-java-client/blob/master/CHANGELOG.md) for the version number and the latest updates.
 
 ## Create a new instance of the client
 
@@ -83,7 +83,7 @@ A unique identifier of the sender of the text message notification. To find this
 1. Sign in to your GOV.UK Notify account.
 1. Go to __Settings__.
 1. If you need to change to another service, select __Switch service__ in the top right corner of the screen and select the correct one.
-1. Go to the __Text Messages__ section and select __Manage__ on the "Text Message sender" row.
+1. Go to the __Text Messages__ section and select __Manage__ on the __Text Message sender__ row.
 
 In this screen, you can then either:
 
@@ -366,7 +366,7 @@ If the request is not successful, the client will return a `NotificationClientEx
 
 # Get message status
 
-Message status depends on message type.
+Message status depends on the type of message that you have sent.
 
 ## Status - text and email
 
@@ -402,7 +402,7 @@ The only failure status that applies to letters is `technical-failure`. Notify h
 
 ### Accepted
 
-Notify is printing and posting the letter.
+GOV.UK Notify is printing and posting the letter.
 
 ### Received
 
