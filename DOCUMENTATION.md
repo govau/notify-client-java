@@ -120,7 +120,7 @@ All messages sent using the [team and whitelist](#team-and-whitelist) or [live](
 
 If the request is not successful, the client will return a `NotificationClientException` containing the relevant error code:
 
-|`http`<br>`Result` |`message`|How to fix|
+|httpResult|Message|How to fix|
 |:---|:---|:---|
 |`400`|`[{`<br>`"error": "BadRequestError",`<br>`"message": "Can't send to this recipient using a team-only API key"`<br>`]}`|Use the correct type of [API key](/#api-keys)|
 |`400`|`[{`<br>`"error": "BadRequestError",`<br>`"message": "Can't send to this recipient when service is in trial mode - see https://www.notifications.service.gov.uk/trial-mode"`<br>`}]`|Your service cannot send this notification in [trial mode](https://www.notifications.service.gov.uk/features/using-notify#trial-mode)|
@@ -210,7 +210,7 @@ Optional<String> fromEmail;
 
 If the request is not successful, the client will return a `NotificationClientException` containing the relevant error code:
 
-|`http`<br>`Result`|`message`|How to fix|
+|httpResult|Message|How to fix|
 |:--- |:---|:---|
 |`400`|`[{`<br>`"error": "BadRequestError",`<br>`"message": "Can't send to this recipient using a team-only API key"`<br>`]}`|Use the correct type of [API key](/#api-keys)|
 |`400`|`[{`<br>`"error": "BadRequestError",`<br>`"message": "Can't send to this recipient when service is in trial mode - see https://www.notifications.service.gov.uk/trial-mode"`<br>`}]`|Your service cannot send this notification in [trial mode](https://www.notifications.service.gov.uk/features/using-notify#trial-mode)|
@@ -298,7 +298,7 @@ String subject;
 
 If the request is not successful, the client will return a `NotificationClientException` containing the relevant error code:
 
-|`http`<br>`Result`|`message`|How to fix|
+|httpResult|Message|How to fix|
 |:--- |:---|:---|
 |`400`|`[{`<br>`"error": "BadRequestError",`<br>`"message": "Cannot send letters with a team api key"`<br>`]}`|Use the correct type of [API key](/#api-keys)|
 |`400`|`[{`<br>`"error": "BadRequestError",`<br>`"message": "Cannot send letters when service is in trial mode - see https://www.notifications.service.gov.uk/trial-mode"`<br>`}]`|Your service cannot send this notification in [trial mode](https://www.notifications.service.gov.uk/features/using-notify#trial-mode)|
@@ -351,7 +351,7 @@ UUID notificationId;
 
 If the request is not successful, the client will return a `NotificationClientException` containing the relevant error code:
 
-|`http`<br>`Result`|`message`|How to fix|
+|httpResult|Message|How to fix|
 |:--- |:---|:---|
 |`400`|`[{`<br>`"error": "BadRequestError",`<br>`"message": "Cannot send letters with a team api key"`<br>`]}`|Use the correct type of [API key](/#api-keys)|
 |`400`|`[{`<br>`"error": "BadRequestError",`<br>`"message": "Cannot send letters when service is in trial mode - see https://www.notifications.service.gov.uk/trial-mode"`<br>`}]`|Your service cannot send this notification in [trial mode](https://www.notifications.service.gov.uk/features/using-notify#trial-mode)|
@@ -455,7 +455,7 @@ Optional<DateTime> estimatedDelivery;
 
 If the request is not successful, the client will return a `NotificationClientException` containing the relevant error code:
 
-|`http`<br>`Result`|`message`|How to fix|
+|httpResult|Message|How to fix|
 |:---|:---|:---|
 |`400`|`[{`<br>`"error": "ValidationError",`<br>`"message": "id is not a valid UUID"`<br>`}]`|Check the notification ID|
 |`403`|`[{`<br>`"error": "AuthError",`<br>`"message": "Error: Your system clock must be accurate to within 30 seconds"`<br>`}]`|Check your system clock|
@@ -536,7 +536,7 @@ Optional<String> nextPageLink;
 
 If the request is not successful, the client will return a `NotificationClientException` containing the relevant error code:
 
-|`http`<br>`Result`|`message`||
+|httpResult|Message||
 |:---|:---|:---|
 |`400`|`[{`<br>`"error": "ValidationError",`<br>`"message": "bad status is not one of [created, sending, sent, delivered, pending, failed, technical-failure, temporary-failure, permanent-failure, accepted, received]"`<br>`}]`|Contact the Notify team|
 |`400`|`[{`<br>`"error": "ValidationError",`<br>`"message": "Applet is not one of [sms, email, letter]"`<br>`}]`|Contact the Notify team|
@@ -586,7 +586,7 @@ Optional<Map<String, Object>> personalisation;
 
 If the request is not successful, the client will return a `NotificationClientException` containing the relevant error code:
 
-|`http`<br>`Result`|`message`|How to fix|
+|httpResult|Message|How to fix|
 |:---|:---|:---|
 |`403`|`[{`<br>`"error": "AuthError",`<br>`"message": "Error: Your system clock must be accurate to within 30 seconds"`<br>`}]`|Check your system clock|
 |`403`|`[{`<br>`"error": "AuthError",`<br>`"message": "Invalid token: signature, api token not found"`<br>`}]`|Use the correct API key. Refer to [API keys](/#api-keys) for more information|
@@ -637,7 +637,7 @@ Optional<Map<String, Object>> personalisation;
 
 If the request is not successful, the client will return a `NotificationClientException` containing the relevant error code:
 
-|`http`<br>`Result`|`message`|How to fix|
+|httpResult|message|How to fix|
 |:---|:---|:---|
 |`403`|`[{`<br>`"error": "AuthError",`<br>`"message": "Error: Your system clock must be accurate to within 30 seconds"`<br>`}]`|Check your system clock|
 |`403`|`[{`<br>`"error": "AuthError",`<br>`"message": "Invalid token: signature, api token not found"`<br>`}]`|Use the correct API key. Refer to [API keys](/#api-keys) for more information|
@@ -723,7 +723,7 @@ Optional<String> subject;
 
 If the request is not successful, the client will return a `NotificationClientException` containing the relevant error code:
 
-|`httpResult`|`message`|How to fix|
+|httpResult|message|How to fix|
 |:---|:---|:---|
 |`400`|`[{`<br>`"error": "BadRequestError",`<br>`"message": "Missing personalisation: [PERSONALISATION FIELD]"`<br>`}]`|Check that the personalisation arguments in the method match the placeholder fields in the template|
 |`400`|`[{`<br>`"error": "NoResultFound",`<br>`"message": "No result found"`<br>`}]`|Check the [template ID](/#generate-a-preview-template-required-arguments-template-id)|
