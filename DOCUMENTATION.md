@@ -752,7 +752,7 @@ To get older messages, pass the ID of an older notification into the `olderThanI
 Input the ID of a received text message into this argument. If you use this argument, the client returns the next 250 received text messages older than the given ID.
 
 ```
-String emailReplyToId='8e222534-7f05-4972-86e3-17c5d9f894e2'
+String olderThanId='8e222534-7f05-4972-86e3-17c5d9f894e2'
 ```
 
 If you pass in an empty argument or `null`, the client returns the most recent 250 text messages.
