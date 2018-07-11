@@ -408,6 +408,16 @@ GOV.UK Notify is printing and posting the letter.
 
 The provider has received the letter to deliver.
 
+## Status - pre-compiled letter
+
+### Pending virus check
+
+GOV.UK Notify virus scan of the pre-compiled letter file is not yet complete.
+
+### Virus scan failed
+
+GOV.UK Notify virus scan has identified a potential virus in the pre-compiled letter file.
+
 ## Get the status of one message
 
 ### Method
@@ -639,6 +649,7 @@ If the request is not successful, the client will return a `NotificationClientEx
 
 |httpResult|message|How to fix|
 |:---|:---|:---|
+|`400`|`[{`<br>`"error": "ValidationError",`<br>`"message": "id is not a valid UUID"`<br>`}]`|Check the notification ID|
 |`403`|`[{`<br>`"error": "AuthError",`<br>`"message": "Error: Your system clock must be accurate to within 30 seconds"`<br>`}]`|Check your system clock|
 |`403`|`[{`<br>`"error": "AuthError",`<br>`"message": "Invalid token: signature, api token not found"`<br>`}]`|Use the correct API key. Refer to [API keys](/#api-keys) for more information|
 |`404`|`[{`<br>`"error": "NoResultFound",`<br>`"message": "No Result Found"`<br>`}]`|Check your [template ID](/#get-a-template-by-id-and-version-arguments-template-id-required) and [version](/#version)|
