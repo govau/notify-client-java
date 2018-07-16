@@ -35,7 +35,12 @@ You can use GOV.UK Notify to send text messages, emails and letters.
 ### Method
 
 ```java
-SendSmsResponse response = client.sendSms(templateId, phoneNumber, personalisation, reference, smsSenderId);
+SendSmsResponse response = client.sendSms(
+    templateId,
+    phoneNumber,
+    personalisation,
+    reference,
+    smsSenderId);
 ```
 
 ### Arguments
@@ -135,7 +140,12 @@ If the request is not successful, the client will return a `NotificationClientEx
 ### Method
 
 ```java
-SendEmailResponse response = client.sendEmail(templateId, emailAddress, personalisation, reference, emailReplyToId);
+SendEmailResponse response = client.sendEmail(
+    templateId,
+    emailAddress,
+    personalisation,
+    reference,
+    emailReplyToId);
 ```
 
 ### Arguments
@@ -228,7 +238,10 @@ When your service first signs up to GOV.UK Notify, you’ll start in trial mode.
 ### Method
 
 ```java
-SendLetterResponse response = client.sendLetter(templateId, personalisation, reference);
+SendLetterResponse response = client.sendLetter(
+    templateId,
+    personalisation,
+    reference);
 ```
 
 ### Arguments
@@ -238,7 +251,7 @@ SendLetterResponse response = client.sendLetter(templateId, personalisation, ref
 You can find this by signing into GOV.UK Notify and going to the __Templates__ page.
 
 ```
-String templateId="f33517ff-2a88-4f6e-b855-c550268ce08a";
+String templateId = "f33517ff-2a88-4f6e-b855-c550268ce08a";
 ```
 
 #### personalisation (required)
@@ -318,7 +331,9 @@ This is an invitation-only feature. Contact the GOV.UK Notify team on the [suppo
 ### Method
 
 ```java
-LetterResponse response = client.sendPrecompiledLetter(reference, precompiledPDF);
+LetterResponse response = client.sendPrecompiledLetter(
+    reference,
+    precompiledPDF);
 ```
 
 ### Arguments
@@ -471,7 +486,11 @@ This API call will return one page of up to 250 messages and statuses. You can g
 ### Method
 
 ```java
-NotificationList notification = client.getNotifications(status, notificationType, reference, olderThanId);
+NotificationList notification = client.getNotifications(
+    status,
+    notificationType,
+    reference,
+    olderThanId);
 ```
 
 To get the most recent messages, you must pass in an empty `olderThanId` argument or `null`.
@@ -682,7 +701,9 @@ If no templates exist for a template type or there no templates for a service, t
 This will generate a preview version of a template.
 
 ```java
-TemplatePreview templatePreview = client.getTemplatePreview(templateId, personalisation);
+TemplatePreview templatePreview = client.getTemplatePreview(
+    templateId,
+    personalisation);
 ```
 
 The parameters in the personalisation argument must match the placeholder fields in the actual template. The API notification client will ignore any extra fields in the method.
