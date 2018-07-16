@@ -35,18 +35,10 @@ You can use GOV.UK Notify to send text messages, emails and letters.
 ### Method
 
 ```java
-SendSmsResponse response = client.sendSms(mobileNumber, templateId, personalisation, reference, smsSenderId);
+SendSmsResponse response = client.sendSms(templateId, phoneNumber, personalisation, reference, smsSenderId);
 ```
 
 ### Arguments
-
-#### mobileNumber (required)
-
-The phone number of the recipient of the text message. This number can be a UK or international number.
-
-```
-String mobileNumber="+447900900123";
-```
 
 #### templateId (required)
 
@@ -54,6 +46,14 @@ You can find this by signing into [GOV.UK Notify](https://www.notifications.serv
 
 ```
 String templateId="f33517ff-2a88-4f6e-b855-c550268ce08a";
+```
+
+#### phoneNumber (required)
+
+The phone number of the recipient of the text message. This number can be a UK or international number.
+
+```
+String phoneNumber="+447900900123";
 ```
 
 #### personalisation (required)
@@ -135,18 +135,11 @@ If the request is not successful, the client will return a `NotificationClientEx
 ### Method
 
 ```java
-SendEmailResponse response = client.sendEmail(emailAddress, templateId, personalisation, reference, emailReplyToId);
+SendEmailResponse response = client.sendEmail(templateId, emailAddress, personalisation, reference, emailReplyToId);
 ```
 
 ### Arguments
 
-#### emailAddress (required)
-
-The email address of the recipient.
-
-```
-String emailAddress='sender@something.com';
-```
 
 #### templateId (required)
 
@@ -154,6 +147,14 @@ You can find this by signing into GOV.UK Notify and going to the __Templates__ p
 
 ```
 String templateId="f33517ff-2a88-4f6e-b855-c550268ce08a";
+```
+
+#### emailAddress (required)
+
+The email address of the recipient.
+
+```
+String emailAddress='sender@something.com';
 ```
 
 #### personalisation (required)
