@@ -440,7 +440,7 @@ The ID of the notification.
 
 ### Response
 
-If the request to the client is successful, the client will return a `notification`:
+If the request to the client is successful, the client will return a `Notification`:
 
 ```java
 UUID id;
@@ -465,6 +465,7 @@ DateTime createdAt;
 Optional<DateTime> sentAt;
 Optional<DateTime> completedAt;
 Optional<DateTime> estimatedDelivery;
+Optional<String> createdByName;
 ```
 
 ### Error codes
