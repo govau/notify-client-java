@@ -395,6 +395,7 @@ public class ClientIntegrationTestIT {
         assertNotNull(notification.getCreatedAt());
         assertNotNull(notification.getStatus());
         assertNotNull(notification.getNotificationType());
+        assertFalse(notification.getCreatedByName().isPresent());
         if(notification.getNotificationType().equals("sms")) {
             assertNotificationWhenSms(notification);
         }
