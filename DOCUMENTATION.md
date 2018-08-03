@@ -337,7 +337,7 @@ LetterResponse response = client.sendPrecompiledLetter(
 ```
 
 ```java
-LetterResponse response = client.sendPrecompiledLetterWithInoutStream(
+LetterResponse response = client.sendPrecompiledLetterWithInputStream(
     reference,
     precompiledPDFAsInputStream);
 ```
@@ -352,7 +352,7 @@ You must create this unique identifier. This reference identifies a single uniqu
 String reference="STRING";
 ```
 
-#### precompiledPDFAsFile (required)
+#### precompiledPDFAsFile (required for the sendPrecompiledLetter method)
 
 The precompiled letter must be a PDF file. This argument adds the precompiled letter PDF file to a Java file object. The method sends this Java file object to GOV.UK Notify.
 
@@ -360,7 +360,7 @@ The precompiled letter must be a PDF file. This argument adds the precompiled le
 File precompiledPDF = new File("<PDF file path>");
 ```
 
-#### precompiledPDFAsInputStream (required)
+#### precompiledPDFAsInputStream (required for the sendPrecompiledLetterWithInputStream method)
 
 The precompiled letter must be an InputStream. This argument adds the precompiled letter PDF content to a Java InputStream object. The method sends this InputStream to GOV.UK Notify.
 
