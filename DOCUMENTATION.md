@@ -333,7 +333,13 @@ This is an invitation-only feature. Contact the GOV.UK Notify team on the [suppo
 ```java
 LetterResponse response = client.sendPrecompiledLetter(
     reference,
-    precompiledPDF);
+    precompiledPDFAsFile);
+```
+
+```java
+LetterResponse response = client.sendPrecompiledLetterWithInputStream(
+    reference,
+    precompiledPDFAsInputStream);
 ```
 
 ### Arguments
@@ -346,12 +352,20 @@ You must create this unique identifier. This reference identifies a single uniqu
 String reference="STRING";
 ```
 
-#### precompiledPDF (required)
+#### precompiledPDFAsFile (required for the sendPrecompiledLetter method)
 
 The precompiled letter must be a PDF file. This argument adds the precompiled letter PDF file to a Java file object. The method sends this Java file object to GOV.UK Notify.
 
 ```java
 File precompiledPDF = new File("<PDF file path>");
+```
+
+#### precompiledPDFAsInputStream (required for the sendPrecompiledLetterWithInputStream method)
+
+The precompiled letter must be an InputStream. This argument adds the precompiled letter PDF content to a Java InputStream object. The method sends this InputStream to GOV.UK Notify.
+
+```java
+InputStream precompiledPDFAsInputStream = new FileInputStream(pdfContent);
 ```
 
 ### Response
