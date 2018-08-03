@@ -35,18 +35,15 @@ You can use GOV.UK Notify to send text messages, emails and letters.
 ### Method
 
 ```java
-SendSmsResponse response = client.sendSms(mobileNumber, templateId, personalisation, reference, smsSenderId);
+SendSmsResponse response = client.sendSms(
+    templateId,
+    phoneNumber,
+    personalisation,
+    reference,
+    smsSenderId);
 ```
 
 ### Arguments
-
-#### mobileNumber (required)
-
-The phone number of the recipient of the text message. This number can be a UK or international number.
-
-```
-String mobileNumber="+447900900123";
-```
 
 #### templateId (required)
 
@@ -54,6 +51,14 @@ You can find this by signing into [GOV.UK Notify](https://www.notifications.serv
 
 ```
 String templateId="f33517ff-2a88-4f6e-b855-c550268ce08a";
+```
+
+#### phoneNumber (required)
+
+The phone number of the recipient of the text message. This number can be a UK or international number.
+
+```
+String phoneNumber="+447900900123";
 ```
 
 #### personalisation (required)
@@ -135,18 +140,16 @@ If the request is not successful, the client will return a `NotificationClientEx
 ### Method
 
 ```java
-SendEmailResponse response = client.sendEmail(emailAddress, templateId, personalisation, reference, emailReplyToId);
+SendEmailResponse response = client.sendEmail(
+    templateId,
+    emailAddress,
+    personalisation,
+    reference,
+    emailReplyToId);
 ```
 
 ### Arguments
 
-#### emailAddress (required)
-
-The email address of the recipient.
-
-```
-String emailAddress='sender@something.com';
-```
 
 #### templateId (required)
 
@@ -154,6 +157,14 @@ You can find this by signing into GOV.UK Notify and going to the __Templates__ p
 
 ```
 String templateId="f33517ff-2a88-4f6e-b855-c550268ce08a";
+```
+
+#### emailAddress (required)
+
+The email address of the recipient.
+
+```
+String emailAddress='sender@something.com';
 ```
 
 #### personalisation (required)
@@ -227,7 +238,10 @@ When your service first signs up to GOV.UK Notify, you’ll start in trial mode.
 ### Method
 
 ```java
-SendLetterResponse response = client.sendLetter(templateId, personalisation, reference);
+SendLetterResponse response = client.sendLetter(
+    templateId,
+    personalisation,
+    reference);
 ```
 
 ### Arguments
@@ -237,7 +251,7 @@ SendLetterResponse response = client.sendLetter(templateId, personalisation, ref
 You can find this by signing into GOV.UK Notify and going to the __Templates__ page.
 
 ```
-String templateId="f33517ff-2a88-4f6e-b855-c550268ce08a";
+String templateId = "f33517ff-2a88-4f6e-b855-c550268ce08a";
 ```
 
 #### personalisation (required)
@@ -317,7 +331,15 @@ This is an invitation-only feature. Contact the GOV.UK Notify team on the [suppo
 ### Method
 
 ```java
-LetterResponse response = client.sendPrecompiledLetter(reference, precompiledPDF);
+LetterResponse response = client.sendPrecompiledLetter(
+    reference,
+    precompiledPDFAsFile);
+```
+
+```java
+LetterResponse response = client.sendPrecompiledLetterWithInputStream(
+    reference,
+    precompiledPDFAsInputStream);
 ```
 
 ### Arguments
@@ -330,12 +352,20 @@ You must create this unique identifier. This reference identifies a single uniqu
 String reference="STRING";
 ```
 
-#### precompiledPDF (required)
+#### precompiledPDFAsFile (required for the sendPrecompiledLetter method)
 
 The precompiled letter must be a PDF file. This argument adds the precompiled letter PDF file to a Java file object. The method sends this Java file object to GOV.UK Notify.
 
 ```java
 File precompiledPDF = new File("<PDF file path>");
+```
+
+#### precompiledPDFAsInputStream (required for the sendPrecompiledLetterWithInputStream method)
+
+The precompiled letter must be an InputStream. This argument adds the precompiled letter PDF content to a Java InputStream object. The method sends this InputStream to GOV.UK Notify.
+
+```java
+InputStream precompiledPDFAsInputStream = new FileInputStream(pdfContent);
 ```
 
 ### Response
@@ -434,7 +464,7 @@ The ID of the notification.
 
 ### Response
 
-If the request to the client is successful, the client will return a `notification`:
+If the request to the client is successful, the client will return a `Notification`:
 
 ```java
 UUID id;
@@ -459,6 +489,7 @@ DateTime createdAt;
 Optional<DateTime> sentAt;
 Optional<DateTime> completedAt;
 Optional<DateTime> estimatedDelivery;
+Optional<String> createdByName;
 ```
 
 ### Error codes
@@ -480,7 +511,11 @@ This API call will return one page of up to 250 messages and statuses. You can g
 ### Method
 
 ```java
-NotificationList notification = client.getNotifications(status, notificationType, reference, olderThanId);
+NotificationList notification = client.getNotifications(
+    status,
+    notificationType,
+    reference,
+    olderThanId);
 ```
 
 To get the most recent messages, you must pass in an empty `olderThanId` argument or `null`.
@@ -692,7 +727,9 @@ If no templates exist for a template type or there no templates for a service, t
 This will generate a preview version of a template.
 
 ```java
-TemplatePreview templatePreview = client.getTemplatePreview(templateId, personalisation);
+TemplatePreview templatePreview = client.getTemplatePreview(
+    templateId,
+    personalisation);
 ```
 
 The parameters in the personalisation argument must match the placeholder fields in the actual template. The API notification client will ignore any extra fields in the method.
