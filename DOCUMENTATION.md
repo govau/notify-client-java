@@ -48,7 +48,7 @@ SendSmsResponse response = client.sendSms(
 
 #### templateId (required)
 
-You can find this by signing into [GOV.UK Notify](https://www.notifications.service.gov.uk/) and going to the __Templates__ page.
+Sign in to [GOV.UK Notify](https://www.notifications.service.gov.uk/) and go to the __Templates__ page to find the template ID.
 
 ```
 String templateId="f33517ff-2a88-4f6e-b855-c550268ce08a";
@@ -76,7 +76,7 @@ If a template does not have any placeholder fields for personalised information,
 
 #### reference (required)
 
-A unique identifier. This reference identifies a single unique notification or a batch of notifications. If you do not have a reference, you must pass in an empty string or `null`.
+A unique identifier you create. This reference identifies a single unique notification or a batch of notifications. If you do not have a reference, you must pass in an empty string or `null`.
 
 ```
 String reference='STRING';
@@ -105,8 +105,7 @@ If you do not have have an `smsSenderId`, you can leave out this argument.
 
 ### Response
 
-If the request to the client is successful, the client will return a `SendSmsResponse`:
-
+If the request to the client is successful, the client returns a `SendSmsResponse`:
 
 ```java
 UUID notificationId;
@@ -118,13 +117,13 @@ String body;
 Optional<String> fromNumber;
 ```
 
-If you are using the [test API key](/#test), all your messages will come back as delivered.
+If you are using the [test API key](/#test), all your messages come back with a `delivered` status.
 
-All messages sent using the [team and whitelist](#team-and-whitelist) or [live](#live) keys will appear on your dashboard.
+All messages sent using the [team and whitelist](#team-and-whitelist) or [live](#live) keys appear on your dashboard.
 
 ### Error codes
 
-If the request is not successful, the client will return a `NotificationClientException` containing the relevant error code:
+If the request is not successful, the client returns a `NotificationClientException` containing the relevant error code:
 
 |httpResult|Message|How to fix|
 |:---|:---|:---|
@@ -155,7 +154,7 @@ SendEmailResponse response = client.sendEmail(
 
 #### templateId (required)
 
-You can find this by signing into GOV.UK Notify and going to the __Templates__ page.
+Sign in to [GOV.UK Notify](https://www.notifications.service.gov.uk/) and go to the __Templates__ page to find the template ID.
 
 ```
 String templateId="f33517ff-2a88-4f6e-b855-c550268ce08a";
@@ -182,7 +181,7 @@ If a template does not have any placeholder fields for personalised information,
 
 #### reference (required)
 
-A unique identifier. This reference identifies a single unique notification or a batch of notifications. If you do not have a reference, you must pass in an empty string or `null`.
+A unique identifier you create. This reference identifies a single unique notification or a batch of notifications. If you do not have a reference, you must pass in an empty string or `null`.
 
 ```
 String reference='STRING';
@@ -195,7 +194,7 @@ This is an email reply-to address specified by you to receive replies from your 
 1. Sign into your GOV.UK Notify account.
 1. Go to __Settings__.
 1. If you need to change to another service, select __Switch service__ in the top right corner of the screen and select the correct one.
-1. Go to the Email section and select __Manage__ on the __Email reply to addresses__ row.
+1. Go to the __Email__ section and select __Manage__ on the __Email reply to addresses__ row.
 1. Select __Change__ to specify the email address to receive replies, and select __Save__.
 
 ```
@@ -206,7 +205,7 @@ If you do not have have an `emailReplyToId`, you can leave out this argument.
 
 ### Response
 
-If the request to the client is successful, the client will return a `SendEmailResponse`:
+If the request to the client is successful, the client returns a `SendEmailResponse`:
 
 ```java
 UUID notificationId;
@@ -221,7 +220,7 @@ Optional<String> fromEmail;
 
 ### Error codes
 
-If the request is not successful, the client will return a `NotificationClientException` containing the relevant error code:
+If the request is not successful, the client returns a `NotificationClientException` containing the relevant error code:
 
 |httpResult|Message|How to fix|
 |:--- |:---|:---|
@@ -235,7 +234,11 @@ If the request is not successful, the client will return a `NotificationClientEx
 
 ## Send a letter
 
-When your service first signs up to GOV.UK Notify, you’ll start in trial mode. You can only send letters in live mode.
+When your service first signs up to GOV.UK Notify, you’ll start in trial mode. You can only send letters in live mode. You must ask GOV.UK Notify to make your service live.
+
+1. Sign in to [GOV.UK Notify](https://www.notifications.service.gov.uk/).
+1. Select __Using Notify__.
+1. Select __requesting to go live__.
 
 ### Method
 
@@ -251,7 +254,7 @@ SendLetterResponse response = client.sendLetter(
 
 #### templateId (required)
 
-You can find this by signing into GOV.UK Notify and going to the __Templates__ page.
+Sign in to [GOV.UK Notify](https://www.notifications.service.gov.uk/) and go to the __Templates__ page to find the template ID.
 
 ```
 String templateId = "f33517ff-2a88-4f6e-b855-c550268ce08a";
@@ -291,7 +294,7 @@ personalisation.put("address_line_6", "Middlesex"); // optional address field
 
 #### reference (required)
 
-A unique identifier. This reference identifies a single unique notification or a batch of notifications. If you do not have a reference, you must pass in an empty string or `null`.
+A unique identifier you create. This reference identifies a single unique notification or a batch of notifications. If you do not have a reference, you must pass in an empty string or `null`.
 
 ```
 String reference='STRING';
@@ -299,7 +302,7 @@ String reference='STRING';
 
 ### Response
 
-If the request to the client is successful, the client will return a `SendLetterResponse`:
+If the request to the client is successful, the client returns a `SendLetterResponse`:
 
 ```java
 UUID notificationId;
@@ -313,7 +316,7 @@ String subject;
 
 ### Error codes
 
-If the request is not successful, the client will return a `NotificationClientException` containing the relevant error code:
+If the request is not successful, the client returns a `NotificationClientException` containing the relevant error code:
 
 |httpResult|Message|How to fix|
 |:--- |:---|:---|
@@ -351,7 +354,7 @@ LetterResponse response = client.sendPrecompiledLetterWithInputStream(
 
 #### reference (required)
 
-You must create this unique identifier. This reference identifies a single unique notification or a batch of notifications. It must not contain any personal information such as name or postal address.
+A unique identifier you create. This reference identifies a single unique notification or a batch of notifications. It must not contain any personal information such as name or postal address.
 
 ```
 String reference="STRING";
@@ -375,7 +378,7 @@ InputStream precompiledPDFAsInputStream = new FileInputStream(pdfContent);
 
 ### Response
 
-If the request to the client is successful, the client will return a `LetterResponse`:
+If the request to the client is successful, the client returns a `LetterResponse`:
 
 ```java
 UUID notificationId;
@@ -384,7 +387,7 @@ UUID notificationId;
 
 ### Error codes
 
-If the request is not successful, the client will return a `NotificationClientException` containing the relevant error code:
+If the request is not successful, the client returns a `NotificationClientException` containing the relevant error code:
 
 |httpResult|Message|How to fix|
 |:--- |:---|:---|
@@ -403,55 +406,38 @@ If the request is not successful, the client will return a `NotificationClientEx
 
 Message status depends on the type of message that you have sent.
 
+You can only get the status of messages that are 7 days old or less.
+
 ## Status - text and email
 
-### Created
+|Status|Information|
+|:---|:---|
+|Created|The message is queued to be sent to the provider. The notification usually remains in this state for a few seconds.|
+|Sending|The message is queued to be sent by the provider to the recipient, and GOV.UK Notify is waiting for delivery information.|
+|Delivered|The message was successfully delivered.|
+|Failed|This covers all failure statuses:<br>- `permanent-failure` - "The provider was unable to deliver message, email or phone number does not exist; remove this recipient from your list"<br>- `temporary-failure` - "The provider was unable to deliver message, email inbox was full or phone was turned off; you can try to send the message again"<br>- `technical-failure` - "Notify had a technical failure; you can try to send the message again"|
 
-The message is queued to be sent to the provider. The notification usually remains in this state for a few seconds.
+## Status - text only
 
-### Sending
-
-The message is queued to be sent by the provider to the recipient, and GOV.UK Notify are waiting for delivery information.
-
-### Delivered
-
-The message was successfully delivered.
-
-### Sent (text message only)
-
-The text message was delivered internationally. GOV.UK Notify may not receive additional status updates depending on the recipient's country and telecoms provider.
-
-### Failed
-
-This covers all failure statuses:
-
-- `permanent-failure` - "The provider was unable to deliver message, email or phone number does not exist; remove this recipient from your list"
-- `temporary-failure` - "The provider was unable to deliver message, email inbox was full or phone was turned off; you can try to send the message again"
-- `technical-failure` - "Notify had a technical failure; you can try to send the message again"
+|Status|Information|
+|:---|:---|
+|Pending|GOV.UK Notify received a callback from the provider but the device has not yet responded. Another callback from the provider determines the final status of the notification.|
+|Sent|The text message was delivered internationally. This only applies to text messages sent to non-UK phone numbers. GOV.UK Notify may not receive additional status updates depending on the recipient's country and telecoms provider.|
 
 ## Status - letter
 
-### Failed
-
-The only failure status that applies to letters is `technical-failure`. Notify had an unexpected error while sending to our printing provider.
-
-### Accepted
-
-GOV.UK Notify is printing and posting the letter.
-
-### Received
-
-The provider has received the letter to deliver.
+|Status|information|
+|:---|:---|
+|Failed|The only failure status that applies to letters is `technical-failure`. GOV.UK Notify had an unexpected error while sending to our printing provider.|
+|Accepted|GOV.UK Notify is printing and posting the letter.|
+|Received|The provider has received the letter to deliver.|
 
 ## Status - pre-compiled letter
 
-### Pending virus check
-
-GOV.UK Notify virus scan of the pre-compiled letter file is not yet complete.
-
-### Virus scan failed
-
-GOV.UK Notify virus scan has identified a potential virus in the pre-compiled letter file.
+|Status|information|
+|:---|:---|
+|Pending virus scan|GOV.UK Notify virus scan of the pre-compiled letter file is not yet complete.|
+|Virus scan failed|GOV.UK Notify virus scan has identified a potential virus in the pre-compiled letter file.|
 
 ## Get the status of one message
 
@@ -465,11 +451,18 @@ Notification notification = client.getNotificationById(notificationId);
 
 #### notificationId (required)
 
-The ID of the notification.
+The ID of the notification. You can find the notification ID in the response to the [original notification method call](/ruby.html#response).
+
+You can also find it in your [GOV.UK Notify Dashboard](https://www.notifications.service.gov.uk).
+
+1. Sign into GOV.UK Notify and select __Dashboard__.
+1. Select either __emails sent__, __text messages sent__, or __letters sent__.
+1. Select the relevant notification.
+1. Copy the notification ID from the end of the page URL, for example `https://www.notifications.service.gov.uk/services/af90d4cb-ae88-4a7c-a197-5c30c7db423b/notification/ID`.
 
 ### Response
 
-If the request to the client is successful, the client will return a `Notification`:
+If the request to the client is successful, the client returns a `Notification`:
 
 ```java
 UUID id;
@@ -499,7 +492,7 @@ Optional<String> createdByName;
 
 ### Error codes
 
-If the request is not successful, the client will return a `NotificationClientException` containing the relevant error code:
+If the request is not successful, the client returns a `NotificationClientException` containing the relevant error code:
 
 |httpResult|Message|How to fix|
 |:---|:---|:---|
@@ -511,7 +504,9 @@ If the request is not successful, the client will return a `NotificationClientEx
 
 ## Get the status of multiple messages
 
-This API call will return one page of up to 250 messages and statuses. You can get either the most recent messages, or get older messages by specifying a particular notification ID in the [`olderThanId`](/#olderthanid) argument.
+This API call returns one page of up to 250 messages and statuses. You can get either the most recent messages, or get older messages by specifying a particular notification ID in the [`olderThanId`](/#olderthanid) argument.
+
+You can only get the status of messages that are 7 days old or less.
 
 ### Method
 
@@ -526,7 +521,7 @@ NotificationList notification = client.getNotifications(
 
 To get the most recent messages, you must pass in an empty `olderThanId` argument or `null`.
 
-To get older messages, pass the ID of an older notification into the `olderThanId` argument. This will return the next oldest messages from the specified notification ID.
+To get older messages, pass the ID of an older notification into the `olderThanId` argument. This returns the next oldest messages from the specified notification ID.
 
 ### Arguments
 
@@ -540,7 +535,7 @@ You can pass in empty arguments or `null` to ignore these filters.
 |`sending` |The message is queued to be sent by the provider to the recipient|Yes|Yes||
 |`delivered`|The message was successfully delivered|Yes|Yes||
 |`sent`|The text message was delivered internationally|Yes|Yes||
-|`failed`|This will return all failure statuses:<br>- `permanent-failure`<br>- `temporary-failure`<br>- `technical-failure`|Yes|Yes||
+|`failed`|This returns all failure statuses:<br>- `permanent-failure`<br>- `temporary-failure`<br>- `technical-failure`|Yes|Yes||
 |`permanent-failure`|The provider was unable to deliver message, email or phone number does not exist; remove this recipient from your list|Yes|Yes||
 |`temporary-failure`|The provider was unable to deliver message, email inbox was full or phone was turned off; you can try to send the message again|Yes|Yes||
 |`technical-failure`|Email / Text: Notify had a technical failure; you can try to send the message again. <br><br>Letter: Notify had an unexpected error while sending to our printing provider. <br><br>You can leave out this argument to ignore this filter.|Yes|Yes||
@@ -557,7 +552,7 @@ You can filter by:
 
 #### reference (optional)
 
-A unique identifier. This reference identifies a single unique notification or a batch of notifications.
+A unique identifier you create if necessary. This reference identifies a single unique notification or a batch of notifications.
 
 ```
 String reference='STRING';
@@ -575,7 +570,7 @@ If you pass in an empty argument or `null`, the client returns the most recent 2
 
 ### Response
 
-If the request to the client is successful, the client will return a `NotificationList`:
+If the request to the client is successful, the client returns a `NotificationList`:
 
 ```java
 List<Notification> notifications;
@@ -585,7 +580,7 @@ Optional<String> nextPageLink;
 
 ### Error codes
 
-If the request is not successful, the client will return a `NotificationClientException` containing the relevant error code:
+If the request is not successful, the client returns a `NotificationClientException` containing the relevant error code:
 
 |httpResult|Message||
 |:---|:---|:---|
@@ -601,7 +596,7 @@ If the request is not successful, the client will return a `NotificationClientEx
 
 ### Method
 
-This will return the latest version of the template.
+This returns the latest version of the template.
 
 ```java
 Template template = client.getTemplateById(templateId);
@@ -611,7 +606,7 @@ Template template = client.getTemplateById(templateId);
 
 #### templateId (required)
 
-The ID of the template. You can find this by signing into GOV.UK Notify and going to the __Templates__ page.
+Sign in to [GOV.UK Notify](https://www.notifications.service.gov.uk/) and go to the __Templates__ page to find the template ID.
 
 ```
 String templateId='f33517ff-2a88-4f6e-b855-c550268ce08a';
@@ -619,7 +614,7 @@ String templateId='f33517ff-2a88-4f6e-b855-c550268ce08a';
 
 ### Response
 
-If the request to the client is successful, the client will return a `Template`:
+If the request to the client is successful, the client returns a `Template`:
 
 ```java
 UUID id;
@@ -635,7 +630,7 @@ Optional<Map<String, Object>> personalisation;
 
 ### Error codes
 
-If the request is not successful, the client will return a `NotificationClientException` containing the relevant error code:
+If the request is not successful, the client returns a `NotificationClientException` containing the relevant error code:
 
 |httpResult|Message|How to fix|
 |:---|:---|:---|
@@ -648,7 +643,7 @@ If the request is not successful, the client will return a `NotificationClientEx
 
 ### Method
 
-This will return the latest version of the template.
+This returns the latest version of the template.
 
 ```java
 Template template = client.getTemplateVersion(templateId, version);
@@ -658,7 +653,7 @@ Template template = client.getTemplateVersion(templateId, version);
 
 #### templateId (required)
 
-The ID of the template. You can find this by signing into GOV.UK Notify and going to the __Templates__ page.
+Sign in to [GOV.UK Notify](https://www.notifications.service.gov.uk/) and go to the __Templates__ page to find the template ID.
 
 ```
 String templateId='f33517ff-2a88-4f6e-b855-c550268ce08a';
@@ -670,7 +665,7 @@ The version number of the template.
 
 ### Response
 
-If the request to the client is successful, the client will return a `Template`:
+If the request to the client is successful, the client returns a `Template`:
 
 ```Java
 UUID id;
@@ -686,7 +681,7 @@ Optional<Map<String, Object>> personalisation;
 
 ### Error codes
 
-If the request is not successful, the client will return a `NotificationClientException` containing the relevant error code:
+If the request is not successful, the client returns a `NotificationClientException` containing the relevant error code:
 
 |httpResult|message|How to fix|
 |:---|:---|:---|
@@ -700,7 +695,7 @@ If the request is not successful, the client will return a `NotificationClientEx
 
 ### Method
 
-This will return the latest version of all templates.
+This returns the latest version of all templates.
 
 ```java
 TemplateList templates = client.getAllTemplates(templateType);
@@ -718,19 +713,19 @@ If you donot use `templateType`, the client returns all templates. Otherwise you
 
 ### Response
 
-If the request to the client is successful, the client will return a `TemplateList`:
+If the request to the client is successful, the client returns a `TemplateList`:
 
 ```java
 List<Template> templates;
 ```
 
-If no templates exist for a template type or there no templates for a service, the templates list will be empty.
+If no templates exist for a template type or there no templates for a service, the templates list is empty.
 
 ## Generate a preview template
 
 ### Method
 
-This will generate a preview version of a template.
+This generates a preview version of a template.
 
 ```java
 TemplatePreview templatePreview = client.getTemplatePreview(
@@ -739,13 +734,13 @@ TemplatePreview templatePreview = client.getTemplatePreview(
 );
 ```
 
-The parameters in the personalisation argument must match the placeholder fields in the actual template. The API notification client will ignore any extra fields in the method.
+The parameters in the personalisation argument must match the placeholder fields in the actual template. The API notification client ignores any extra fields in the method.
 
 ### Arguments
 
 #### templateId (required)
 
-The ID of the template. You can find this by signing into GOV.UK Notify and going to the __Templates__ page.
+Sign in to [GOV.UK Notify](https://www.notifications.service.gov.uk/) and go to the __Templates__ page to find the template ID.
 
 ```
 String templateId='f33517ff-2a88-4f6e-b855-c550268ce08a';
@@ -764,7 +759,7 @@ If a template does not have any placeholder fields for personalised information,
 
 ### Response
 
-If the request to the client is successful, the client will return a `TemplatePreview`:
+If the request to the client is successful, the client returns a `TemplatePreview`:
 
 ```java
 UUID id;
@@ -776,7 +771,7 @@ Optional<String> subject;
 
 ### Error codes
 
-If the request is not successful, the client will return a `NotificationClientException` containing the relevant error code:
+If the request is not successful, the client returns a `NotificationClientException` containing the relevant error code:
 
 |httpResult|message|How to fix|
 |:---|:---|:---|
@@ -788,7 +783,9 @@ If the request is not successful, the client will return a `NotificationClientEx
 
 # Get received text messages
 
-This API call will return one page of up to 250 received text messages. You can get either the most recent messages, or get older messages by specifying a particular notification ID in the [`olderThanId`](/#olderThanId) argument.
+This API call returns one page of up to 250 received text messages. You can get either the most recent messages, or get older messages by specifying a particular notification ID in the [`olderThanId`](/#olderThanId) argument.
+
+You can only get messages that are 7 days old or less.
 
 ### Method
 
@@ -798,7 +795,7 @@ ReceivedTextMessageList response = client.getReceivedTextMessages(olderThanId);
 
 To get the most recent messages, you must pass in an empty argument or `null`.
 
-To get older messages, pass the ID of an older notification into the `olderThanId` argument. This will return the next oldest messages from the specified notification ID.
+To get older messages, pass the ID of an older notification into the `olderThanId` argument. This returns the next oldest messages from the specified notification ID.
 
 ### Arguments
 
@@ -814,14 +811,14 @@ If you pass in an empty argument or `null`, the client returns the most recent 2
 
 ### Response
 
-If the request to the client is successful, the client will return a `ReceivedTextMessageList` that returns all received texts.
+If the request to the client is successful, the client returns a `ReceivedTextMessageList` that returns all received texts.
 
 ```java
 private List<ReceivedTextMessage> receivedTextMessages;
 private String currentPageLink;
 private String nextPageLink;
 ```
-The `ReceivedTextMessageList` will have the following properties:
+The `ReceivedTextMessageList` have the following properties:
 
 ```java
 private UUID id;
@@ -831,3 +828,4 @@ private UUID serviceId;
 private String content;
 private DateTime createdAt;
 ```
+If the notification specified in the `olderThanId` argument is older than 7 days, the client returns an empty response.
