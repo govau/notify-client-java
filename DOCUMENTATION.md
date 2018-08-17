@@ -451,7 +451,7 @@ Notification notification = client.getNotificationById(notificationId);
 
 #### notificationId (required)
 
-The ID of the notification. You can find the notification ID in the response to the [original notification method call](/ruby.html#response).
+The ID of the notification. You can find the notification ID in the response to the [original notification method call](/java.html#response).
 
 You can also find it in your [GOV.UK Notify Dashboard](https://www.notifications.service.gov.uk).
 
