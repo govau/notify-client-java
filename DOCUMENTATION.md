@@ -101,7 +101,7 @@ String smsSenderId='8e222534-7f05-4972-86e3-17c5d9f894e2'
 ```
 
 
-If you do not have have an `smsSenderId`, you can leave out this argument.
+If you do not have an `smsSenderId`, you can leave out this argument.
 
 ### Response
 
@@ -201,7 +201,7 @@ This is an email reply-to address specified by you to receive replies from your 
 String emailReplyToId='8e222534-7f05-4972-86e3-17c5d9f894e2'
 ```
 
-If you do not have have an `emailReplyToId`, you can leave out this argument.
+If you do not have an `emailReplyToId`, you can leave out this argument.
 
 ### Response
 
@@ -818,7 +818,7 @@ private List<ReceivedTextMessage> receivedTextMessages;
 private String currentPageLink;
 private String nextPageLink;
 ```
-The `ReceivedTextMessageList` have the following properties:
+The `ReceivedTextMessageList` has the following properties:
 
 ```java
 private UUID id;
