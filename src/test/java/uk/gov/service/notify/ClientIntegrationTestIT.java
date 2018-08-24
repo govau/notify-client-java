@@ -218,6 +218,7 @@ public class ClientIntegrationTestIT {
         assertNotNull(template.getTemplateType());
         assertNotNull(template.getBody());
         assertNotNull(template.getSubject());
+        assertNotNull(template.getName());
     }
 
     @Test
@@ -229,6 +230,7 @@ public class ClientIntegrationTestIT {
         assertNotNull(template.getCreatedAt());
         assertNotNull(template.getTemplateType());
         assertNotNull(template.getBody());
+        assertNotNull(template.getName());
     }
 
     @Test

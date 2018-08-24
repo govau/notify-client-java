@@ -19,6 +19,7 @@ public class TemplateTest {
         JSONObject content = new JSONObject();
         String id = UUID.randomUUID().toString();
         content.put("id", id);
+        content.put("name", "my template");
         content.put("type", "email");
         content.put("created_at", "2017-05-01T08:30:00.000Z");
         content.put("updated_at", "2017-05-01T08:34:00.000Z");
@@ -37,6 +38,7 @@ public class TemplateTest {
 
         Template template = new Template(content.toString());
         assertEquals(UUID.fromString(id), template.getId());
+        assertEquals("my template", template.getName());
         assertEquals("email", template.getTemplateType());
         assertEquals(new DateTime("2017-05-01T08:30:00.000Z"), template.getCreatedAt());
         assertEquals(Optional.of(new DateTime("2017-05-01T08:34:00.000Z")), template.getUpdatedAt());
@@ -60,6 +62,7 @@ public class TemplateTest {
         JSONObject content = new JSONObject();
         String id = UUID.randomUUID().toString();
         content.put("id", id);
+        content.put("name", "my template");
         content.put("type", "email");
         content.put("created_at", "2017-05-01T08:30:00.000Z");
         content.put("updated_at", null);
@@ -70,6 +73,7 @@ public class TemplateTest {
 
         Template template = new Template(content.toString());
         assertEquals(UUID.fromString(id), template.getId());
+        assertEquals("my template", template.getName());
         assertEquals("email", template.getTemplateType());
         assertEquals(new DateTime("2017-05-01T08:30:00.000Z"), template.getCreatedAt());
         assertEquals(Optional.ofNullable(null), template.getUpdatedAt());

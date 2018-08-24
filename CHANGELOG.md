@@ -1,3 +1,6 @@
+## 3.11.0-RELEASE
+* Updated `Template` to have `name`, the name of the template as set in Notify.
+
 ## 3.10.0-RELEASE
 * Updated `Notification` to have an Optional createdByName. If the notification was sent manually, this will be the name of the sender. If the notification was sent through the API, this will be `Optional.empty()`.
 * New method, `sendPrecompiledLetterWithInputStream`, to send a precompiled letter using an InputStream rather than a file.
