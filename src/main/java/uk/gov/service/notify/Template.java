@@ -9,6 +9,7 @@ import java.util.Map;
 
 public class Template {
     private UUID id;
+    private String name;
     private String templateType;
     private DateTime createdAt;
     private DateTime updatedAt;
@@ -32,6 +33,7 @@ public class Template {
 
     private void build(JSONObject data) {
         id = UUID.fromString(data.getString("id"));
+        name = data.getString("name");
         templateType = data.getString("type");
         createdAt = new DateTime(data.getString("created_at"));
         updatedAt = data.isNull("updated_at") ? null : new DateTime(data.getString("updated_at"));
@@ -56,6 +58,14 @@ public class Template {
 
     public void setTemplateType(String templateType) {
         this.templateType = templateType;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public DateTime getCreatedAt() {

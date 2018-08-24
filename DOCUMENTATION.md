@@ -618,6 +618,7 @@ If the request to the client is successful, the client returns a `Template`:
 
 ```java
 UUID id;
+String name;
 String templateType;
 DateTime createdAt;
 Optional<DateTime> updatedAt;
@@ -669,6 +670,7 @@ If the request to the client is successful, the client returns a `Template`:
 
 ```Java
 UUID id;
+String name;
 String templateType;
 DateTime createdAt;
 Optional<DateTime> updatedAt;
@@ -705,7 +707,7 @@ TemplateList templates = client.getAllTemplates(templateType);
 
 #### templateType (optional)
 
-If you donot use `templateType`, the client returns all templates. Otherwise you can filter by:
+If you don’t use `templateType`, the client returns all templates. Otherwise you can filter by:
 
 - `email`
 - `sms`
