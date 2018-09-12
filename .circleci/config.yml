@@ -1,0 +1,91 @@
+version: 2
+
+references:
+  java_image: &java_image
+    docker:
+    - image: circleci/openjdk:8u181-jdk-browsers
+
+  attach_workspace: &attach_workspace
+    attach_workspace:
+      at: .
+
+  restore_cache: &restore_cache
+    restore_cache:
+      keys:
+      # when lock file changes, use increasingly general patterns to restore cache
+      - gradle-repo-v1-{{ .Branch }}-{{ checksum "build.gradle" }}
+      - gradle-repo-v1-{{ .Branch }}-
+      - gradle-repo-v1-
+
+  master_branch: &master_branch
+    filters:
+      branches:
+        only:
+        - master
+
+jobs:
+  setup:
+    <<: *java_image
+    steps:
+    - checkout
+    - persist_to_workspace:
+        root: .
+        paths:
+        - .
+        - gradle
+        - src
+
+  download-dependencies:
+    <<: *java_image
+    steps:
+    - *attach_workspace
+    - *restore_cache
+    - run:
+        name: Download dependencies
+        command: ./gradlew downloadDependencies
+    - save_cache:
+        paths:
+        - ~/.gradle
+        key: gradle-repo-v1-{{ .Branch }}-{{ checksum "build.gradle" }}
+
+  test-and-build:
+    <<: *java_image
+    steps:
+    - *attach_workspace
+    - *restore_cache
+    - run:
+        name: Test & build
+        command: |
+          ./gradlew build
+    - persist_to_workspace:
+        root: .
+        paths:
+        - build
+
+  publish-to-bintray-jcenter:
+    <<: *java_image
+    steps:
+    - *attach_workspace
+    - *restore_cache
+    - run:
+        name: Publish to bintray
+        command: ./gradlew bintrayUpload
+
+workflows:
+  version: 2
+  build-and-deploy:
+    jobs:
+    - setup
+
+    - download-dependencies:
+        requires:
+        - setup
+
+    - test-and-build:
+        requires:
+        - download-dependencies
+
+    - publish-to-bintray-jcenter:
+        <<: *master_branch
+        requires:
+        - test-and-build

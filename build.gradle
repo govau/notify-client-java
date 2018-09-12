@@ -1,0 +1,110 @@
+
+plugins {
+    id "com.jfrog.bintray" version "1.8.4"
+}
+
+apply plugin: 'java'
+apply plugin: 'maven-publish'
+
+def props = new Properties()
+file("src/main/resources/application.properties").withInputStream { props.load(it) }
+
+group = 'au.gov.notify'
+version = props.getProperty("project.version")
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    compile(
+        'org.bitbucket.b_c:jose4j:0.5.5',
+        'commons-cli:commons-cli:1.1',
+        'org.json:json:20160212',
+        'joda-time:joda-time:2.7',
+        'org.apache.httpcomponents:httpclient:4.5.2',
+        'commons-io:commons-io:1.3.2',
+        'org.apache.commons:commons-lang3:3.0'
+    )
+
+    testCompile(
+        'junit:junit:4.12'
+    )
+}
+
+
+task downloadDependencies() {
+    description 'Download all dependencies to the Gradle cache'
+    doLast {
+        configurations.findAll { it.canBeResolved }.files
+    }
+}
+
+bintray {
+    user = System.getenv('BINTRAY_USER')
+    key = System.getenv('BINTRAY_KEY')
+    publications = ['MyPublication']
+
+    pkg {
+        issueTrackerUrl = 'https://github.com/govau/notify-client-java/issues'
+        licenses = ['MIT']
+        name = 'notify-client-java'
+        publicDownloadNumbers = false
+        publish = true
+        repo = 'notify-jars'
+        vcsUrl = 'https://github.com/govau/notify-client-java.git'
+        version {
+            name = props.getProperty("project.version")
+            released  = new Date()
+        }
+        websiteUrl = 'https://github.com/govau/notify-client-java'
+    }
+}
+
+
+def pomConfig = {
+    licenses {
+        license {
+            name "The MIT License"
+            url "https://github.com/govau/notify-client-java/blob/master/LICENSE"
+            distribution "repo"
+        }
+    }
+    developers {
+        developer {
+            name "DTA Notify support"
+            email "notify-support@digital.gov.au"
+        }
+    }
+
+    scm {
+        url "https://github.com/govau/notify-client-java"
+    }
+}
+
+task sourceJar(type: Jar) {
+    from sourceSets.main.allJava
+    classifier "sources"
+}
+
+publishing {
+    publications {
+        MyPublication(MavenPublication) {
+            from components.java
+            artifact sourceJar
+            groupId 'au.gov.notify'
+            artifactId 'notify-client-java'
+            version props.getProperty("project.version")
+            pom.withXml {
+                def root = asNode()
+                root.appendNode('description', 'Notify.gov.au java client')
+                root.appendNode('name', 'notify-client-java')
+                root.appendNode('url', 'https://notify.gov.au')
+                root.children().last() + pomConfig
+            }
+        }
+    }
+}

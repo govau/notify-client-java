@@ -1,3 +1,7 @@
+## 4.0.0-RELEASE
+* Forked java client from Gov UK and repurposing for Gov AU
+* Removed unsupported APIs from SDK
+
 ## 3.11.0-RELEASE
 * Updated `Template` to have `name`, the name of the template as set in Notify.
 

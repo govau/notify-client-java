@@ -1,4 +1,4 @@
-<!--Thanks for contributing to GOV.UK Notify. Using this template to write your pull request message will help get it merged as soon as possible. -->
+<!--Thanks for contributing to GOV.AU Notify. Using this template to write your pull request message will help get it merged as soon as possible. -->
 
 ## What problem does the pull request solve?
 <!--- Describe why you’re making this change -->
@@ -10,4 +10,3 @@
 - [ ] I’ve written unit tests for these changes
 - [ ] I’ve update the documentation (in `DOCUMENTATION.md`)
 - [ ] I’ve bumped the version number (in `src/main/resources/application.properties`)
-      and run the `update_version.sh` script
