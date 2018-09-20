@@ -48,6 +48,7 @@ jobs:
         - ~/.gradle
         key: gradle-repo-v1-{{ .Branch }}-{{ checksum "build.gradle" }}
 
+  # This is integrated with Circle CI with its integration tests hitting https://notify.gov.au with the notify-dev@digital.gov.au user account.
   test-and-build:
     <<: *java_image
     steps:
@@ -85,7 +86,13 @@ workflows:
         requires:
         - download-dependencies
 
+    - approve-publish-to-bintray:
+        <<: *master_branch
+        type: approval
+        requires:
+        - test-and-build
+
     - publish-to-bintray-jcenter:
         <<: *master_branch
         requires:
-        - test-and-build
+        - approve-publish-to-bintray
