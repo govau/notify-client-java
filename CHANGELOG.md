@@ -1,3 +1,7 @@
+## 4.0.1-RELEASE
+* Bring in changes from GDS where applicable
+* Update dependency versions
+
 ## 4.0.0-RELEASE
 * Forked java client from Gov UK and repurposing for Gov AU
 * Removed unsupported APIs from SDK

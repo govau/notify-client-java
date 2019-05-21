@@ -2,7 +2,7 @@ package au.gov.notify;
 
 public class NotifyClientException extends Exception
 {
-    private static final long serialVersionUID = 2l;
+    private static final long serialVersionUID = 2L;
     private int httpResult;
 
     public NotifyClientException(Exception ex)

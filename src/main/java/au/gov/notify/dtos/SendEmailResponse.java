@@ -6,14 +6,14 @@ import java.util.Optional;
 import java.util.UUID;
 
 public class SendEmailResponse {
-    private UUID notificationId;
-    private String reference;
-    private UUID templateId;
-    private int templateVersion;
-    private String templateUri;
-    private String body;
-    private String subject;
-    private String fromEmail;
+    private final UUID notificationId;
+    private final String reference;
+    private final UUID templateId;
+    private final int templateVersion;
+    private final String templateUri;
+    private final String body;
+    private final String subject;
+    private final String fromEmail;
 
 
     public SendEmailResponse(String response) {

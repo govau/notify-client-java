@@ -62,7 +62,7 @@ The phone number of the recipient of the text message. This number can be a AU o
 String phoneNumber="+61412345678";
 ```
 
-#### personalisation (required)
+#### personalisation (optional)
 
 If a template has placeholder fields for personalised information such as name or reference number, you must provide their values in a map. For example:
 
@@ -76,7 +76,7 @@ If a template does not have any placeholder fields for personalised information,
 
 #### reference (required)
 
-A unique identifier you create. This reference identifies a single unique notification or a batch of notifications. If you do not have a reference, you must pass in an empty string or `null`.
+A unique identifier you create. This reference identifies a single unique notification or a batch of notifications. It must not contain any personal information such as name or postal address. If you do not have a reference, you must pass in an empty string or `null`.
 
 ```
 String reference='STRING';
@@ -181,7 +181,7 @@ If a template does not have any placeholder fields for personalised information,
 
 #### reference (required)
 
-A unique identifier you create. This reference identifies a single unique notification or a batch of notifications. If you do not have a reference, you must pass in an empty string or `null`.
+A unique identifier you create. This reference identifies a single unique notification or a batch of notifications. It must not contain any personal information such as name or postal address. If you do not have a reference, you must pass in an empty string or `null`.
 
 ```
 String reference='STRING';
@@ -234,9 +234,9 @@ If the request is not successful, the client returns a `NotificationClientExcept
 
 # Get message status
 
-Message status depends on the type of message that you have sent.
+Message status depends on the type of message you have sent.
 
-You can only get the status of messages that are 7 days old or less.
+You can only get the status of messages that are 7 days old or newer.
 
 ## Status - text and email
 
@@ -321,7 +321,7 @@ If the request is not successful, the client returns a `NotificationClientExcept
 
 This API call returns one page of up to 250 messages and statuses. You can get either the most recent messages, or get older messages by specifying a particular notification ID in the [`olderThanId`](#olderthanid) argument.
 
-You can only get the status of messages that are 7 days old or less.
+You can only get the status of messages that are 7 days old or newer.
 
 ### Method
 
@@ -366,7 +366,7 @@ You can filter by:
 
 #### reference (optional)
 
-A unique identifier you create if necessary. This reference identifies a single unique notification or a batch of notifications.
+A unique identifier you create if necessary. It must not contain any personal information such as name or postal address. This reference identifies a single unique notification or a batch of notifications.
 
 ```
 String reference='STRING';
@@ -600,7 +600,7 @@ If the request is not successful, the client returns a `NotificationClientExcept
 
 This API call returns one page of up to 250 received text messages. You can get either the most recent messages, or get older messages by specifying a particular notification ID in the [`olderThanId`](#olderThanId) argument.
 
-You can only get messages that are 7 days old or less.
+You can only get messages that are 7 days old or newer.
 
 ### Method
 
@@ -644,3 +644,12 @@ private String content;
 private DateTime createdAt;
 ```
 If the notification specified in the `olderThanId` argument is older than 7 days, the client returns an empty response.
+
+### Error codes
+
+If the request is not successful, the client returns a `NotificationClientException` containing the relevant error code:
+
+|httpResult|Message|How to fix|
+|:---|:---|:---|
+|`403`|`[{`<br>`"error": "AuthError",`<br>`"message": "Error: Your system clock must be accurate to within 30 seconds"`<br>`}]`|Check your system clock|
+|`403`|`[{`<br>`"error": "AuthError",`<br>`"message": "Invalid token: signature, api token not found"`<br>`}]`|Use the correct API key. Refer to [API keys](#api-keys) for more information|

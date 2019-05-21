@@ -23,7 +23,7 @@ import static org.junit.Assert.fail;
 public class ClientIntegrationTestIT {
 
     @Test
-    public void testEmailNotificationIT() throws NotifyClientException, InterruptedException {
+    public void testEmailNotificationIT() throws NotifyClientException {
         NotifyClient client = getClient();
         SendEmailResponse emailResponse = sendEmailAndAssertResponse(client);
         Notification notification = client.getNotificationById(emailResponse.getNotificationId().toString());
@@ -31,7 +31,7 @@ public class ClientIntegrationTestIT {
     }
 
     @Test
-    public void testSmsNotificationIT() throws NotifyClientException, InterruptedException {
+    public void testSmsNotificationIT() throws NotifyClientException {
         NotifyClient client = getClient();
         SendSmsResponse response = sendSmsAndAssertResponse(client);
         Notification notification = client.getNotificationById(response.getNotificationId().toString());
@@ -73,7 +73,7 @@ public class ClientIntegrationTestIT {
     }
 
     @Test
-    public void testEmailNotificationWithValidEmailReplyToIdIT() throws NotifyClientException, InterruptedException {
+    public void testEmailNotificationWithValidEmailReplyToIdIT() throws NotifyClientException {
         NotifyClient client = getClient();
         SendEmailResponse emailResponse = sendEmailAndAssertResponse(client);
 
@@ -95,7 +95,7 @@ public class ClientIntegrationTestIT {
     }
 
     @Test
-    public void testEmailNotificationWithInValidEmailReplyToIdIT() throws NotifyClientException, InterruptedException {
+    public void testEmailNotificationWithInValidEmailReplyToIdIT() throws NotifyClientException {
         NotifyClient client = getClient();
         SendEmailResponse emailResponse = sendEmailAndAssertResponse(client);
 
@@ -139,7 +139,7 @@ public class ClientIntegrationTestIT {
     }
 
     @Test
-    public void testSmsNotificationWithValidSmsSenderIdIT() throws NotifyClientException, InterruptedException {
+    public void testSmsNotificationWithValidSmsSenderIdIT() throws NotifyClientException {
         NotifyClient client = getClient("API_SENDING_KEY");
 
         HashMap<String, String> personalisation = new HashMap<>();
@@ -160,7 +160,7 @@ public class ClientIntegrationTestIT {
     }
 
     @Test
-    public void testSmsNotificationWithInValidSmsSenderIdIT() throws NotifyClientException, InterruptedException {
+    public void testSmsNotificationWithInValidSmsSenderIdIT() throws NotifyClientException {
         NotifyClient client = getClient();
 
         HashMap<String, String> personalisation = new HashMap<>();
@@ -304,7 +304,7 @@ public class ClientIntegrationTestIT {
         assertNotNull(response.getTemplateVersion());
     }
 
-    private Notification assertNotification(Notification notification){
+    private void assertNotification(Notification notification){
         assertNotNull(notification);
         assertNotNull(notification.getId());
         assertNotNull(notification.getTemplateId());
@@ -329,8 +329,6 @@ public class ClientIntegrationTestIT {
         } else {
             assertTrue("expected status to be created, sending or delivered", Arrays.asList("created", "sending", "delivered").contains(notification.getStatus()));
         }
-
-        return notification;
     }
 
     private void assertNotificationWhenLetter(Notification notification) {

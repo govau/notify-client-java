@@ -1,6 +1,7 @@
 package au.gov.notify.utils;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import org.jose4j.jws.AlgorithmIdentifiers;
 import org.jose4j.jws.JsonWebSignature;
 import org.jose4j.jwt.JwtClaims;
@@ -34,11 +35,8 @@ public final class Authentication {
         }
     }
 
-
-    public static final String ENCODING = "UTF-8";
-
     public static SecretKey keyFromString(String value)
             throws UnsupportedEncodingException {
-        return new SecretKeySpec(value.getBytes(ENCODING), "RAW");
+        return new SecretKeySpec(value.getBytes(StandardCharsets.UTF_8), "RAW");
     }
 }

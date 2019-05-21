@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TemplateList {
-    private List<Template> templates;
+    private final List<Template> templates;
 
     public TemplateList(String content){
         JSONObject data = new JSONObject(content);

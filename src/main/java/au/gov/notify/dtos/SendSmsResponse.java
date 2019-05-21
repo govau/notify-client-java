@@ -6,13 +6,13 @@ import java.util.Optional;
 import java.util.UUID;
 
 public class SendSmsResponse {
-    private UUID notificationId;
-    private String reference;
-    private UUID templateId;
-    private int templateVersion;
-    private String templateUri;
-    private String body;
-    private String fromNumber;
+    private final UUID notificationId;
+    private final String reference;
+    private final UUID templateId;
+    private final int templateVersion;
+    private final String templateUri;
+    private final String body;
+    private final String fromNumber;
 
 
     public SendSmsResponse(String response) {
