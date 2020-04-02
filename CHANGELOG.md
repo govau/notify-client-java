@@ -1,3 +1,6 @@
+## 4.0.2-RELEASE
+* Added delivery status callback options to `sendEmail` and `sendSms` calls
+
 ## 4.0.1-RELEASE
 * Bring in changes from GDS where applicable
 * Update dependency versions
