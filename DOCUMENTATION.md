@@ -1,6 +1,6 @@
 # Java client documentation
 
-This documentation is for developers interested in using the GOV.AU Notify Java client to send emails or text messages. This is a hard fork
+This documentation is for developers interested in using the Notify.gov.au Java client to send emails or text messages. This is a hard fork
 of the [GOV UK's notify java client](https://github.com/alphagov/notifications-java-client) which was used as the base for the library.
 
 # Set up the client
@@ -9,7 +9,7 @@ of the [GOV UK's notify java client](https://github.com/alphagov/notifications-j
 
 The `notify-client-java` deploys to Bintray's JCenter. You will need to include JCenter as your repository within your maven/gradle configuration. 
 
-The library is available on the [GOV.AU Notify Java client page on Bintray](https://bintray.com/notify-infra/notify-jars/notify-client-java) [external link]:
+The library is available on the [Notify.gov.au Java client page on Bintray](https://bintray.com/notify-infra/notify-jars/notify-client-java) [external link]:
 
 You can also refer to the [sample Java example](https://github.com/govau/notify-examples-java) for an example application using the library.
 
@@ -24,11 +24,11 @@ import au.gov.notify.NotifyClient;
 NotifyClient client = new NotifyClient(apiKey);
 ```
 
-To get an API key, [sign in to GOV.AU Notify](https://notify.gov.au/) and go to the __API integration__ page. You can find more information in the [API keys](#api-keys) section of the documentation.
+To get an API key, [sign in to Notify.gov.au](https://notify.gov.au/) and go to the __API integration__ page. You can find more information in the [API keys](#api-keys) section of the documentation.
 
 # Send a message
 
-You can use GOV.AU Notify to send text messages or emails.
+You can use Notify.gov.au to send text messages or emails.
 
 ## Send a text message
 
@@ -48,7 +48,7 @@ SendSmsResponse response = client.sendSms(
 
 #### templateId (required)
 
-Sign in to [GOV.AU Notify](https://notify.gov.au/) and go to the __Templates__ page to find the template ID.
+Sign in to [Notify.gov.au](https://notify.gov.au/) and go to the __Templates__ page to find the template ID.
 
 ```
 String templateId="f33517ff-2a88-4f6e-b855-c550268ce08a";
@@ -86,7 +86,7 @@ String reference='STRING';
 
 A unique identifier of the sender of the text message notification. To find this information, go to the __Text Message sender__ settings screen:
 
-1. Sign in to your GOV.AU Notify account.
+1. Sign in to your Notify.gov.au account.
 1. Go to __Settings__.
 1. If you need to change to another service, select __Switch service__ in the top right corner of the screen and select the correct one.
 1. Go to the __Text Messages__ section and select __Manage__ on the __Text Message sender__ row.
@@ -154,7 +154,7 @@ SendEmailResponse response = client.sendEmail(
 
 #### templateId (required)
 
-Sign in to [GOV.AU Notify](https://notify.gov.au/) and go to the __Templates__ page to find the template ID.
+Sign in to [Notify.gov.au](https://notify.gov.au/) and go to the __Templates__ page to find the template ID.
 
 ```
 String templateId="f33517ff-2a88-4f6e-b855-c550268ce08a";
@@ -191,7 +191,7 @@ String reference='STRING';
 
 This is an email reply-to address specified by you to receive replies from your users. Your service cannot go live until you set up at least one of these email addresses. To set up:
 
-1. Sign into your GOV.AU Notify account.
+1. Sign into your Notify.gov.au account.
 1. Go to __Settings__.
 1. If you need to change to another service, select __Switch service__ in the top right corner of the screen and select the correct one.
 1. Go to the __Email__ section and select __Manage__ on the __Email reply-to addresses__ row.
@@ -243,7 +243,7 @@ You can only get the status of messages that are 7 days old or newer.
 |Status|Information|
 |:---|:---|
 |Created|The message is queued to be sent to the provider. The notification usually remains in this state for a few seconds.|
-|Sending|The message is queued to be sent by the provider to the recipient, and GOV.AU Notify is waiting for delivery information.|
+|Sending|The message is queued to be sent by the provider to the recipient, and Notify.gov.au is waiting for delivery information.|
 |Delivered|The message was successfully delivered.|
 |Failed|This covers all failure statuses:<br>- `permanent-failure` - "The provider was unable to deliver message, email or phone number does not exist; remove this recipient from your list"<br>- `temporary-failure` - "The provider was unable to deliver message, email inbox was full or phone was turned off; you can try to send the message again"<br>- `technical-failure` - "Notify had a technical failure; you can try to send the message again"|
 
@@ -251,8 +251,8 @@ You can only get the status of messages that are 7 days old or newer.
 
 |Status|Information|
 |:---|:---|
-|Pending|GOV.AU Notify received a callback from the provider but the device has not yet responded. Another callback from the provider determines the final status of the notification.|
-|Sent|The text message was delivered internationally. This only applies to text messages sent to non-AU phone numbers. GOV.AU Notify may not receive additional status updates depending on the recipient's country and telecoms provider.|
+|Pending|Notify.gov.au received a callback from the provider but the device has not yet responded. Another callback from the provider determines the final status of the notification.|
+|Sent|The text message was delivered internationally. This only applies to text messages sent to non-AU phone numbers. Notify.gov.au may not receive additional status updates depending on the recipient's country and telecoms provider.|
 
 ## Get the status of one message
 
@@ -268,9 +268,9 @@ Notification notification = client.getNotificationById(notificationId);
 
 The ID of the notification. You can find the notification ID in the response to the [original notification method call](/java.html#response).
 
-You can also find it in your [GOV.AU Notify Dashboard](https://notify.gov.au).
+You can also find it in your [Notify.gov.au Dashboard](https://notify.gov.au).
 
-1. Sign into GOV.AU Notify and select __Dashboard__.
+1. Sign into Notify.gov.au and select __Dashboard__.
 1. Select either __emails sent__, or __text messages sent__.
 1. Select the relevant notification.
 1. Copy the notification ID from the end of the page URL, for example `https://notify.gov.au/services/af90d4cb-ae88-4a7c-a197-5c30c7db423b/notification/ID`.
@@ -420,7 +420,7 @@ Template template = client.getTemplateById(templateId);
 
 #### templateId (required)
 
-Sign in to [GOV.AU Notify](https://notify.gov.au/) and go to the __Templates__ page to find the template ID.
+Sign in to [Notify.gov.au](https://notify.gov.au/) and go to the __Templates__ page to find the template ID.
 
 ```
 String templateId='f33517ff-2a88-4f6e-b855-c550268ce08a';
@@ -468,7 +468,7 @@ Template template = client.getTemplateVersion(templateId, version);
 
 #### templateId (required)
 
-Sign in to [GOV.AU Notify](https://notify.gov.au/) and go to the __Templates__ page to find the template ID.
+Sign in to [Notify.gov.au](https://notify.gov.au/) and go to the __Templates__ page to find the template ID.
 
 ```
 String templateId='f33517ff-2a88-4f6e-b855-c550268ce08a';
@@ -555,7 +555,7 @@ The parameters in the personalisation argument must match the placeholder fields
 
 #### templateId (required)
 
-Sign in to [GOV.AU Notify](https://notify.gov.au/) and go to the __Templates__ page to find the template ID.
+Sign in to [Notify.gov.au](https://notify.gov.au/) and go to the __Templates__ page to find the template ID.
 
 ```
 String templateId='f33517ff-2a88-4f6e-b855-c550268ce08a';

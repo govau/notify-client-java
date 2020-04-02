@@ -1,6 +1,6 @@
-# GOV.AU Notify Java client
+# Notify.gov.au Java client
 
-Use this client to send emails, text messages and letters using the [GOV.AU Notify](https://notify.gov.au) API.
+Use this client to send emails, text messages and letters using the [Notify.gov.au](https://notify.gov.au) API.
 
 Useful links:
 

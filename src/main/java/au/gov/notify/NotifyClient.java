@@ -43,7 +43,7 @@ public class NotifyClient implements NotifyClientApi {
     /**
      * This client constructor given the api key.
      *
-     * @param apiKey Generate an API key by signing in to GOV.AU Notify, https://notify.gov.au, and going to the **API integration** page
+     * @param apiKey Generate an API key by signing in to https://notify.gov.au, and going to the **API integration** page
      */
     public NotifyClient(final String apiKey) {
         this(
@@ -56,7 +56,7 @@ public class NotifyClient implements NotifyClientApi {
     /**
      * Use this client constructor if you require a proxy for https requests.
      *
-     * @param apiKey Generate an API key by signing in to GOV.AU Notify, https://notify.gov.au, and going to the **API integration** page
+     * @param apiKey Generate an API key by signing in to https://notify.gov.au, and going to the **API integration** page
      * @param proxy  Proxy used on the http requests
      */
     public NotifyClient(final String apiKey, final Proxy proxy) {
@@ -68,9 +68,9 @@ public class NotifyClient implements NotifyClientApi {
     }
 
     /**
-     * This client constructor is used for testing on other environments, used by the GOV.AU Notify team.
+     * This client constructor is used for testing on other environments, used by the Notify.gov.au team.
      *
-     * @param apiKey  Generate an API key by signing in to GOV.AU Notify, https://notify.gov.au, and going to the **API integration** page
+     * @param apiKey  Generate an API key by signing in to https://notify.gov.au, and going to the **API integration** page
      * @param baseUrl base URL, defaults to https://rest-api.notify.gov.au
      */
     public NotifyClient(final String apiKey, final String baseUrl) {
@@ -83,7 +83,7 @@ public class NotifyClient implements NotifyClientApi {
 
 
     /**
-     * @param apiKey  Generate an API key by signing in to GOV.AU Notify, https://notify.gov.au, and going to the **API integration** page
+     * @param apiKey  Generate an API key by signing in to https://notify.gov.au, and going to the **API integration** page
      * @param baseUrl base URL, defaults to https://rest-api.notify.gov.au
      * @param proxy   Proxy used on the http requests
      */
