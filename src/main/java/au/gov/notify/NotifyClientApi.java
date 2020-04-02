@@ -41,10 +41,13 @@ public interface NotifyClientApi {
      * @param emailReplyToId  An optional identifier for a reply to email address for the notification, rather than use the service default.
      *                        Service emailReplyToIds can be accessed via the service settings / manage email reply to addresses page.
      *                        Omit this argument to use the default service email reply to address.
+     * @param statusCallbackUrl         An optional HTTPS URL for delivery status updates to be sent to.
+     * @param statusCallbackBearerToken Bearer token that will be used for authentication to the delivery status callback URL. This must be 
+     *                                  provided if the status callback URL is provided.
      * @return <code>SendEmailResponse</code>
      * @throws NotifyClientException
      */
-    SendEmailResponse sendEmail(String templateId, String emailAddress, Map<String, String> personalisation, String reference, String emailReplyToId) throws NotifyClientException;
+    SendEmailResponse sendEmail(String templateId, String emailAddress, Map<String, String> personalisation, String reference, String emailReplyToId, String statusCallbackUrl, String statusCallbackBearerToken) throws NotifyClientException;
 
     /**
      * The sendSms method will create an HTTPS POST request. A JWT token will be created and added as an Authorization header to the request.
@@ -74,10 +77,13 @@ public interface NotifyClientApi {
      * @param smsSenderId     An optional identifier for the text message sender of the notification, rather than use the service default.
      *                        Service smsSenderIds can be accessed via the service settings / manage text message senders page.
      *                        Omit this argument to use the default service text message sender.
+     * @param statusCallbackUrl         An optional HTTPS URL for delivery status updates to be sent to.
+     * @param statusCallbackBearerToken Bearer token that will be used for authentication to the delivery status callback URL. This must be 
+     *                                  provided if the status callback URL is provided.
      * @return <code>SendSmsResponse</code>
      * @throws NotifyClientException
      */
-    SendSmsResponse sendSms(String templateId, String phoneNumber, Map<String, String> personalisation, String reference, String smsSenderId) throws NotifyClientException;
+    SendSmsResponse sendSms(String templateId, String phoneNumber, Map<String, String> personalisation, String reference, String smsSenderId, String statusCallbackUrl, String statusCallbackBearerToken) throws NotifyClientException;
 
     /**
      * The getNotificationById method will return a <code>Notification</code> for a given notification id.

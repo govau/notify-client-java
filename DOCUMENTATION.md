@@ -40,7 +40,9 @@ SendSmsResponse response = client.sendSms(
     phoneNumber,
     personalisation,
     reference,
-    smsSenderId
+    smsSenderId,
+    statusCallbackUrl,
+    statusCallbackBearerToken
 );
 ```
 
@@ -100,8 +102,17 @@ In this screen, you can then either:
 String smsSenderId='8e222534-7f05-4972-86e3-17c5d9f894e2'
 ```
 
-
 If you do not have an `smsSenderId`, you can leave out this argument.
+
+#### statusCallbackUrl (optional)
+
+This is an HTTPS URL of the server that you would like delivery status updates to be sent to.
+
+This argument is optional. If you do not provide this and you have set up a delivery status callback URL on your service through Notify.gov.au, then that will be used.
+
+#### statusCallbackBearerToken (optional)
+
+This is the bearer token that Notify.gov.au will use when making a request to your server so that you can authenticate requests. This argument is required if you provide `statusCallbackUrl`.
 
 ### Response
 
@@ -145,7 +156,9 @@ SendEmailResponse response = client.sendEmail(
     emailAddress,
     personalisation,
     reference,
-    emailReplyToId
+    emailReplyToId,
+    statusCallbackUrl,
+    statusCallbackBearerToken
 );
 ```
 
@@ -202,6 +215,16 @@ String emailReplyToId='8e222534-7f05-4972-86e3-17c5d9f894e2'
 ```
 
 If you do not have an `emailReplyToId`, you can leave out this argument.
+
+#### statusCallbackUrl (optional)
+
+This is an HTTPS URL of the server that you would like delivery status updates to be sent to.
+
+This argument is optional. If you do not provide this and you have set up a delivery status callback URL on your service through Notify.gov.au, then that will be used.
+
+#### statusCallbackBearerToken (optional)
+
+This is the bearer token that Notify.gov.au will use when making a request to your server so that you can authenticate requests. This argument is required if you provide `statusCallbackUrl`.
 
 ### Response
 

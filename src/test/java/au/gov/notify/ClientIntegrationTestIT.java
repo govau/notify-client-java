@@ -86,7 +86,9 @@ public class ClientIntegrationTestIT {
                 System.getenv("FUNCTIONAL_TEST_EMAIL"),
                 personalisation,
                 uniqueName,
-                System.getenv("EMAIL_REPLY_TO_ID"));
+                System.getenv("EMAIL_REPLY_TO_ID"),
+                "",
+                "");
 
         assertNotificationEmailResponse(response, uniqueName);
 
@@ -114,7 +116,9 @@ public class ClientIntegrationTestIT {
                     System.getenv("FUNCTIONAL_TEST_EMAIL"),
                     personalisation,
                     uniqueName,
-                    fake_uuid.toString());
+                    fake_uuid.toString(),
+                    "",
+                    "");
         }
         catch (final NotifyClientException ex)
         {
@@ -151,7 +155,9 @@ public class ClientIntegrationTestIT {
                 System.getenv("FUNCTIONAL_TEST_NUMBER"),
                 personalisation,
                 uniqueName,
-                System.getenv("SMS_SENDER_ID"));
+                System.getenv("SMS_SENDER_ID"),
+                "",
+                "");
 
         assertNotificationSmsResponse(response, uniqueName);
 
@@ -178,7 +184,9 @@ public class ClientIntegrationTestIT {
                     System.getenv("FUNCTIONAL_TEST_NUMBER"),
                     personalisation,
                     uniqueName,
-                    fake_uuid.toString());
+                    fake_uuid.toString(),
+                    "",
+                    "");
         }
         catch (final NotifyClientException ex)
         {

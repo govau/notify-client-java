@@ -141,7 +141,7 @@ public class NotifyClient implements NotifyClientApi {
                                        String emailAddress,
                                        Map<String, String> personalisation,
                                        String reference) throws NotifyClientException {
-        return sendEmail(templateId, emailAddress, personalisation, reference, "");
+        return sendEmail(templateId, emailAddress, personalisation, reference, "", "", "");
     }
 
     @Override
@@ -149,7 +149,9 @@ public class NotifyClient implements NotifyClientApi {
                                        String emailAddress,
                                        Map<String, String> personalisation,
                                        String reference,
-                                       String emailReplyToId) throws NotifyClientException {
+                                       String emailReplyToId,
+                                       String statusCallbackUrl,
+                                       String statusCallbackBearerToken) throws NotifyClientException {
 
         JSONObject body = createBodyForPostRequest(templateId,
                 null,
@@ -160,6 +162,12 @@ public class NotifyClient implements NotifyClientApi {
 
         if (emailReplyToId != null && !emailReplyToId.isEmpty()) {
             body.put("email_reply_to_id", emailReplyToId);
+        }
+        if (statusCallbackUrl != null && !statusCallbackUrl.isEmpty()) {
+            body.put("status_callback_url", statusCallbackUrl);
+        }
+        if (statusCallbackBearerToken != null && !statusCallbackBearerToken.isEmpty()) {
+            body.put("status_callback_bearer_token", statusCallbackBearerToken);
         }
 
         HttpURLConnection conn = createConnectionAndSetHeaders(baseUrl + "/v2/notifications/email", "POST");
@@ -173,7 +181,7 @@ public class NotifyClient implements NotifyClientApi {
                                    Map<String, String> personalisation,
                                    String reference) throws NotifyClientException {
 
-        return sendSms(templateId, phoneNumber, personalisation, reference, "");
+        return sendSms(templateId, phoneNumber, personalisation, reference, "", "", "");
     }
 
     @Override
@@ -181,7 +189,9 @@ public class NotifyClient implements NotifyClientApi {
                                    String phoneNumber,
                                    Map<String, String> personalisation,
                                    String reference,
-                                   String smsSenderId) throws NotifyClientException {
+                                   String smsSenderId,
+                                   String statusCallbackUrl,
+                                   String statusCallbackBearerToken) throws NotifyClientException {
 
         JSONObject body = createBodyForPostRequest(templateId,
                 phoneNumber,
@@ -193,6 +203,13 @@ public class NotifyClient implements NotifyClientApi {
         if (smsSenderId != null && !smsSenderId.isEmpty()) {
             body.put("sms_sender_id", smsSenderId);
         }
+        if (statusCallbackUrl != null && !statusCallbackUrl.isEmpty()) {
+            body.put("status_callback_url", statusCallbackUrl);
+        }
+        if (statusCallbackBearerToken != null && !statusCallbackBearerToken.isEmpty()) {
+            body.put("status_callback_bearer_token", statusCallbackBearerToken);
+        }
+
         HttpURLConnection conn = createConnectionAndSetHeaders(baseUrl + "/v2/notifications/sms", "POST");
         String response = performPostRequest(conn, body, HttpsURLConnection.HTTP_CREATED);
         return new SendSmsResponse(response);
