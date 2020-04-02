@@ -57,7 +57,7 @@ jobs:
     - run:
         name: Test & build
         command: |
-          ./gradlew build
+          ./gradlew build --stacktrace --debug --scan
     - persist_to_workspace:
         root: .
         paths:
